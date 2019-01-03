@@ -6,7 +6,7 @@
 class Node;
 class Edge;
 
-
+ //Testing commit
 void setSpringForce(Node& node, Edge& edge) {
 
     unsigned numEdges = edge.node_L.size();
