@@ -41,6 +41,13 @@ struct WLCInfoVecs;
 struct TorsionInfoVecs;
 struct AuxVecs;
 
+// **********************************************
+// Included by C. Holderman for platelet model.
+// Most likely temporary until later development.
+class Node;
+class Edge;
+// **********************************************
+
 
 typedef thrust::tuple<unsigned, bool, double> Tubd;
 typedef thrust::tuple<unsigned, bool> Tub;
