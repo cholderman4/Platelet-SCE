@@ -15,7 +15,7 @@ int main() {
     
     edge.printConnections();
 
-    setSpringForce(node, edge);
+    Spring_Force(node, edge);
         
     return 0;
 }
