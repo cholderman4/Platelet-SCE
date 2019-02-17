@@ -42,10 +42,13 @@ struct TorsionInfoVecs;
 struct AuxVecs;
 
 // **********************************************
-// Included by C. Holderman for platelet model.
-// Most likely temporary until later development.
-class Node;
-class Edge;
+/* 
+Included by C. Holderman for platelet model.
+Most likely temporary until later development.
+Eventually these will replace pltInfoVecs and similar structures.  
+*/
+struct Node;
+struct SpringEdge;
 // **********************************************
 
 

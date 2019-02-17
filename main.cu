@@ -3,8 +3,12 @@
 
 
 int main() {  
+
+    PlatletSystem platletSystem;
+
+    platletSystem.initializePltSystem(3);
     
-    // Test values
+    /* // Test values
     unsigned N{3};
     unsigned E{3};
     Node node(N);
@@ -15,7 +19,7 @@ int main() {
     
     edge.printConnections();
 
-    Spring_Force(node, edge);
+    Spring_Force(node, edge); */
         
     return 0;
 }

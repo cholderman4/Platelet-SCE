@@ -7,13 +7,11 @@ void Spring_Force(Node& node, Edge& edge) {
 
     unsigned numEdges = edge.node_L.size();
 
-
-
     // Temporary vectors to hold forces and node id's before sort/reduce
-    thrust::device_vector<unsigned> tempNodeID(numEdges*2, 47);
-    thrust::device_vector<double> tempForce_x(numEdges*2, 4.7f);
-    thrust::device_vector<double> tempForce_y(numEdges*2, 4.7f);
-    thrust::device_vector<double> tempForce_z(numEdges*2, 4.7f);
+    thrust::device_vector<unsigned> tempNodeID(numEdges*2, 0);
+    thrust::device_vector<double> tempForce_x(numEdges*2, 0.0);
+    thrust::device_vector<double> tempForce_y(numEdges*2, 0.0);
+    thrust::device_vector<double> tempForce_z(numEdges*2, 0.0);
 
 
 
