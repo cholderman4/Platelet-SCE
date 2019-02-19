@@ -93,8 +93,8 @@ struct CVec3Add : public thrust::binary_function<CVec3, CVec3, CVec3> {
 		CVec3 operator()(const CVec3 &vec1, const CVec3 &vec2) {
 		return thrust::make_tuple(
             thrust::get<0>(vec1) + thrust::get<0>(vec2),
-			thrust::get<1>(vec1) + thrust::get<1>(vec2),
-			thrust::get<2>(vec1) + thrust::get<2>(vec2));
+						thrust::get<1>(vec1) + thrust::get<1>(vec2),
+						thrust::get<2>(vec1) + thrust::get<2>(vec2));
 	}
 };
 

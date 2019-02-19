@@ -3,10 +3,10 @@
 #include <iostream>
 #include <cstdio>
 // ************************************
+#include "PlatletSystem.h" 
 
 #include "Advance_Positions.h"
 #include "Spring_Force.h"
-#include "PlatletSystem.h" 
 
 
 PlatletSystem::PlatletSystem() {};
@@ -28,10 +28,24 @@ void PlatletSystem::initializePltSystem(unsigned N) {
 void PlatletSystem::solvePltSystem() {
 
 
+    // Advance_Positions();
+
+    solvePltForces(); // Reset Forces to zero, then solve for next time step
+
+    // Output stuff to file.
+
+    // 
+
 }
 
 
 void PlatletSystem::solvePltForces() {
+
+    Spring_Force(node, springEdge);
+
+    printForces();
+
+    //LJ_Force(node);
 
 
 }
@@ -39,6 +53,8 @@ void PlatletSystem::solvePltForces() {
 
 void PlatletSystem::setPltNodes(unsigned N) {
 
+    
+    // Hard coded values for now. Later initialize points randomly or in a circle.
 
     thrust::host_vector<double> host_pos_x(3);
     thrust::host_vector<double> host_pos_y(3);
@@ -140,5 +156,15 @@ void PlatletSystem::printConnections() {
             std::cout << "Edge " << i << ": "
                 << springEdge.node_L[i] << ", "
                 << springEdge.node_R[i] << std::endl;
+        }
+}
+
+void PlatletSystem::printForces() {
+    std::cout << "Testing force calculation:" << std::endl;
+        for(auto i = 0; i < node.force_x.size(); ++i) {
+            std::cout << "Force on node " << i << ": ("
+                << node.force_x[i] << ", "
+                << node.force_y[i] << ", "
+                << node.force_z[i] << ")" << std::endl;
         }
 }

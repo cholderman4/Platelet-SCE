@@ -25,14 +25,19 @@ __host__ __device__ T springForceByCoord(T dist, T coordDist) {
     return k*(dist - eq)*coordDist/dist;
 }
 
+template <typename T>
+__host__ __device__ T norm(T x, T y, T z) {
+        return sqrt(x*x + y*y + z*z);
+}
 
-struct getForcesFunctor : public thrust::unary_function<Tbuu, Tuddd> {
+
+struct functor_spring_force : public thrust::unary_function<Tbuu, Tuddd> {
     double* posXVec;
     double* posYVec;
     double* posZVec;
    
     __host__ __device__
-        getForcesFunctor(
+        functor_spring_force(
             double* _posXVec,
             double* _posYVec,
             double* _posZVec) :
@@ -54,9 +59,11 @@ struct getForcesFunctor : public thrust::unary_function<Tbuu, Tuddd> {
         double posY_R = posYVec[node_R];
         double posZ_R = posZVec[node_R];
 
-        double dist = CVec3NormBinary(
+
+        double dist = norm(posX_L - posX_R, posY_L - posY_R, posZ_L - posZ_R);
+        /* double dist = CVec3NormBinary(
             thrust::make_tuple(posX_L, posY_L, posZ_L), 
-            thrust::make_tuple(posX_R, posY_R, posZ_R));
+            thrust::make_tuple(posX_R, posY_R, posZ_R)); */
 
         double forceX=0.0;
         double forceY=0.0;

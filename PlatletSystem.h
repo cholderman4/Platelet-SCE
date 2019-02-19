@@ -59,6 +59,9 @@ public:
 
 
     void printConnections();
+    
+
+    void printForces();
 
 };
 

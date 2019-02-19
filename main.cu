@@ -7,6 +7,8 @@ int main() {
     PlatletSystem platletSystem;
 
     platletSystem.initializePltSystem(3);
+
+    platletSystem.solvePltForces();
     
     /* // Test values
     unsigned N{3};
