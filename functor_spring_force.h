@@ -4,25 +4,22 @@
 #include "SystemStructures.h"
 
 
-// Input:   bool - whether to return force to left/right node connected to edge.
-//          unsigned(x2) - ID of nodes that edge is connected to.
-typedef thrust::tuple<bool, unsigned, unsigned> Tbuu;
+/* Input:   node ID */  
 
-//Output:   unsigned - ID of node
-//          (x,y,z) - forces on node 
+/* Output:  VOID */
 
+/* Update:  node.force_(x,y,z) on given node based on all spring connections. */
 
-// This algorithm currently runs in a different manner than the FibrinPlatlet project.
+// This functor does not account for fixed nodes.
 
 
 
 
-template <typename T>
-__host__ __device__ T springForceByCoord(T dist, T coordDist) {
+__host__ __device__ double springForceByCoord(double dist, double coordDist, double l_0) {
     double k = 2.1;
-    double eq = 3.0;
+    // double eq = 3.0;
 
-    return k*(dist - eq)*coordDist/dist;
+    return k*(dist - l_0)*coordDist/dist;
 }
 
 template <typename T>
@@ -31,61 +28,102 @@ __host__ __device__ T norm(T x, T y, T z) {
 }
 
 
-struct functor_spring_force : public thrust::unary_function<Tbuu, Tuddd> {
-    double* posXVec;
-    double* posYVec;
-    double* posZVec;
-   
+struct functor_spring_force : public thrust::unary_function<unsigned, void> {
+    double* posVec_x;
+    double* posVec_y;
+    double* posVec_z;
+
+    double* forceVec_x;
+    double* forceVec_y;
+    double* forceVec_z;
+
+    double* len_0;
+    unsigned* nodeConnections;
+
+    unsigned maxConnectedSpringCount;
+
+
     __host__ __device__
         functor_spring_force(
-            double* _posXVec,
-            double* _posYVec,
-            double* _posZVec) :
-        posXVec(_posXVec),
-        posYVec(_posYVec),
-        posZVec(_posZVec) {}
+            double* _posVec_x,
+            double* _posVec_y,
+            double* _posVec_z,
+            
+            double* _forceVec_x,
+            double* _forceVec_y,
+            double* _forceVec_z,
+
+            double* _len_0,
+            unsigned* _nodeConnections,
+
+            unsigned _maxConnectedSpringCount) :
+
+        posVec_x(_posVec_x),
+        posVec_y(_posVec_y),
+        posVec_z(_posVec_z),
+        
+        forceVec_x(_forceVec_x),
+        forceVec_y(_forceVec_y),
+        forceVec_z(_forceVec_z),
+
+        len_0(_len_0),
+        nodeConnections(_nodeConnections),
+
+        maxConnectedSpringCount(_maxConnectedSpringCount) {}
+
 
     __device__
-    Tuddd operator()(const Tbuu& leftNodeReturn_Id2) {
-        bool leftNodeReturn = thrust::get<0>(leftNodeReturn_Id2);
-        unsigned node_L = thrust::get<1>(leftNodeReturn_Id2);
-        unsigned node_R = thrust::get<2>(leftNodeReturn_Id2);
+    void operator()(const unsigned idA) {
+        // ID of the node being acted on.
 
-        double posX_L = posXVec[node_L];
-        double posY_L = posYVec[node_L];
-        double posZ_L = posZVec[node_L];
+        double sumForce_x = 0.0;
+        double sumForce_y = 0.0;
+        double sumForce_z = 0.0;
 
-        double posX_R = posXVec[node_R];
-        double posY_R = posYVec[node_R];
-        double posZ_R = posZVec[node_R];
+        double posA_x = posVec_x[idA];
+        double posA_y = posVec_y[idA];
+        double posA_z = posVec_z[idA];
 
+        // Index along nodeConnections vector.
+        unsigned indexBegin = idA * maxConnectedSpringCount;
+        unsigned indexEnd = indexBegin + maxConnectedSpringCount;
 
-        double dist = norm(posX_L - posX_R, posY_L - posY_R, posZ_L - posZ_R);
-        /* double dist = CVec3NormBinary(
-            thrust::make_tuple(posX_L, posY_L, posZ_L), 
-            thrust::make_tuple(posX_R, posY_R, posZ_R)); */
+        for (unsigned i=indexBegin; i < indexEnd; ++i) {
 
-        double forceX=0.0;
-        double forceY=0.0;
-        double forceZ=0.0;
+            // ID of node(s) connected to the primary node.
+            unsigned idB = nodeConnections[i];
 
-        if (fabs(dist)>=1.0e-16) {
-            //Calculate force from spring (Hooke's Law) on node.
-            forceX = springForceByCoord(dist, posX_L - posX_R);
-            forceY = springForceByCoord(dist, posY_L - posY_R);
-            forceZ = springForceByCoord(dist, posZ_L - posZ_R);            
+            double distAB_x = posA_x - posVec_x[idB];
+            double distAB_y = posA_y - posVec_y[idB];
+            double distAB_z = posA_z - posVec_z[idB];
+
+            double dist = norm(distAB_x, distAB_y, distAB_z);
+
+            double length_0 = len_0[i];
+
+            if (fabs(dist)>=1.0e-12) {
+                //Calculate force from linear spring (Hooke's Law) on node.
+                sumForce_x += springForceByCoord(dist, distAB_x, length_0);
+                sumForce_y += springForceByCoord(dist, distAB_y, length_0);
+                sumForce_z += springForceByCoord(dist, distAB_z, length_0);            
+            }
+        }
+        if(isfinite(sumForce_x)) {
+            forceVec_x[idA] += sumForce_x;
+        }
+        if(isfinite(sumForce_x)) {
+            forceVec_y[idA] += sumForce_y;
+        }
+        if(isfinite(sumForce_x)) {
+            forceVec_z[idA] += sumForce_z;
         }
 
 
-        // Return the force on either left/right node.
-        if (leftNodeReturn) {
-            return thrust::make_tuple(node_L, forceX, forceY, forceZ);
-        }
-        else {
-            return thrust::make_tuple(node_R, -forceX, -forceY, -forceZ);
-        }
-    }
-};
+
+        
+        
+    } // End operator()
+}; // End struct
 
 
 #endif

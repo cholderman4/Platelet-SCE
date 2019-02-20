@@ -4,7 +4,10 @@
 
 #include "SystemStructures.h"
 
-void Spring_Force(Node& node, SpringEdge& springEdge);
+void SpringForce(
+    Node& node, 
+    SpringEdge& springEdge, 
+    GeneralParams& generalParams);
 
 
 #endif
