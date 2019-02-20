@@ -12,15 +12,18 @@
 PlatletSystem::PlatletSystem() {};
 
 
-void PlatletSystem::initializePltSystem(unsigned N) {
+void PlatletSystem::initializePltSystem(unsigned N, unsigned E) {
 
-    setPltNodes(N);
+    generalParams.springEdgeCount = E;
+    generalParams.memNodeCount = N;
+
+    setPltNodes();
 
     printPoints();
 
-    setPltSpringEdge(N);
+    setPltSpringEdge();
 
-    printConnections();
+    // printConnections();
 
 }
 
@@ -41,7 +44,7 @@ void PlatletSystem::solvePltSystem() {
 
 void PlatletSystem::solvePltForces() {
 
-    Spring_Force(node, springEdge);
+    SpringForce(node, springEdge, generalParams);
 
     printForces();
 
@@ -51,55 +54,51 @@ void PlatletSystem::solvePltForces() {
 }
 
 
-void PlatletSystem::setPltNodes(unsigned N) {
+void PlatletSystem::setPltNodes() {
 
     
     // Hard coded values for now. Later initialize points randomly or in a circle.
 
-    thrust::host_vector<double> host_pos_x(3);
-    thrust::host_vector<double> host_pos_y(3);
-    thrust::host_vector<double> host_pos_z(3);
+    thrust::host_vector<double> host_pos_x(generalParams.memNodeCount);
+    thrust::host_vector<double> host_pos_y(generalParams.memNodeCount);
+    thrust::host_vector<double> host_pos_z(generalParams.memNodeCount);
 
-    host_pos_x[0] = -1.0f;
-    host_pos_y[0] = 0.0f;
-    host_pos_z[0] = 0.0f;
+    host_pos_x[0] = 0.0;
+    host_pos_y[0] = -1.0;
+    host_pos_z[0] = 0.0;
 
-    /* node.vel_x[0] = 0.0;
-    node.vel_y[0] = 0.0;
-    node.vel_z[0] = 0.0; */
+    host_pos_x[1] = 0.0;
+    host_pos_y[1] = 0.0;
+    host_pos_z[1] = 0.0;
 
-    host_pos_x[1] = 1.0f;
-    host_pos_y[1] = 0.0f;
-    host_pos_z[1] = 0.0f;
+    host_pos_x[2] = 1.0;
+    host_pos_y[2] = 0.0;
+    host_pos_z[2] = 0.0;
 
-   /*  node.vel_x[1] = 0.0;
-    node.vel_y[1] = 0.0;
-    node.vel_z[1] = 0.0; */
+    host_pos_x[3] = 0.0;
+    host_pos_y[3] = 1.0;
+    host_pos_z[3] = 0.0;
 
-    host_pos_x[2] = 0.0f;
-    host_pos_y[2] = 1.0f;
-    host_pos_z[2] = 0.0f;
-
-    /* node.vel_x[2] = 0.0;
-    node.vel_y[2] = 0.0;
-    node.vel_z[2] = 0.0; */
+    host_pos_x[4] = 1.0;
+    host_pos_y[4] = 2.0;
+    host_pos_z[4] = 0.0;
 
 
+    node.pos_x.resize(generalParams.memNodeCount);
+    node.pos_y.resize(generalParams.memNodeCount);
+    node.pos_z.resize(generalParams.memNodeCount);
 
+    node.vel_x.resize(generalParams.memNodeCount);
+    node.vel_y.resize(generalParams.memNodeCount);
+    node.vel_z.resize(generalParams.memNodeCount);
 
-    // TO-DO: change N to generalParams.maxPltNodeCount
+    node.force_x.resize(generalParams.memNodeCount);
+    node.force_y.resize(generalParams.memNodeCount);
+    node.force_z.resize(generalParams.memNodeCount);
 
-    node.pos_x.resize(N);
-    node.pos_y.resize(N);
-    node.pos_z.resize(N);
-
-    node.vel_x.resize(N);
-    node.vel_y.resize(N);
-    node.vel_z.resize(N);
-
-    node.force_x.resize(N);
-    node.force_y.resize(N);
-    node.force_z.resize(N);
+    thrust::copy(host_pos_x.begin(), host_pos_x.end(), node.pos_x.begin());
+    thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
+    thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());
 
     thrust::fill(node.vel_x.begin(), node.vel_x.end(), 0.0);
     thrust::fill(node.vel_y.begin(), node.vel_y.end(), 0.0);
@@ -108,35 +107,28 @@ void PlatletSystem::setPltNodes(unsigned N) {
     thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);
     thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);
     thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
-
-    thrust::copy(host_pos_x.begin(), host_pos_x.end(), node.pos_x.begin());
-    thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
-    thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());    
-    //Fill device vectors with test values.
-    
-
-    /* pos_x[3] = 0.0f;
-    pos_y[3] = 3.0f;
-    pos_z[3] = 0.0f;
-
-    vel_x[3] = 0.0;
-    vel_y[3] = 0.0;
-    vel_z[3] = 0.0; */
 }
 
 
-void PlatletSystem::setPltSpringEdge(unsigned N) {
-    // TO-DO: change N to generalParams.maxPltSpringEdgeCount
+void PlatletSystem::setPltSpringEdge() {
 
-    springEdge.node_L.resize(N);
-    springEdge.node_R.resize(N);
+    /* For now we multiply by 2 since each node will be connected to exactly 2 other nodes.
+    This should be later generalized to not count the springs, but to count the number of connections at each node. */
+    springEdge.nodeConnections.resize(generalParams.memNodeCount * generalParams.maxConnectedSpringCount);
+    springEdge.len_0.resize(generalParams.memNodeCount * generalParams.maxConnectedSpringCount);
+    thrust::fill(springEdge.len_0.begin(), springEdge.len_0.end(), 3.0);
 
 
-    // Set edge values (connections, length) via circular connection
-    for(int i = 0; i < N; ++i) {
-        springEdge.node_L[i] = i;
-        springEdge.node_R[i] = (i+1 >= springEdge.node_L.size()) ? 0 : i+1;
+    // Set edge connections via circular connection
+    for(int i = 0; i < generalParams.springEdgeCount; ++i) {
+        // i-th spring connects to the i-th node.
+        springEdge.nodeConnections[i*2] = (i-1 < 0) ? generalParams.memNodeCount-1 : i-1;
+
+        // i-th spring edge connects to the (i+1)th node, except for the last node, which connects to the 0-th node.
+        springEdge.nodeConnections[i*2 + 1] = (i+1 >= generalParams.springEdgeCount) ? 0 : i+1;
     }
+
+    // TO-DO Set length_0!!!
 }
 
 void PlatletSystem::printPoints() {
@@ -152,11 +144,16 @@ void PlatletSystem::printPoints() {
 
 void PlatletSystem::printConnections() {
     std::cout << "Testing edge connections:" << std::endl;
-        for(auto i = 0; i < springEdge.node_L.size(); ++i) {
-            std::cout << "Edge " << i << ": "
-                << springEdge.node_L[i] << ", "
-                << springEdge.node_R[i] << std::endl;
+        for(auto i = 0; i < generalParams.springEdgeCount; ++i) {
+            std::cout << "Node " << i << " is connected to: "
+                << springEdge.nodeConnections[i*2] << ", "
+                << springEdge.nodeConnections[i*2 + 1] << std::endl;
         }
+
+    std::cout << "Testing edge connection vector creation:" << std::endl;
+    for (auto s : springEdge.nodeConnections) {
+        std::cout << s << std::endl;
+    }
 }
 
 void PlatletSystem::printForces() {

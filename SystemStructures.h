@@ -102,11 +102,11 @@ struct CVec3NormBinary {
 	__host__ __device__
 
 		double operator() (const CVec3& vec1, const CVec3& vec2) {
-		//divide force by fiber cross section to get stress
-		return fabs(
-			((thrust::get<0>(vec1) - thrust::get<0>(vec2))) +
-			((thrust::get<1>(vec1) - thrust::get<1>(vec2))) +
-			((thrust::get<2>(vec1) - thrust::get<2>(vec2))));
+
+		return sqrt(
+			((thrust::get<0>(vec1) - thrust::get<0>(vec2)) * (thrust::get<0>(vec1) - thrust::get<0>(vec2))) +
+			((thrust::get<1>(vec1) - thrust::get<1>(vec2)) * (thrust::get<1>(vec1) - thrust::get<1>(vec2))) +
+			((thrust::get<2>(vec1) - thrust::get<2>(vec2)) * (thrust::get<2>(vec1) - thrust::get<2>(vec2))));
 	}
 };
 
@@ -114,10 +114,10 @@ struct CVec3NormUnary {
 	__host__ __device__
 		double operator() (const CVec3& vec) {
 		//divide force by fiber cross section to get stress
-		return (
-			sqrt(thrust::get<0>(vec) * thrust::get<0>(vec) +
+		return sqrt(
+			thrust::get<0>(vec) * thrust::get<0>(vec) +
 			thrust::get<1>(vec) * thrust::get<1>(vec) +
-			thrust::get<2>(vec) * thrust::get<2>(vec)));
+			thrust::get<2>(vec) * thrust::get<2>(vec));
 	}
 };
 

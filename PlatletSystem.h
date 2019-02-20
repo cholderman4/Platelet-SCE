@@ -8,9 +8,14 @@
 
 
 struct SpringEdge {
-    // Store ID of each node connected to edge.
-    thrust::device_vector<unsigned> node_L;
-    thrust::device_vector<unsigned> node_R;
+    /* Vector size is 2*numSpringEdges.
+    For now, each node is connected to 2 spring edges.
+    Each node corresponds to two consecutive vector entries, 
+    corresponding to its two connected neighbors. */
+
+    thrust::device_vector<unsigned> nodeConnections;
+
+    thrust::device_vector<double> len_0;
 };
 
 
@@ -27,6 +32,20 @@ struct Node {
     thrust::device_vector<double> force_x;
     thrust::device_vector<double> force_y;
     thrust::device_vector<double> force_z;
+
+
+    /* Keep track of the number of springs connected to each node
+    Possibly not needed if we just resize to memNodeCount * maxConnectedSpringCount
+    and fill empty connections with ULONGMAX */
+    //thrust::device_vector<unsigned> numConnectedSprings;
+};
+
+
+struct GeneralParams {
+    bool runSim = true;
+    unsigned springEdgeCount;
+    unsigned memNodeCount;
+    unsigned maxConnectedSpringCount = 2;
 };
 
 
@@ -34,13 +53,14 @@ class PlatletSystem {
 public:
     Node node;
     SpringEdge springEdge;
+    GeneralParams generalParams;
 
 public:
 
     PlatletSystem();
 
 
-    void initializePltSystem(unsigned N);
+    void initializePltSystem(unsigned N, unsigned E);
 
 
     void solvePltSystem();
@@ -49,10 +69,10 @@ public:
     void solvePltForces();
 
 
-    void setPltNodes(unsigned N);
+    void setPltNodes();
 
 
-    void setPltSpringEdge(unsigned N);
+    void setPltSpringEdge();
 
 
     void printPoints();

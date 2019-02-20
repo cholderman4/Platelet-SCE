@@ -1,14 +1,14 @@
 #include "PlatletSystem.h"
-#include "Spring_Force.h"
+// #include "SpringForce.h"
 
 
 int main() {  
 
     PlatletSystem platletSystem;
 
-    platletSystem.initializePltSystem(3);
+    platletSystem.initializePltSystem(5,5);
 
-    platletSystem.solvePltForces();
+    platletSystem.solvePltSystem();
     
     /* // Test values
     unsigned N{3};
