@@ -48,9 +48,10 @@ void PlatletSystem::solvePltForces() {
 
     printForces();
 
-    //LJ_Force(node);
+    // LJ_Force(node);
 
 
+    // Fixed nodes. Set forces to zero.
 }
 
 
@@ -88,9 +89,10 @@ void PlatletSystem::setPltNodes() {
     node.pos_y.resize(generalParams.memNodeCount);
     node.pos_z.resize(generalParams.memNodeCount);
 
-    node.vel_x.resize(generalParams.memNodeCount);
+    node.velocity.resize(generalParams.memNodeCount);
+    /* node.vel_x.resize(generalParams.memNodeCount);
     node.vel_y.resize(generalParams.memNodeCount);
-    node.vel_z.resize(generalParams.memNodeCount);
+    node.vel_z.resize(generalParams.memNodeCount); */
 
     node.force_x.resize(generalParams.memNodeCount);
     node.force_y.resize(generalParams.memNodeCount);
@@ -100,9 +102,11 @@ void PlatletSystem::setPltNodes() {
     thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
     thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());
 
-    thrust::fill(node.vel_x.begin(), node.vel_x.end(), 0.0);
+    thrust::fill(node.velocity.begin(), node.vel_x.end(), 0.0);
+
+    /* thrust::fill(node.vel_x.begin(), node.vel_x.end(), 0.0);
     thrust::fill(node.vel_y.begin(), node.vel_y.end(), 0.0);
-    thrust::fill(node.vel_z.begin(), node.vel_z.end(), 0.0);
+    thrust::fill(node.vel_z.begin(), node.vel_z.end(), 0.0); */
 
     thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);
     thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);

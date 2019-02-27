@@ -25,9 +25,15 @@ struct Node {
     thrust::device_vector<double> pos_y;
     thrust::device_vector<double> pos_z;
     
+    thrust::device_vector<double> velocity;
+
+    /* These are apparently not needed. Only the 
+    magnitude of velocity to know when equilibrium 
+    is reached.
+    
     thrust::device_vector<double> vel_x;
     thrust::device_vector<double> vel_y;
-    thrust::device_vector<double> vel_z;
+    thrust::device_vector<double> vel_z; */
 
     thrust::device_vector<double> force_x;
     thrust::device_vector<double> force_y;
@@ -46,6 +52,12 @@ struct GeneralParams {
     unsigned springEdgeCount;
     unsigned memNodeCount;
     unsigned maxConnectedSpringCount = 2;
+
+    double dt = 0.1;
+	double viscousDamp = 3.769911184308; //???
+	double temperature = 300.0;
+	double kB = 1.3806488e-8;;
+	double memNodeMass = 1.0;
 };
 
 

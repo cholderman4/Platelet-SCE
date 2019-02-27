@@ -56,7 +56,7 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
             double* _len_0,
             unsigned* _nodeConnections,
 
-            unsigned _maxConnectedSpringCount) :
+            unsigned& _maxConnectedSpringCount) :
 
         posVec_x(_posVec_x),
         posVec_y(_posVec_y),
