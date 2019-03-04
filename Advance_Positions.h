@@ -4,8 +4,7 @@
 #include "SystemStructures.h"
 
 double Advance_Positions(
-	NodeInfoVecs& nodeInfoVecs,
-	PltInfoVecs& pltInfoVecs,
+	Node& node,
 	GeneralParams& generalParams);
 
 

@@ -35,6 +35,10 @@ void PlatletSystem::solvePltSystem() {
 
     solvePltForces(); // Reset Forces to zero, then solve for next time step
 
+    Advance_Positions(node, generalParams);
+
+    printPoints();
+
     // Output stuff to file.
 
     // 
@@ -102,7 +106,7 @@ void PlatletSystem::setPltNodes() {
     thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
     thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());
 
-    thrust::fill(node.velocity.begin(), node.vel_x.end(), 0.0);
+    thrust::fill(node.velocity.begin(), node.velocity.end(), 0.0);
 
     /* thrust::fill(node.vel_x.begin(), node.vel_x.end(), 0.0);
     thrust::fill(node.vel_y.begin(), node.vel_y.end(), 0.0);

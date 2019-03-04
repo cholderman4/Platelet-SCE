@@ -31,7 +31,7 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 			double& _viscousDamp,
 			double& _temperature,
 			double& _kB,
-			double& _mass :
+			double& _mass) :
 
 		dt(_dt),
 		viscousDamp(_viscousDamp),
@@ -60,7 +60,7 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 			after multiplication, additive noise becomes 
 					sqrt(2*kb*t*dt/eta) * N(0,1) 
 			*/
-		
+
 			double noise = sqrt(2.0 * kB* temperature * dt  / viscousDamp) * gaussianData;
 
 			double acc_x = (thrust::get<1>(g1f3));
@@ -69,13 +69,13 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 
 
 			//update positions
-			double newPos_x = locX + (dt/viscousDamp) * (acc_x) + noise;
-			double newPos_y = locY + (dt/viscousDamp) * (acc_y) + noise;
-			double newPos_z = locZ + (dt/viscousDamp) * (acc_z) + noise;
+			double newPos_x = pos_x + (dt/viscousDamp) * (acc_x) + noise;
+			double newPos_y = pos_y + (dt/viscousDamp) * (acc_y) + noise;
+			double newPos_z = pos_z + (dt/viscousDamp) * (acc_z) + noise;
 
-			double velocity = sqrt((newPos_x - locX) * (newPos_x - locX) + 
-									(newPos_y - locY) * (newPos_y - locY) + 
-									(newPos_z - locZ) * (newPos_z - locZ));
+			double velocity = sqrt((newPos_x - pos_x) * (newPos_x - pos_x) + 
+									(newPos_y - pos_y) * (newPos_y - pos_y) + 
+									(newPos_z - pos_z) * (newPos_z - pos_z));
 
 
 

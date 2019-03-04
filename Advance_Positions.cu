@@ -1,5 +1,5 @@
 #include "functor_advance_pos.h"
-#include "System.h"
+#include "PlatletSystem.h"
 #include "Advance_Positions.h"
 
 
@@ -18,7 +18,7 @@ double Advance_Positions(
     	gaussianData.resize(generalParams.memNodeCount); //
 		thrust::counting_iterator<unsigned> index_sequence_begin(_seed);
 
-    	thrust::transform(thrust::device, index_sequence_begin, index_sequence_begin + (generalParams.maxNodeCount),
+    	thrust::transform(thrust::device, index_sequence_begin, index_sequence_begin + (generalParams.memNodeCount),
 		gaussianData.begin(), psrunifgen(-1.0, 1.0));
 		
 		/* ***************************************************************************************** */
@@ -65,7 +65,7 @@ double Advance_Positions(
         gaussianData.clear();
         gaussianData.shrink_to_fit();
 
-	return generalParams.dtTemp;
+	return generalParams.dt;
 		//now that nodeLoc is different, we can calculate change and then set previous location
 		//to the current location.
 

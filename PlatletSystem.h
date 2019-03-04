@@ -56,7 +56,7 @@ struct GeneralParams {
     double dt = 0.1;
 	double viscousDamp = 3.769911184308; //???
 	double temperature = 300.0;
-	double kB = 1.3806488e-8;;
+	double kB = 1.3806488e-8;
 	double memNodeMass = 1.0;
 };
 
