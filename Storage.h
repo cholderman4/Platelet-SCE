@@ -1,4 +1,3 @@
-
 #ifndef STORAGE_H_
 #define STORAGE_H_
 
@@ -32,9 +31,9 @@ class Storage {
 
 public: 
 	Storage(std::weak_ptr<PlatletSystem> a_system,
-		std::weak_ptr<PlatletSystemBuilder> b_system, const std::string& a_filename);
+		/* std::weak_ptr<PlatletSystemBuilder> b_system, */ const std::string& a_filename);
 
-	void save_params(void);
+	// void save_params(void);
 
 	void updateStorage(void);
 	void print_VTK_File(void);
