@@ -6,14 +6,14 @@
 #include <memory>
 #include <iomanip>
 
-class System;
-class SystemBuilder;
+class PlatletSystem;
+//class PltSystemBuilder;
 
 //During graph deformation, this file stores position and velocity of nodes at a given time step
 class Storage {
 	
-	std::weak_ptr<System> system;
-	std::weak_ptr<SystemBuilder> builder;
+	std::weak_ptr<PlatletSystem> pltSystem;
+	//std::weak_ptr<PlatletSystemBuilder> builder;
 	//std::shared_ptr<ExternalForce> grip;
 	std::ofstream output;
 	std::ofstream statesOutput;
@@ -31,8 +31,8 @@ class Storage {
 	unsigned iteration = 0;
 
 public: 
-	Storage(std::weak_ptr<System> a_system,
-		std::weak_ptr<SystemBuilder> b_system, const std::string& a_filename);
+	Storage(std::weak_ptr<PlatletSystem> a_system,
+		std::weak_ptr<PlatletSystemBuilder> b_system, const std::string& a_filename);
 
 	void save_params(void);
 
