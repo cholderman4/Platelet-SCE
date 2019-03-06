@@ -3,8 +3,8 @@
 #include <iostream>
 #include <cstdio>
 // ************************************
+#include "PlatletStorage.h"
 #include "PlatletSystem.h" 
-
 #include "Advance_Positions.h"
 #include "Spring_Force.h"
 
@@ -31,26 +31,45 @@ void PlatletSystem::initializePltSystem(unsigned N, unsigned E) {
 void PlatletSystem::solvePltSystem() {
 
 
-    // Advance_Positions();
+    while (generalParams.runSim == true) {
 
-    solvePltForces(); // Reset Forces to zero, then solve for next time step
+        generalParams.iterationCounter += 1;
+        generalParams.currentTime += generalParams.dt;
 
-    Advance_Positions(node, generalParams);
+        solvePltForces(); // Reset Forces to zero, then solve for next time step
 
-    printPoints();
+        Advance_Positions(node, generalParams);
 
-    // Output stuff to file.
+        if (generalParams.iterationCounter % 10 == 0) {
 
-    // 
+            pltStorage->print_VTK_File(); 
 
+            // Temporary just to verify the output.
+            printPoints();
+        }
+
+        /* Hard cap on the number of simulation steps. */
+        if (generalParams.iterationCounter >= 5000) {
+            generalParams.runSim = false;
+        }
+    }
+    
 }
 
 
 void PlatletSystem::solvePltForces() {
 
+    // Reset forces to zero.
+    thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);    
+    thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);    
+    thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
+
+
     SpringForce(node, springEdge, generalParams);
 
+    // Used only for debugging.
     printForces();
+
 
     // LJ_Force(node);
 
@@ -102,6 +121,10 @@ void PlatletSystem::setPltNodes() {
     node.force_y.resize(generalParams.memNodeCount);
     node.force_z.resize(generalParams.memNodeCount);
 
+    node.isFixed.resize(generalParams.memNodeCount);
+
+
+
     thrust::copy(host_pos_x.begin(), host_pos_x.end(), node.pos_x.begin());
     thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
     thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());
@@ -115,6 +138,8 @@ void PlatletSystem::setPltNodes() {
     thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);
     thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);
     thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
+
+    thrust::fill(node.isFixed.begin(), node.isFixed.end(), false);
 }
 
 

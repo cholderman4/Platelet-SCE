@@ -3,15 +3,15 @@
 #include "PlatletSystem.h"
 // #include "System_Builder.h"
 #include "SystemStructures.h"
-#include "Storage.h"
+#include "PlatletStorage.h"
 
 
-Storage::Storage(std::weak_ptr<System> a_system,
-	/* std::weak_ptr<SystemBuilder> b_system , */ __attribute__ ((unused)) const std::string& a_fileName) {
+PlatletStorage::Storage(std::weak_ptr<System> a_pltSystem,
+	/* std::weak_ptr<SystemBuilder> b_pltSystem , */ __attribute__ ((unused)) const std::string& a_fileName) {
 	//std::cout << "FDM constructor" << std::endl;
 
-	pltSystem = a_system;
-	// builder = b_system;
+	pltSystem = a_pltSystem;
+	// builder = b_pltSystem;
 
 };
 
@@ -19,13 +19,13 @@ Storage::Storage(std::weak_ptr<System> a_system,
 /* 
 void Storage::save_params(void) {
 	std::shared_ptr<System>pltSys =pltSystem.lock();
-	if (sys) {
+	if (pltSys) {
 
 		//first create a new file using the current network strain
 		
 		std::string format = ".sta";
 		
-		std::string strain =  std::to_string(sys->generalParams.currentTime);
+		std::string strain =  std::to_string(pltSys->generalParams.currentTime);
 		std::string initial = "Params/Param_";
 		std::ofstream ofs;
 		std::string Filename = initial + strain + format;
@@ -114,7 +114,7 @@ void Storage::save_params(void) {
 		//added links per node.
 		for (unsigned i = 0; i <pltSys->generalParams.memNodeCount; i++ ){
 			unsigned val =pltSys->wlcInfoVecs.currentNodeEdgeCountVector[i] - 
-				sys->wlcInfoVecs.numOriginalNeighborsNodeVector[i];
+				pltSys->wlcInfoVecs.numOriginalNeighborsNodeVector[i];
 			ofs << std::setprecision(5)<< std::fixed<<"bind_sites_per_node " << val <<std::endl;
 		}
 
@@ -125,13 +125,13 @@ void Storage::save_params(void) {
  */
 
 
-void Storage::print_VTK_File() {
+void PlatletStorage::print_VTK_File() {
 
 	std::shared_ptr<PlatletSystem> pltSys = pltSystem.lock();
 
 
 	/* Save membrane node positions to VTK file. */
-	if (sys) {
+	if (pltSys) {
 		iteration+=1;
 		unsigned digits = ceil(log10(iteration + 1));
 		std::string format = ".vtk";
@@ -157,7 +157,7 @@ void Storage::print_VTK_File() {
 
 
 		unsigned memNodeCount = pltSys->generalParams.memNodeCount;
-		__attribute__ ((unused)) unsigned maxNeighborCount = (sys->generalParams).maxNeighborCount;
+		//__attribute__ ((unused)) unsigned maxNeighborCount = (pltSys->generalParams).maxNeighborCount;
 
 		unsigned springEdgeCount = pltSys->generalParams.springEdgeCount;
 

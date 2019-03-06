@@ -10,7 +10,7 @@
 struct SpringEdge {
     /* Vector size is 2*numSpringEdges.
     For now, each node is connected to 2 spring edges.
-    Each node corresponds to two consecutive vector entries, 
+    Each spring corresponds to two consecutive vector entries, 
     corresponding to its two connected neighbors. */
 
     thrust::device_vector<unsigned> nodeConnections;
@@ -39,6 +39,8 @@ struct Node {
     thrust::device_vector<double> force_y;
     thrust::device_vector<double> force_z;
 
+    thrust::device_vector<bool> isFixed;
+
 
     /* Keep track of the number of springs connected to each node
     Possibly not needed if we just resize to memNodeCount * maxConnectedSpringCount
@@ -48,11 +50,20 @@ struct Node {
 
 
 struct GeneralParams {
+
+    /* For tracking the simulation while it is running. */
     bool runSim = true;
+    bool currentTime = 0.0;
+    unsigned iterationCounter = 0;
+
+
+    /* Parameters related to nodes, edges, and connections. */ 
     unsigned springEdgeCount;
     unsigned memNodeCount;
     unsigned maxConnectedSpringCount = 2;
 
+
+    /* Parameters used in various formulae. */
     double dt = 0.1;
 	double viscousDamp = 3.769911184308; //???
 	double temperature = 300.0;
@@ -61,11 +72,16 @@ struct GeneralParams {
 };
 
 
+class PlatletStorage;
+
+
 class PlatletSystem {
 public:
     Node node;
     SpringEdge springEdge;
     GeneralParams generalParams;
+
+    std::shared_ptr<PlatletStorage> pltStorage;
 
 public:
 

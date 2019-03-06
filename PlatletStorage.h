@@ -1,5 +1,5 @@
-#ifndef STORAGE_H_
-#define STORAGE_H_
+#ifndef PLATLET_STORAGE_H_
+#define PLATLET_STORAGE_H_
 
 #include <fstream>	     
 #include <memory>
@@ -9,7 +9,7 @@ class PlatletSystem;
 //class PltSystemBuilder;
 
 //During graph deformation, this file stores position and velocity of nodes at a given time step
-class Storage {
+class PlatletStorage {
 	
 	std::weak_ptr<PlatletSystem> pltSystem;
 	//std::weak_ptr<PlatletSystemBuilder> builder;
@@ -25,8 +25,8 @@ class Storage {
 
 	double forceStep = 0.0;	 //increments in which force will be increased. 
 	double magnitudeForce = 0.0;  //how much force we are currently at.
-	int currentAddedEdges = 0;
-	int previousAddedEdges = 0;
+	/* int currentAddedEdges = 0;
+	int previousAddedEdges = 0; */
 	unsigned iteration = 0;
 
 public: 
