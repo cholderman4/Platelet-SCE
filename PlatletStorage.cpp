@@ -6,7 +6,7 @@
 #include "PlatletStorage.h"
 
 
-PlatletStorage::Storage(std::weak_ptr<System> a_pltSystem,
+PlatletStorage::PlatletStorage(std::weak_ptr<System> a_pltSystem,
 	/* std::weak_ptr<SystemBuilder> b_pltSystem , */ __attribute__ ((unused)) const std::string& a_fileName) {
 	//std::cout << "FDM constructor" << std::endl;
 
@@ -132,23 +132,25 @@ void PlatletStorage::print_VTK_File() {
 
 	/* Save membrane node positions to VTK file. */
 	if (pltSys) {
-		iteration+=1;
-		unsigned digits = ceil(log10(iteration + 1));
+
+		++outputCounter;
+		
+		unsigned digits = ceil(log10(outputCounter + 1));
 		std::string format = ".vtk";
 		std::string Number;
 		std::string initial = "AnimationTest/PlatletMembrane_";
 		std::ofstream ofs;
 		if (digits == 1 || digits == 0) {
-			Number = "0000" + std::to_string(iteration);
+			Number = "0000" + std::to_string(outputCounter);
 		}
 		else if (digits == 2) {
-			Number = "000" + std::to_string(iteration);
+			Number = "000" + std::to_string(outputCounter);
 		}
 		else if (digits == 3) {
-			Number = "00" + std::to_string(iteration);
+			Number = "00" + std::to_string(outputCounter);
 		}
 		else if (digits == 4) {
-			Number = "0" + std::to_string(iteration);
+			Number = "0" + std::to_string(outputCounter);
 		}
 
 		std::string Filename = initial + Number + format;

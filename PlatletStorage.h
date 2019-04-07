@@ -27,10 +27,10 @@ class PlatletStorage {
 	double magnitudeForce = 0.0;  //how much force we are currently at.
 	/* int currentAddedEdges = 0;
 	int previousAddedEdges = 0; */
-	unsigned iteration = 0;
+	unsigned outputCounter = 0;
 
 public: 
-	Storage(std::weak_ptr<PlatletSystem> a_system,
+	PlatletStorage(std::weak_ptr<PlatletSystem> a_system,
 		/* std::weak_ptr<PlatletSystemBuilder> b_system, */ const std::string& a_filename);
 
 	// void save_params(void);

@@ -48,8 +48,9 @@ void PlatletSystem::solvePltSystem() {
             printPoints();
         }
 
-        /* Hard cap on the number of simulation steps. */
-        if (generalParams.iterationCounter >= 5000) {
+        // Hard cap on the number of simulation steps. 
+        // Currently the only way to stop the simulation.
+        if (generalParams.iterationCounter >= 500) {
             generalParams.runSim = false;
         }
     }
