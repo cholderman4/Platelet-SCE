@@ -129,7 +129,6 @@ void PlatletStorage::print_VTK_File() {
 
 	std::shared_ptr<PlatletSystem> pltSys = pltSystem.lock();
 
-
 	/* Save membrane node positions to VTK file. */
 	if (pltSys) {
 
