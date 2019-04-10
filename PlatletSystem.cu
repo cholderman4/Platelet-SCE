@@ -11,6 +11,10 @@
 
 PlatletSystem::PlatletSystem() {};
 
+void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage) {
+	pltStorage = _pltStorage;
+}
+
 
 void PlatletSystem::initializePltSystem(unsigned N, unsigned E) {
 
@@ -22,6 +26,8 @@ void PlatletSystem::initializePltSystem(unsigned N, unsigned E) {
     printPoints();
 
     setPltSpringEdge();
+
+
 
     // printConnections();
 
