@@ -3,10 +3,10 @@
 #include <iostream>
 #include <cstdio>
 // ************************************
-#include "PlatletStorage.h"
+//#include "PlatletStorage.h"
 #include "PlatletSystem.h" 
-#include "Advance_Positions.h"
-#include "Spring_Force.h"
+//#include "Advance_Positions.h"
+//#include "Spring_Force.h"
 
 
 PlatletSystem::PlatletSystem() {};
@@ -16,7 +16,7 @@ void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage
 }
 
 
-void PlatletSystem::initializePltSystem(unsigned N, unsigned E) {
+void PlatletSystem::initializePltSystem() {
 
     generalParams.springEdgeCount = E;
     generalParams.memNodeCount = N;

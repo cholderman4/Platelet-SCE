@@ -31,6 +31,9 @@
 #include <thrust/random/uniform_real_distribution.h>
 #include <stdint.h>
 #include <thrust/sequence.h>
+
+#include <thrust/host_vector.h>
+
  
 
 struct NodeInfoVecs;
@@ -47,8 +50,10 @@ Included by C. Holderman for platelet model.
 Most likely temporary until later development.
 Eventually these will replace pltInfoVecs and similar structures.  
 */
-struct Node;
+
 struct SpringEdge;
+
+struct Node;
 // **********************************************
 
 

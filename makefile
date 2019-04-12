@@ -41,10 +41,10 @@ all: plt-test
 CXXFLAGS=-O2 -std=c++0x -pg -g -c -Wall
 NVCCFLAGS=-O2 -g -G
 # Tool invocations
-bend-model: $(OBJS) $(USER_OBJS)
+plt-test: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: NVCC C++ Linker'
-	nvcc main.cu -o "plt-test" $(OBJS) $(USER_OBJS) $(ILIBS) $(LIBS) $(NVCCFLAGS)
+	nvcc main.cpp -o "plt-test" $(OBJS) $(USER_OBJS) $(ILIBS) $(LIBS) $(NVCCFLAGS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 #	$(MAKE) --no-print-directory post-build
@@ -55,7 +55,7 @@ clean:
 	-@echo ' '
 
 #post-build:
-#	-mkdir --parents ../bend-0.0.6/Debug; cd ../../bend-0.0.6/Debug; cp ../../bend-model/Debug/bend-model bend-model
+#	-mkdir --parents ../plt-0.0.6/Debug; cd ../../plt-0.0.6/Debug; cp ../../plt-test/Debug/plt-test plt-test
 #	-@echo ' '
 
 .PHONY: all clean dependents

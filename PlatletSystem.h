@@ -6,42 +6,32 @@
 
 #include "SystemStructures.h"
 
-class PlatletStorage;
+// class PlatletStorage;
 
-template<typename vec_D, typename vec_U>
 struct SpringEdge {
     /* Vector size is 2*numSpringEdges.
     For now, each node is connected to 2 spring edges.
     Each spring corresponds to two consecutive vector entries, 
     corresponding to its two connected neighbors. */
 
-    vec_U nodeConnections;
+    thrust::device_vector<unsigned> nodeConnections;
 
-    vec_D len_0;
+    thrust::device_vector<double> len_0;
 };
 
-template<typename vec_B, typename vec_D>
 struct Node {
     // Holds a set of xyz coordinates for a single node.
-    vec_D pos_x;
-    vec_D pos_y;
-    vec_D pos_z;
+    thrust::device_vector<double> pos_x;
+    thrust::device_vector<double> pos_y;
+    thrust::device_vector<double> pos_z;
     
-    vec_D velocity;
+    thrust::device_vector<double> velocity;
 
-    /* These are apparently not needed. Only the 
-    magnitude of velocity to know when equilibrium 
-    is reached.
-    
-    vec_D vel_x;
-    vec_D vel_y;
-    vec_D vel_z; */
+    thrust::device_vector<double> force_x;
+    thrust::device_vector<double> force_y;
+    thrust::device_vector<double> force_z;
 
-    vec_D force_x;
-    vec_D force_y;
-    vec_D force_z;
-
-    vec_B isFixed;
+    thrust::device_vector<bool> isFixed;
 
 
     /* Keep track of the number of springs connected to each node
@@ -76,20 +66,20 @@ struct GeneralParams {
 
 class PlatletSystem {
 public:
-    Node< thrust::device_vector<bool>, thrust::device_vector<double> > node;
-    SpringEdge<thrust::device_vector<double>, thrust::device_vector<unsigned> > springEdge;
+    Node node;
+    SpringEdge springEdge;
     GeneralParams generalParams;
 
-    std::shared_ptr<PlatletStorage> pltStorage;
+    //std::shared_ptr<PlatletStorage> pltStorage;
 
 public:
 
     PlatletSystem();
 
-    void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage);
+    //void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage);
 
 
-    void initializePltSystem(unsigned N, unsigned E);
+    void initializePltSystem();
 
 
     void solvePltSystem();

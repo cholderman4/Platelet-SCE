@@ -1,3 +1,4 @@
+//********************************
 #include <cuda.h>
 #include <cstdlib>
 #include <random>
@@ -8,21 +9,42 @@
 #include "PlatletSystemBuilder.h"
 #include "PlatletSystem.h"
 # define M_PI 3.14159265358979323846  /* pi */
+//********************************
 
 
-PlatletSystemBuilder::SystemBuilder(double _epsilon, double _dt):
+PlatletSystemBuilder::PlatletSystemBuilder(double _epsilon, double _dt):
 	epsilon(_epsilon), dt(_dt) {}
 
-PlatletSystemBuilder::~SystemBuilder() {
+PlatletSystemBuilder::~PlatletSystemBuilder() {
 }
 
-unsigned PlatletSystemBuilder::addMembraneNode() {
+unsigned PlatletSystemBuilder::addMembraneNode(glm::dvec3 pos) {
 
+	pos_x.push_back(pos.x);
+	pos_y.push_back(pos.y);
+	pos_z.push_back(pos.z);
+	
+	// Include this part with create_system_on_device().
+	// node.isFixed.push_back(false);
+
+	return pos_x.size();
+
+}
+
+void PlatletSystemBuilder::printNodes() {
+	std::cout << "Testing initialization of vector position:\n";
+	for(auto i = 0; i < pos_x.size(); ++i) {
+		std::cout << "Node " << i << ": ("
+			<< pos_x[i] << ", "
+			<< pos_y[i] << ", "
+			<< pos_z[i] << ")\n";
+	}
 }
 
 
 unsigned PlatletSystemBuilder::addMembraneEdge() {
 
+	return 0;
 }
 
 
@@ -39,14 +61,13 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 	 
 
 	// The pointer to the final system to be returned by this method.
-	std::shared_ptr<PlatletSystem> host_ptr_devPlatletSystem = std::make_shared<PlatletSystem>();
+	/* std::shared_ptr<PlatletSystem> host_ptr_devPlatletSystem = std::make_shared<PlatletSystem>();
 
-	host_ptr_devPlatletSystem->initializePltSystem(
-		node,
-		springEdge,
-		generalParams);
+	host_ptr_devPlatletSystem->initializePltSystem();
 
-	return host_ptr_devPlatletSystem;
+	return host_ptr_devPlatletSystem; */
+
+	return nullptr;
 }
 
 
