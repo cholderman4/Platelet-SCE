@@ -86,10 +86,19 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 
     // Add membrane spring connections.
 
+    double n1, n2; //variables to be used reading in data.
 
-    // Loop through link siblings and do pltBuilder->addMembraneEdge().
+	for (auto link = links.child("link"); link; link = link.next_sibling("link")) {
+		const char* text = link.text().as_string();
 
+		if (2 != sscanf(text, "%lf %lf", &n1, &n2)) {
+			std::cout << "parse node error\n";
+			return 0;
+		}
+		__attribute__ ((unused)) int unused = pltBuilder->addMembraneEdge( n1, n2 );
+    }
 
+    pltBuilder->printEdges();
     // *****************************************************
 	// Create and initialize (the pointer to) the final system on device().
 

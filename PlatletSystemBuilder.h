@@ -26,7 +26,7 @@ public:
 
     double epsilon, dt;
 
-
+    std::vector<glm::dvec3> nodePosition;
     // Host version of Node.
     thrust::host_vector<double> pos_x;
     thrust::host_vector<double> pos_y;
@@ -55,9 +55,11 @@ public:
     // Bunch of methods for adding to vectors from XML.
     unsigned addMembraneNode(glm::dvec3 pos);
     
-    unsigned addMembraneEdge();
+    unsigned addMembraneEdge(unsigned n1, unsigned n2);
 
     void printNodes();
+
+    void printEdges();
 
     // Final goal of SystemBuilder is to create a copy of the system on device.
     std::shared_ptr<PlatletSystem> Create_Platlet_System_On_Device();

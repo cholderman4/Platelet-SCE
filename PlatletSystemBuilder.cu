@@ -20,6 +20,8 @@ PlatletSystemBuilder::~PlatletSystemBuilder() {
 
 unsigned PlatletSystemBuilder::addMembraneNode(glm::dvec3 pos) {
 
+	nodePosition.push_back(pos);
+
 	pos_x.push_back(pos.x);
 	pos_y.push_back(pos.y);
 	pos_z.push_back(pos.z);
@@ -42,9 +44,25 @@ void PlatletSystemBuilder::printNodes() {
 }
 
 
-unsigned PlatletSystemBuilder::addMembraneEdge() {
+unsigned PlatletSystemBuilder::addMembraneEdge(unsigned n1, unsigned n2) {
 
-	return 0;
+	double length = glm::length(nodePosition[n1] - nodePosition[n2]);
+
+	len_0.push_back(length);
+	nodeConnections.push_back(n1);
+	nodeConnections.push_back(n2);
+
+	return nodeConnections.size();
+}
+
+
+void PlatletSystemBuilder::printEdges() {
+	std::cout << "Testing initialization of edge connections:\n";
+	for(auto i = 0; i < nodeConnections.size()/2; ++i) {
+		std::cout << "Edge " << i << " connecting: "
+			<< nodeConnections[2*i] << " and "
+			<< nodeConnections[2*i + 1] << '\n';
+	}
 }
 
 
