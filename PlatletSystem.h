@@ -14,7 +14,9 @@ struct SpringEdge {
     Each spring corresponds to two consecutive vector entries, 
     corresponding to its two connected neighbors. */
 
-    thrust::device_vector<unsigned> nodeConnections;
+    thrust::device_vector<unsigned> nodeID_L;
+    thrust::device_vector<unsigned> nodeID_R;
+
 
     thrust::device_vector<double> len_0;
 };
@@ -40,14 +42,16 @@ struct Node {
     //thrust::device_vector<unsigned> numConnectedSprings;
 };
 
-
-struct GeneralParams {
+struct SimulationParams {
 
     /* For tracking the simulation while it is running. */
     bool runSim = true;
     bool currentTime = 0.0;
     unsigned iterationCounter = 0;
+};
 
+
+struct GeneralParams {
 
     /* Parameters related to nodes, edges, and connections. */ 
     unsigned springEdgeCount;
@@ -56,6 +60,7 @@ struct GeneralParams {
 
 
     /* Parameters used in various formulae. */
+    double epsilon = 0.001;
     double dt = 0.1;
 	double viscousDamp = 3.769911184308; //???
 	double temperature = 300.0;
@@ -68,6 +73,7 @@ class PlatletSystem {
 public:
     Node node;
     SpringEdge springEdge;
+    SimulationParams simulationParams;
     GeneralParams generalParams;
 
     //std::shared_ptr<PlatletStorage> pltStorage;
@@ -79,7 +85,14 @@ public:
     //void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage);
 
 
-    void initializePltSystem();
+    void initializePlatletSystem(
+        thrust::host_vector<double> &host_pos_x,
+        thrust::host_vector<double> &host_pos_y,
+        thrust::host_vector<double> &host_pos_z,    
+        thrust::host_vector<bool> &host_isFixed,
+        thrust::host_vector<unsigned> &host_nodeID_L,
+        thrust::host_vector<unsigned> &host_nodeID_R,
+        thrust::host_vector<double> &host_len_0);
 
 
     void solvePltSystem();
@@ -88,10 +101,18 @@ public:
     void solvePltForces();
 
 
-    void setPltNodes();
+    void setMembraneNodes(
+        thrust::host_vector<double> &host_pos_x,
+        thrust::host_vector<double> &host_pos_y,
+        thrust::host_vector<double> &host_pos_z,    
+        thrust::host_vector<bool> &host_isFixed);
 
 
-    void setPltSpringEdge();
+    void setSpringEdge(
+        thrust::host_vector<unsigned> &host_nodeID_L,
+        thrust::host_vector<unsigned> &host_nodeID_R,
+        thrust::host_vector<double> &host_len_0
+    );
 
 
     void printPoints();

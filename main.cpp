@@ -102,13 +102,13 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     // *****************************************************
 	// Create and initialize (the pointer to) the final system on device().
 
-    /* auto pltModel = builder->Create_Platlet_System_On_Device();
+    auto ptr_Platlet_System_Host = pltBuilder->Create_Platlet_System_On_Device();
 
 	std::cout << "model built" << "\n";
 
-    return pltModel; */
+    return ptr_Platlet_System_Host;
     
-    return nullptr;
+    //return nullptr;
 
 
 

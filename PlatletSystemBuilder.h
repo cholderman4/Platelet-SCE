@@ -21,10 +21,10 @@
 class PlatletSystemBuilder {
 public:
 
+    double epsilon, dt;
+
     PlatletSystemBuilder(double _epsilon, double _dt);
 	~PlatletSystemBuilder();
-
-    double epsilon, dt;
 
     std::vector<glm::dvec3> nodePosition;
     // Host version of Node.
@@ -32,17 +32,12 @@ public:
     thrust::host_vector<double> pos_y;
     thrust::host_vector<double> pos_z;
     
-    thrust::host_vector<double> velocity;
-
-    thrust::host_vector<double> force_x;
-    thrust::host_vector<double> force_y;
-    thrust::host_vector<double> force_z;
-
     thrust::host_vector<bool> isFixed;
 
 
     // Host version of SpringEdge.
-    thrust::host_vector<unsigned> nodeConnections;
+    thrust::host_vector<unsigned> nodeID_L;
+    thrust::host_vector<unsigned> nodeID_R;
 
     thrust::host_vector<double> len_0;
 

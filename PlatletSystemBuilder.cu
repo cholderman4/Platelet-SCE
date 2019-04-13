@@ -13,7 +13,7 @@
 
 
 PlatletSystemBuilder::PlatletSystemBuilder(double _epsilon, double _dt):
-	epsilon(_epsilon), dt(_dt) {}
+	epsilon(_epsilon), dt(_dt) {};
 
 PlatletSystemBuilder::~PlatletSystemBuilder() {
 }
@@ -49,19 +49,19 @@ unsigned PlatletSystemBuilder::addMembraneEdge(unsigned n1, unsigned n2) {
 	double length = glm::length(nodePosition[n1] - nodePosition[n2]);
 
 	len_0.push_back(length);
-	nodeConnections.push_back(n1);
-	nodeConnections.push_back(n2);
+	nodeID_L.push_back(n1);
+	nodeID_R.push_back(n2);
 
-	return nodeConnections.size();
+	return nodeID_L.size();
 }
 
 
 void PlatletSystemBuilder::printEdges() {
 	std::cout << "Testing initialization of edge connections:\n";
-	for(auto i = 0; i < nodeConnections.size()/2; ++i) {
+	for(auto i = 0; i < nodeID_L.size(); ++i) {
 		std::cout << "Edge " << i << " connecting: "
-			<< nodeConnections[2*i] << " and "
-			<< nodeConnections[2*i + 1] << '\n';
+			<< nodeID_L[i] << " and "
+			<< nodeID_R[i] << '\n';
 	}
 }
 
@@ -69,23 +69,53 @@ void PlatletSystemBuilder::printEdges() {
 std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_Device() {
 
 	// *****************************************************
-	// Calculations of parameter values based on vector info (size, max, etc.)
-
-
+	// Create and initialize (the pointer to) the final system on device.
+	 
+	std::shared_ptr<PlatletSystem> ptr_Platlet_System_Host = std::make_shared<PlatletSystem>();
 
 
 	// *****************************************************
-	// Create and initialize (the pointer to) the final system on device.
-	 
+	// Calculations of parameter values based on vector info (size, max, etc.)
+	if (pos_x.size() == pos_y.size() && pos_y.size() == pos_z.size()) {
+		ptr_Platlet_System_Host->generalParams.memNodeCount = pos_x.size();
+	} else {
+		std::cout << "ERROR: Position vectors not all the same size.\n";
+		return nullptr;
+	}
 
-	// The pointer to the final system to be returned by this method.
-	/* std::shared_ptr<PlatletSystem> host_ptr_devPlatletSystem = std::make_shared<PlatletSystem>();
+	if (nodeID_L.size() == nodeID_R.size()) {
+		ptr_Platlet_System_Host->generalParams.springEdgeCount = nodeID_L.size();
+	} else {
+		std::cout << "ERROR: Missing entry on membrane edge connection.\n";
+		return nullptr;
+	}
 
-	host_ptr_devPlatletSystem->initializePltSystem();
+	// Temporary value for 2D.
+	ptr_Platlet_System_Host->generalParams.maxConnectedSpringCount = 2;
 
-	return host_ptr_devPlatletSystem; */
+	ptr_Platlet_System_Host->generalParams.epsilon = generalParams.epsilon;
+	ptr_Platlet_System_Host->generalParams.dt = generalParams.dt;
+	ptr_Platlet_System_Host->generalParams.viscousDamp = generalParams.viscousDamp;
+	ptr_Platlet_System_Host->generalParams.temperature = generalParams.temperature;
+	ptr_Platlet_System_Host->generalParams.kB = generalParams.kB;
+	ptr_Platlet_System_Host->generalParams.memNodeMass = generalParams.memNodeMass;
 
-	return nullptr;
+	// *****************************************************
+
+	ptr_Platlet_System_Host->initializePlatletSystem(
+		pos_x,
+		pos_y,
+		pos_y,
+		isFixed,
+		nodeID_L,
+		nodeID_R,
+		len_0);
+
+	
+
+	return ptr_Platlet_System_Host; 
+
+	// return nullptr;
 }
 
 
