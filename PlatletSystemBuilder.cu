@@ -95,7 +95,7 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 
 	// Temporary value for 2D.
 	ptr_Platlet_System_Host->generalParams.maxConnectedSpringCount = 2;
-
+	
 	ptr_Platlet_System_Host->generalParams.epsilon = generalParams.epsilon;
 	ptr_Platlet_System_Host->generalParams.dt = generalParams.dt;
 	ptr_Platlet_System_Host->generalParams.viscousDamp = generalParams.viscousDamp;
