@@ -135,38 +135,64 @@ void PlatletSystem::setSpringEdge(
     thrust::host_vector<unsigned> &host_nodeID_R,
     thrust::host_vector<double> &host_len_0) {
 
-    
     springEdge.nodeID_L.resize(generalParams.springEdgeCount);
     springEdge.nodeID_R.resize(generalParams.springEdgeCount);
     springEdge.len_0.resize(generalParams.springEdgeCount);
+
+    springEdge.nodeConnections.resize(generalParams.memNodeCount * generalParams.maxConnectedSpringCount);
+    springEdge.nodeDegree.resize(generalParams.memNodeCount);
+
+    thrust::fill(springEdge.nodeDegree.begin(), springEdge.nodeDegree.end(), 0);
+    thrust::fill(springEdge.nodeConnections.begin(), springEdge.nodeConnections.end(), 47);
 
     thrust::copy(host_nodeID_L.begin(), host_nodeID_L.end(), springEdge.nodeID_L.begin());
     thrust::copy(host_nodeID_R.begin(), host_nodeID_R.end(), springEdge.nodeID_R.begin());
     thrust::copy(host_len_0.begin(), host_len_0.end(), springEdge.len_0.begin());
 
-    // To-do:
-    // Merge nodeID_(R/L) into nodeConnecions with maxConnectedSpringCount.
+    // Merge nodeID_(R/L) into nodeConnections with maxConnectedSpringCount.
+    // Build nodeDegree as we go.
+    for (auto s = 0; s < generalParams.springEdgeCount; ++s) {
+        unsigned node = springEdge.nodeID_L[s];
+        unsigned index = node * generalParams.maxConnectedSpringCount + springEdge.nodeDegree[node];
+        springEdge.nodeConnections[index] = s;
+        ++springEdge.nodeDegree[node];
+
+        node = springEdge.nodeID_R[s];
+        index = node * generalParams.maxConnectedSpringCount + springEdge.nodeDegree[node];
+        springEdge.nodeConnections[index] = s;
+        ++springEdge.nodeDegree[node];
+    }
 
 }
 
 void PlatletSystem::printPoints() {
-    std::cout << "Testing initialization of vector position:" << std::endl;
-        for(auto i = 0; i < node.pos_x.size(); ++i) {
-            std::cout << "Node " << i << ": ("
-                << node.pos_x[i] << ", "
-                << node.pos_y[i] << ", "
-                << node.pos_z[i] << ")" << std::endl;
-        }
+    std::cout << "Testing initialization of vector position:\n";
+    for(auto i = 0; i < node.pos_x.size(); ++i) {
+        std::cout << "Node " << i << ": ("
+            << node.pos_x[i] << ", "
+            << node.pos_y[i] << ", "
+            << node.pos_z[i] << ")\n";
+    }
 }
 
 
 void PlatletSystem::printConnections() {
-    std::cout << "Testing edge connections in PlatletSystem:" << std::endl;
-        for(auto i = 0; i < generalParams.springEdgeCount; ++i) {
-            std::cout << "Node " << i << " is connected to: "
-                << springEdge.nodeID_L[i] << ", "
-                << springEdge.nodeID_R[i] << std::endl;
-        }
+    std::cout << "Testing edge connections in PlatletSystem: \n";
+    for(auto i = 0; i < generalParams.springEdgeCount; ++i) {
+        std::cout << "Node " << i << " is connected to: "
+            << springEdge.nodeID_L[i] << ", "
+            << springEdge.nodeID_R[i] << '\n';
+    }
+
+    std::cout << "Testing nodeConnections vector:\n";
+    for(auto i = 0; i <  springEdge.nodeConnections.size(); ++i) {
+        std::cout << springEdge.nodeConnections[i] << '\n';
+    }
+
+    std::cout << "Testing nodeDegree vector:\n";
+    for(auto i = springEdge.nodeDegree.begin(); i != springEdge.nodeDegree.end(); ++i) {
+        std::cout << *i << '\n';
+    }
 }
 
 void PlatletSystem::printForces() {

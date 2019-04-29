@@ -14,6 +14,7 @@ struct SpringEdge {
     Each spring corresponds to two consecutive vector entries, 
     corresponding to its two connected neighbors. */
     thrust::device_vector<unsigned> nodeConnections;
+    thrust::device_vector<unsigned> nodeDegree;
     
     thrust::device_vector<unsigned> nodeID_L;
     thrust::device_vector<unsigned> nodeID_R;
