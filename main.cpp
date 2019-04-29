@@ -79,7 +79,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 		__attribute__ ((unused)) int unused = pltBuilder->addMembraneNode( glm::dvec3(x, y, z) );
     }
     
-    // Chaeck that the nodes are all there.
+    // Check that the nodes are all there.
     pltBuilder->printNodes();
 
     // *****************************************************
@@ -102,6 +102,8 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     // *****************************************************
 	// Create and initialize (the pointer to) the final system on device().
 
+    std::cout << "Building model...\n";
+    
     auto ptr_Platlet_System_Host = pltBuilder->Create_Platlet_System_On_Device();
 
 	std::cout << "model built" << "\n";
