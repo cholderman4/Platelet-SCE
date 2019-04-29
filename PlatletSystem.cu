@@ -84,7 +84,7 @@ void PlatletSystem::initializePlatletSystem(
     thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
 
 
-    SpringForce(node, springEdge, generalParams);
+    Spring_Force(node, springEdge, generalParams);
 
     // Used only for debugging.
     printForces();

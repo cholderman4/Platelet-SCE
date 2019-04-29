@@ -3,8 +3,10 @@
 #include "Spring_Force.h"
 #include "functor_spring_force.h"
 
-
-void SpringForce(
+// ******************************************************
+// This function is node-based. That is, for each node, it
+// loops through all the edges connected to it.
+void Spring_Force(
     Node& node, 
     SpringEdge& springEdge, 
     GeneralParams& generalParams) {
@@ -29,3 +31,5 @@ void SpringForce(
             generalParams.maxConnectedSpringCount) );
     
 }
+// ******************************************************
+// This function is spring-based. For each spring, it assigns forces 

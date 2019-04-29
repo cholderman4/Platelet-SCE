@@ -27,6 +27,7 @@ public:
 	~PlatletSystemBuilder();
 
     std::vector<glm::dvec3> nodePosition;
+    
     // Host version of Node.
     thrust::host_vector<double> pos_x;
     thrust::host_vector<double> pos_y;
@@ -40,7 +41,6 @@ public:
     thrust::host_vector<unsigned> nodeID_R;
 
     thrust::host_vector<double> len_0;
-
 
 
     GeneralParams generalParams;
