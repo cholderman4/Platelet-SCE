@@ -13,12 +13,27 @@ struct SpringEdge {
     For now, each node is connected to 2 spring edges.
     Each spring corresponds to two consecutive vector entries, 
     corresponding to its two connected neighbors. */
-
+    thrust::device_vector<unsigned> nodeConnections;
+    
     thrust::device_vector<unsigned> nodeID_L;
     thrust::device_vector<unsigned> nodeID_R;
 
-
     thrust::device_vector<double> len_0;
+
+    // ****************************************
+    // These will be used if we calculate force by spring
+    // instead of by node, then sort, reduce (by key).
+    thrust::device_vector<unsigned> tempNodeID;
+    thrust::device_vector<double> tempForce_x;
+    thrust::device_vector<double> tempForce_y;
+    thrust::device_vector<double> tempForce_z;
+
+    thrust::device_vector<unsigned> reducedNodeID;
+    // Probably don't need these. Can just += to force vectors.
+    thrust::device_vector<double> reducedForce_x;
+    thrust::device_vector<double> reducedForce_y;
+    thrust::device_vector<double> reducedForce_z;
+    // ****************************************
 };
 
 struct Node {
@@ -34,7 +49,6 @@ struct Node {
     thrust::device_vector<double> force_z;
 
     thrust::device_vector<bool> isFixed;
-
 
     /* Keep track of the number of springs connected to each node
     Possibly not needed if we just resize to memNodeCount * maxConnectedSpringCount
