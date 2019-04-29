@@ -76,15 +76,18 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 
 	// *****************************************************
 	// Calculations of parameter values based on vector info (size, max, etc.)
-	if (pos_x.size() == pos_y.size() && pos_y.size() == pos_z.size()) {
-		ptr_Platlet_System_Host->generalParams.memNodeCount = pos_x.size();
+	if ( (pos_x.size() == pos_y.size()) && (pos_y.size() == pos_z.size()) ) {
+		generalParams.memNodeCount = pos_x.size();
+		ptr_Platlet_System_Host->generalParams.memNodeCount = generalParams.memNodeCount;
 	} else {
 		std::cout << "ERROR: Position vectors not all the same size.\n";
 		return nullptr;
 	}
 
 	if (nodeID_L.size() == nodeID_R.size()) {
-		ptr_Platlet_System_Host->generalParams.springEdgeCount = nodeID_L.size();
+		generalParams.springEdgeCount = nodeID_L.size();
+		ptr_Platlet_System_Host->generalParams.springEdgeCount = generalParams.springEdgeCount;
+
 	} else {
 		std::cout << "ERROR: Missing entry on membrane edge connection.\n";
 		return nullptr;
