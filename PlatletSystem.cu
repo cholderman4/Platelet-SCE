@@ -143,6 +143,10 @@ void PlatletSystem::setSpringEdge(
     thrust::copy(host_nodeID_L.begin(), host_nodeID_L.end(), springEdge.nodeID_L.begin());
     thrust::copy(host_nodeID_R.begin(), host_nodeID_R.end(), springEdge.nodeID_R.begin());
     thrust::copy(host_len_0.begin(), host_len_0.end(), springEdge.len_0.begin());
+
+    // To-do:
+    // Merge nodeID_(R/L) into nodeConnecions with maxConnectedSpringCount.
+
 }
 
 void PlatletSystem::printPoints() {
