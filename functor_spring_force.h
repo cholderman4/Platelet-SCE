@@ -90,6 +90,8 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
 
         for (unsigned i=indexBegin; i < indexEnd; ++i) {
 
+            // Doesn't account for unassigned slots in the nodeConnections vector.
+
             // ID of node(s) connected to the primary node.
             unsigned idB = nodeConnections[i];
 
