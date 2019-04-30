@@ -25,8 +25,11 @@ void Spring_Force(
             thrust::raw_pointer_cast(node.force_y.data()),
             thrust::raw_pointer_cast(node.force_z.data()),
 
+            thrust::raw_pointer_cast(springEdge.nodeID_L.data()),
+            thrust::raw_pointer_cast(springEdge.nodeID_R.data()),
             thrust::raw_pointer_cast(springEdge.len_0.data()),
             thrust::raw_pointer_cast(springEdge.nodeConnections.data()),
+            thrust::raw_pointer_cast(springEdge.nodeDegree.data()),
             
             generalParams.maxConnectedSpringCount) );
     

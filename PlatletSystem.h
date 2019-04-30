@@ -8,18 +8,18 @@
 
 // class PlatletStorage;
 
-struct SpringEdge {
-    /* Vector size is 2*numSpringEdges.
-    For now, each node is connected to 2 spring edges.
-    Each spring corresponds to two consecutive vector entries, 
-    corresponding to its two connected neighbors. */
-    thrust::device_vector<unsigned> nodeConnections;
-    thrust::device_vector<unsigned> nodeDegree;
-    
+struct SpringEdge {   
     thrust::device_vector<unsigned> nodeID_L;
     thrust::device_vector<unsigned> nodeID_R;
 
     thrust::device_vector<double> len_0;
+
+    // Vector size is M * N, 
+    // where    M = maxConnectedSpringCount
+    // and      N = memNodeCount.
+    // Each entry corresponds to the ID of a spring that node is connected to.
+    thrust::device_vector<unsigned> nodeConnections;
+    thrust::device_vector<unsigned> nodeDegree;
 
     // ****************************************
     // These will be used if we calculate force by spring

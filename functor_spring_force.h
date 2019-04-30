@@ -37,8 +37,11 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
     double* forceVec_y;
     double* forceVec_z;
 
+    unsigned* nodeIDVec_L;
+    unsigned* nodeIDVec_R;
     double* len_0;
     unsigned* nodeConnections;
+    unsigned* nodeDegreeVec;
 
     unsigned maxConnectedSpringCount;
 
@@ -53,8 +56,11 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
             double* _forceVec_y,
             double* _forceVec_z,
 
+            unsigned* _nodeIDVec_L,
+            unsigned* _nodeIDVec_R;
             double* _len_0,
             unsigned* _nodeConnections,
+            unsigned* _nodeDegreeVec,
 
             unsigned& _maxConnectedSpringCount) :
 
@@ -66,8 +72,11 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         forceVec_y(_forceVec_y),
         forceVec_z(_forceVec_z),
 
+        nodeIDVec_L(_nodeIDVec_L),
+        nodeIDVec_R(_nodeIDVec_R),
         len_0(_len_0),
         nodeConnections(_nodeConnections),
+        nodeDegreeVec(_nodeDegreeVec),
 
         maxConnectedSpringCount(_maxConnectedSpringCount) {}
 
@@ -84,24 +93,30 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         double posA_y = posVec_y[idA];
         double posA_z = posVec_z[idA];
 
+        // Current node degree.
+        unsigned nodeDegree = nodeDegreeVec[idA];
+
         // Index along nodeConnections vector.
         unsigned indexBegin = idA * maxConnectedSpringCount;
-        unsigned indexEnd = indexBegin + maxConnectedSpringCount;
+        unsigned indexEnd = indexBegin + nodeDegree;
 
-        for (unsigned i=indexBegin; i < indexEnd; ++i) {
+        for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
-            // Doesn't account for unassigned slots in the nodeConnections vector.
+            unsigned springID = nodeConnections[i];
+            unsigned length_0 = len_0[springID];
 
             // ID of node(s) connected to the primary node.
-            unsigned idB = nodeConnections[i];
+            if ( nodeIDVec_L[springID] == idA) {
+                idB = nodeIDVec_R[springID];
+            } else {
+                idB = nodeIDVec_L[springID];
+            }
 
             double distAB_x = posA_x - posVec_x[idB];
             double distAB_y = posA_y - posVec_y[idB];
             double distAB_z = posA_z - posVec_z[idB];
 
             double dist = norm(distAB_x, distAB_y, distAB_z);
-
-            double length_0 = len_0[i];
 
             if (fabs(dist)>=1.0e-12) {
                 //Calculate force from linear spring (Hooke's Law) on node.
