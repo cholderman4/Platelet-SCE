@@ -5,7 +5,7 @@
 // ************************************
 //#include "PlatletStorage.h"
 #include "PlatletSystem.h" 
-//#include "Advance_Positions.h"
+#include "Advance_Positions.h"
 #include "Spring_Force.h"
 
 
@@ -56,11 +56,11 @@ void PlatletSystem::solvePltSystem() {
 
         solvePltForces(); // Reset Forces to zero, then solve for next time step
 
-        /* Advance_Positions(node, generalParams);
+        Advance_Positions(node, generalParams);
 
-        if (generalParams.iterationCounter % 10 == 0) {
+        if (simulationParams.iterationCounter % 10 == 0) {
 
-            pltStorage->print_VTK_File(); 
+            // pltStorage->print_VTK_File(); 
 
             // Temporary just to verify the output.
             printPoints();
@@ -68,11 +68,11 @@ void PlatletSystem::solvePltSystem() {
 
         // Hard cap on the number of simulation steps. 
         // Currently the only way to stop the simulation.
-        if (generalParams.iterationCounter >= 500) {
-            generalParams.runSim = false;
-        } */
+        if (simulationParams.iterationCounter >= 100) {
+            simulationParams.runSim = false;
+        }
 
-        simulationParams.runSim = false;
+       // simulationParams.runSim = false;
     }
     
 }
@@ -89,7 +89,7 @@ void PlatletSystem::solvePltForces() {
     Spring_Force(node, springEdge, generalParams);
 
     // Used only for debugging.
-    printForces();
+    // printForces();
 
 
     // LJ_Force(node);
