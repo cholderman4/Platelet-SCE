@@ -129,7 +129,7 @@ void run() {
 
     auto pltSystem = createPlatletSystem("testData.xml", pltBuilder);
 
-    // pltSystem->SolvePltSystem();
+    pltSystem->solvePltSystem();
 
 }
 

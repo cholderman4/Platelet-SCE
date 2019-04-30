@@ -57,7 +57,7 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
             double* _forceVec_z,
 
             unsigned* _nodeIDVec_L,
-            unsigned* _nodeIDVec_R;
+            unsigned* _nodeIDVec_R,
             double* _len_0,
             unsigned* _nodeConnections,
             unsigned* _nodeDegreeVec,
@@ -103,9 +103,11 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
             unsigned springID = nodeConnections[i];
-            unsigned length_0 = len_0[springID];
+            // double length_0 = len_0[springID];
+            double length_0 = 2.0;
 
             // ID of node(s) connected to the primary node.
+            unsigned idB;
             if ( nodeIDVec_L[springID] == idA) {
                 idB = nodeIDVec_R[springID];
             } else {

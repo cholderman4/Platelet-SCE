@@ -6,7 +6,7 @@
 //#include "PlatletStorage.h"
 #include "PlatletSystem.h" 
 //#include "Advance_Positions.h"
-//#include "Spring_Force.h"
+#include "Spring_Force.h"
 
 
 PlatletSystem::PlatletSystem() {};
@@ -46,7 +46,7 @@ void PlatletSystem::initializePlatletSystem(
 }
 
 
-/* void PlatletSystem::solvePltSystem() {
+void PlatletSystem::solvePltSystem() {
 
 
     while (simulationParams.runSim == true) {
@@ -56,7 +56,7 @@ void PlatletSystem::initializePlatletSystem(
 
         solvePltForces(); // Reset Forces to zero, then solve for next time step
 
-        Advance_Positions(node, generalParams);
+        /* Advance_Positions(node, generalParams);
 
         if (generalParams.iterationCounter % 10 == 0) {
 
@@ -70,13 +70,15 @@ void PlatletSystem::initializePlatletSystem(
         // Currently the only way to stop the simulation.
         if (generalParams.iterationCounter >= 500) {
             generalParams.runSim = false;
-        }
+        } */
+
+        simulationParams.runSim = false;
     }
     
-} */
+}
 
 
-/* void PlatletSystem::solvePltForces() {
+void PlatletSystem::solvePltForces() {
 
     // Reset forces to zero.
     thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);    
@@ -95,7 +97,7 @@ void PlatletSystem::initializePlatletSystem(
 
     // Fixed nodes. Set forces to zero.
 }
- */
+
 
 void PlatletSystem::setMembraneNodes(
     thrust::host_vector<double> &host_pos_x,
