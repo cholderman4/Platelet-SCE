@@ -2,3 +2,4 @@
 *.bin
 *.ipch
 MWE/main.cu
+*.vtk
