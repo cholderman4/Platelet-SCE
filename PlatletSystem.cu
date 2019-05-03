@@ -59,7 +59,7 @@ void PlatletSystem::solvePltSystem() {
 
         Advance_Positions(node, generalParams);
 
-        if (simulationParams.iterationCounter % 10 == 0) {
+        if (simulationParams.iterationCounter % 20 == 0) {
 
             pltStorage->print_VTK_File(); 
 

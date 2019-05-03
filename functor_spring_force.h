@@ -16,7 +16,7 @@
 
 
 __host__ __device__ double springForceByCoord(double dist, double coordDist, double l_0) {
-    double k = 2.1;
+    double k = 0.1;
     // double eq = 3.0;
 
     return k*(dist - l_0)*coordDist/dist;
@@ -103,8 +103,10 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
             unsigned springID = nodeConnections[i];
-            // double length_0 = len_0[springID];
-            double length_0 = 2.0;
+            double length_0 = len_0[springID];
+
+            // Temporary test value.
+            // double length_0 = 0.50;
 
             // ID of node(s) connected to the primary node.
             unsigned idB;
@@ -127,6 +129,7 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
                 sumForce_z += springForceByCoord(dist, distAB_z, length_0);            
             }
         }
+
         if(isfinite(sumForce_x)) {
             forceVec_x[idA] += sumForce_x;
         }
@@ -135,14 +138,9 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         }
         if(isfinite(sumForce_x)) {
             forceVec_z[idA] += sumForce_z;
-        }
-
-
-
-        
+        }    
         
     } // End operator()
 }; // End struct
-
 
 #endif
