@@ -69,7 +69,7 @@ void PlatletSystem::solvePltSystem() {
 
         // Hard cap on the number of simulation steps. 
         // Currently the only way to stop the simulation.
-        if (simulationParams.iterationCounter >= 100) {
+        if (simulationParams.iterationCounter >= 1000) {
             simulationParams.runSim = false;
         }
 

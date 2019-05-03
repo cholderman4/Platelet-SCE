@@ -132,7 +132,7 @@ void run() {
     // Inital creation of pointer to the PlatletSystemBuilder.
     auto pltBuilder = std::make_shared<PlatletSystemBuilder>(epsilon, timeStep);
 
-    auto pltSystem = createPlatletSystem("testData.xml", pltBuilder);
+    auto pltSystem = createPlatletSystem("info.xml", pltBuilder);
 
     auto outputFileName = generateOutputFileName("Test");
 
