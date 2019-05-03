@@ -17,7 +17,7 @@
 #include "PlatletSystemBuilder.h"
 #include "PlatletStorage.h"
 
-std::string generateOutputFileName(std::string inputFileName) {
+std::string generateOutputFileNameByDate(std::string inputFileName) {
 	time_t now;
 	const int MAX_DATE = 64;
 	char theDate[MAX_DATE];
@@ -81,7 +81,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     }
     
     // Check that the nodes are all there.
-    pltBuilder->printNodes();
+    // pltBuilder->printNodes();
 
     // *****************************************************
 
@@ -99,7 +99,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 		__attribute__ ((unused)) int unused = pltBuilder->addMembraneEdge( n1, n2 );
     }
 
-    pltBuilder->printEdges();
+    // pltBuilder->printEdges();
     // *****************************************************
 	// Create and initialize (the pointer to) the final system on device().
 
@@ -127,14 +127,14 @@ void run() {
 	t0 = time(0);
 
     double epsilon = 0.01;
-    double timeStep = 0.0001;
+    double timeStep = 0.01;
 
     // Inital creation of pointer to the PlatletSystemBuilder.
     auto pltBuilder = std::make_shared<PlatletSystemBuilder>(epsilon, timeStep);
 
     auto pltSystem = createPlatletSystem("info.xml", pltBuilder);
 
-    auto outputFileName = generateOutputFileName("Test");
+    auto outputFileName = generateOutputFileNameByDate("Test");
 
     std::cout << outputFileName << '\n';
 
