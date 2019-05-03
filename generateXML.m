@@ -25,6 +25,7 @@ end
 product = docNode.createElement('links');
 data.appendChild(product);
 
+% Connect everything in a line.
 for j = 1:numel(x)-1
    curr_node = docNode.createElement('link');
    curr_node.appendChild(docNode.createTextNode(num2str([j-1, j])));
