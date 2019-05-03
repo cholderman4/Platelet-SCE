@@ -6,7 +6,7 @@
 
 #include "SystemStructures.h"
 
-// class PlatletStorage;
+class PlatletStorage;
 
 struct SpringEdge {   
     thrust::device_vector<unsigned> nodeID_L;
@@ -91,13 +91,13 @@ public:
     SimulationParams simulationParams;
     GeneralParams generalParams;
 
-    //std::shared_ptr<PlatletStorage> pltStorage;
+    std::shared_ptr<PlatletStorage> pltStorage;
 
 public:
 
     PlatletSystem();
 
-    //void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage);
+    void assignPltStorage( std::shared_ptr<PlatletStorage> );
 
 
     void initializePlatletSystem(

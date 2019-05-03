@@ -6,27 +6,24 @@
 #include <cmath>
 
 #include <thrust/random.h>
-#include <thrust/count.h>
-#include <thrust/extrema.h>
-#include <thrust/sort.h>
+// #include <thrust/count.h>
+// #include <thrust/extrema.h>
+// #include <thrust/sort.h>
 #include <thrust/for_each.h>
 #include <thrust/transform.h>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/tuple.h>
 #include <thrust/device_vector.h>
 #include <thrust/device_ptr.h>
-#include <thrust/remove.h>
+// #include <thrust/remove.h>
 #include <thrust/copy.h>
-#include <thrust/execution_policy.h>
+// #include <thrust/execution_policy.h>
 #include <thrust/pair.h>
 #include <thrust/unique.h>
-#include <thrust/device_vector.h>
-#include <thrust/device_ptr.h>
-#include <thrust/remove.h>
 #include <thrust/binary_search.h>
-#include <thrust/reduce.h>
-#include <thrust/replace.h>
-#include <thrust/gather.h>
+// #include <thrust/reduce.h>
+// #include <thrust/replace.h>
+// #include <thrust/gather.h>
 #include <thrust/iterator/counting_iterator.h>
 #include <thrust/random/uniform_real_distribution.h>
 #include <stdint.h>

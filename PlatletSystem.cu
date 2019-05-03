@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cstdio>
 // ************************************
-//#include "PlatletStorage.h"
+#include "PlatletStorage.h"
 #include "PlatletSystem.h" 
 #include "Advance_Positions.h"
 #include "Spring_Force.h"
@@ -11,9 +11,9 @@
 
 PlatletSystem::PlatletSystem() {};
 
-/* void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage) {
+void PlatletSystem::assignPltStorage(std::shared_ptr<PlatletStorage> _pltStorage) {
 	pltStorage = _pltStorage;
-} */
+}
 
 
 void PlatletSystem::initializePlatletSystem(
@@ -54,16 +54,17 @@ void PlatletSystem::solvePltSystem() {
         simulationParams.iterationCounter += 1;
         simulationParams.currentTime += generalParams.dt;
 
-        solvePltForces(); // Reset Forces to zero, then solve for next time step
+        // Reset Forces to zero, then solve for next time step.
+        solvePltForces(); 
 
         Advance_Positions(node, generalParams);
 
         if (simulationParams.iterationCounter % 10 == 0) {
 
-            // pltStorage->print_VTK_File(); 
+            pltStorage->print_VTK_File(); 
 
             // Temporary just to verify the output.
-            printPoints();
+            // printPoints();
         }
 
         // Hard cap on the number of simulation steps. 
@@ -167,6 +168,7 @@ void PlatletSystem::setSpringEdge(
 
 }
 
+
 void PlatletSystem::printPoints() {
     std::cout << "Testing initialization of vector position:\n";
     for(auto i = 0; i < node.pos_x.size(); ++i) {
@@ -196,6 +198,7 @@ void PlatletSystem::printConnections() {
         std::cout << *i << '\n';
     }
 }
+
 
 void PlatletSystem::printForces() {
     std::cout << "Testing force calculation:" << std::endl;

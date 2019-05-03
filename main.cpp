@@ -15,8 +15,9 @@
 
 #include "PlatletSystem.h"
 #include "PlatletSystemBuilder.h"
+#include "PlatletStorage.h"
 
-/* std::string generateOutputFileName(std::string inputFileName) {
+std::string generateOutputFileName(std::string inputFileName) {
 	time_t now;
 	const int MAX_DATE = 64;
 	char theDate[MAX_DATE];
@@ -29,7 +30,7 @@
 		return inputFileName + theDate;
 	}
 	return "";
-} */
+}
 
 
 std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::shared_ptr<PlatletSystemBuilder> pltBuilder) {
@@ -121,6 +122,10 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 
 void run() {
 
+    // Used to calculate the time to run the entire system.
+    time_t t0,t1;
+	t0 = time(0);
+
     double epsilon = 0.01;
     double timeStep = 0.001;
 
@@ -129,17 +134,32 @@ void run() {
 
     auto pltSystem = createPlatletSystem("testData.xml", pltBuilder);
 
+    auto outputFileName = generateOutputFileName("Test");
+
+    std::cout << outputFileName << '\n';
+
+    auto pltStorage = std::make_shared<PlatletStorage>(pltSystem, pltBuilder, outputFileName);
+
+    pltSystem->assignPltStorage(pltStorage);
+
     pltSystem->solvePltSystem();
 
+    // ***********************************************************
+    // Output the time it takes to run the simulation.
+    t1 = time(0);  //current time at the end of solving the system.
+	int total,hours,min,sec;
+	total = difftime(t1,t0);
+	hours = total / 3600;
+	min = (total % 3600) / 60;
+	sec = (total % 3600) % 60;
+	std::cout << "Total time hh: " << hours << " mm: " << min << " ss: " << sec << '\n';
+    // ***********************************************************
 }
 
 
 int main() {  
 
     run();
-
-    // auto outputFileName = generateOutputFileName("test");
-
-            
+           
     return 0;
 }

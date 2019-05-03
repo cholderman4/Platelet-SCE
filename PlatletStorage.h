@@ -6,14 +6,13 @@
 #include <iomanip>
 
 class PlatletSystem;
-//class PltSystemBuilder;
+class PlatletSystemBuilder;
 
 //During graph deformation, this file stores position and velocity of nodes at a given time step
 class PlatletStorage {
 	
 	std::weak_ptr<PlatletSystem> pltSystem;
-	//std::weak_ptr<PlatletSystemBuilder> builder;
-	//std::shared_ptr<ExternalForce> grip;
+	std::weak_ptr<PlatletSystemBuilder> pltBuilder;
 	std::ofstream output;
 	std::ofstream statesOutput;
 	
@@ -31,11 +30,13 @@ class PlatletStorage {
 
 public: 
 	PlatletStorage(std::weak_ptr<PlatletSystem> a_system,
-		/* std::weak_ptr<PlatletSystemBuilder> b_system, */ const std::string& a_filename);
+		std::weak_ptr<PlatletSystemBuilder> b_system, 
+		const std::string& a_filename);
 
-	// void save_params(void);
+	void save_params(void);
 
 	void updateStorage(void);
+
 	void print_VTK_File(void);
 };
 #endif

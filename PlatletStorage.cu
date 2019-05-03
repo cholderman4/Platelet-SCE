@@ -1,23 +1,21 @@
-
-
 #include "PlatletSystem.h"
-// #include "System_Builder.h"
-#include "SystemStructures.h"
+#include "PlatletSystemBuilder.h"
 #include "PlatletStorage.h"
+// #include "SystemStructures.h"
 
 
-PlatletStorage::PlatletStorage(std::weak_ptr<System> a_pltSystem,
-	/* std::weak_ptr<SystemBuilder> b_pltSystem , */ __attribute__ ((unused)) const std::string& a_fileName) {
-	//std::cout << "FDM constructor" << std::endl;
+PlatletStorage::PlatletStorage(std::weak_ptr<PlatletSystem> a_pltSystem,
+	std::weak_ptr<PlatletSystemBuilder> b_pltSystem, 
+	__attribute__ ((unused)) const std::string& a_fileName) {
 
 	pltSystem = a_pltSystem;
-	// builder = b_pltSystem;
+	pltBuilder = b_pltSystem;
 
 };
 
 
-/* 
-void Storage::save_params(void) {
+
+/* void Storage::save_params(void) {
 	std::shared_ptr<System>pltSys =pltSystem.lock();
 	if (pltSys) {
 
@@ -121,15 +119,15 @@ void Storage::save_params(void) {
 
 
 	}
-};
- */
+}; */
+
 
 
 void PlatletStorage::print_VTK_File() {
 
 	std::shared_ptr<PlatletSystem> pltSys = pltSystem.lock();
 
-	/* Save membrane node positions to VTK file. */
+	// Save membrane node positions to VTK file.
 	if (pltSys) {
 
 		++outputCounter;
