@@ -61,7 +61,7 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 					sqrt(2*kb*t*dt/eta) * N(0,1) 
 			*/
 
-			double noise = sqrt(2.0 * kB* temperature * dt  / viscousDamp) * gaussianData;
+			double noise = sqrt(2.0 * kB* temperature * dt  / viscousDamp) * gaussianData * 0.0001;
 
 			double acc_x = (thrust::get<1>(g1f3));
 			double acc_y = (thrust::get<2>(g1f3));

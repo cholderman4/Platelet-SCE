@@ -32,7 +32,7 @@ void PlatletSystem::initializePlatletSystem(
         host_pos_z,    
         host_isFixed);
 
-    printPoints();
+    // printPoints();
 
     setSpringEdge(
         host_nodeID_L,
@@ -41,7 +41,7 @@ void PlatletSystem::initializePlatletSystem(
 
 
 
-    printConnections();
+    // printConnections();
 
 }
 

@@ -103,7 +103,7 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
             unsigned springID = nodeConnections[i];
-            double length_0 = len_0[springID];
+            double length_0 = 0.8 * len_0[springID];
 
             // Temporary test value.
             // double length_0 = 0.50;

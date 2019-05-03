@@ -17,7 +17,7 @@ for i = 1:numel(x)
     %curr_node.setAttribute('target',curr_file);
     
     % Child text is the function name.
-    curr_node.appendChild(docNode.createTextNode(num2str([x(i), y(i), z(i)])));
+    curr_node.appendChild(docNode.createTextNode(num2str([x(i), 0, 0])));
     product.appendChild(curr_node);
 end
 
