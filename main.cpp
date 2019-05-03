@@ -127,7 +127,7 @@ void run() {
 	t0 = time(0);
 
     double epsilon = 0.01;
-    double timeStep = 0.001;
+    double timeStep = 0.0001;
 
     // Inital creation of pointer to the PlatletSystemBuilder.
     auto pltBuilder = std::make_shared<PlatletSystemBuilder>(epsilon, timeStep);
