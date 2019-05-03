@@ -6,10 +6,11 @@
 
 PlatletStorage::PlatletStorage(std::weak_ptr<PlatletSystem> a_pltSystem,
 	std::weak_ptr<PlatletSystemBuilder> b_pltSystem, 
-	__attribute__ ((unused)) const std::string& a_fileName) {
+	const std::string& a_fileName) {
 
 	pltSystem = a_pltSystem;
 	pltBuilder = b_pltSystem;
+	fileNameDescription = a_fileName;
 
 };
 
@@ -150,7 +151,7 @@ void PlatletStorage::print_VTK_File() {
 			Number = "0" + std::to_string(outputCounter);
 		}
 
-		std::string Filename = initial + Number + format;
+		std::string Filename = initial + fileNameDescription + Number + format;
 
 		ofs.open(Filename.c_str());
 

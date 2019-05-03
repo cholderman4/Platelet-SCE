@@ -19,6 +19,8 @@ class PlatletStorage {
 	std::ofstream statesOutputStrain;
 	std::string bn;
 
+	std::string fileNameDescription;
+
 	unsigned stepCounter = 0;
 	unsigned stepInterval = 10;
 
