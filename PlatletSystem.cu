@@ -32,7 +32,7 @@ void PlatletSystem::initializePlatletSystem(
         host_pos_z,    
         host_isFixed);
 
-    printPoints();
+    // printPoints();
 
     setSpringEdge(
         host_nodeID_L,
@@ -41,7 +41,7 @@ void PlatletSystem::initializePlatletSystem(
 
 
 
-    printConnections();
+    // printConnections();
 
 }
 
@@ -59,7 +59,7 @@ void PlatletSystem::solvePltSystem() {
 
         Advance_Positions(node, generalParams);
 
-        if (simulationParams.iterationCounter % 20 == 0) {
+        if (simulationParams.iterationCounter % 10 == 0) {
 
             pltStorage->print_VTK_File(); 
 
@@ -69,7 +69,7 @@ void PlatletSystem::solvePltSystem() {
 
         // Hard cap on the number of simulation steps. 
         // Currently the only way to stop the simulation.
-        if (simulationParams.iterationCounter >= 100) {
+        if (simulationParams.iterationCounter >= 1000) {
             simulationParams.runSim = false;
         }
 
