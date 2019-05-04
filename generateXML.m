@@ -1,14 +1,27 @@
+format long
+
 docNode = com.mathworks.xml.XMLUtils.createDocument('data');
 
 data = docNode.getDocumentElement;
 % toc.setAttribute('version','2.0');
 
+product = docNode.createElement('settings');
+data.appendChild(product);
+
+settingsList = {'resistance', 'memSpringStiffness', 'mass'};
+%values = {'3.769911184308', '50'};
+values = [3.769911184308, 50.0, 1.0];
+
+for k = 1:numel(settingsList)
+   curr_node = docNode.createElement(settingsList(k));
+   curr_node.appendChild(docNode.createTextNode(num2str(values(k), 15)));
+   product.appendChild(curr_node);
+end
+
 product = docNode.createElement('nodes');
 product.setAttribute('default-mass', '1.0');
 
 data.appendChild(product)
-
-% product.appendChild(docNode.createComment(' Functions '));
 
 for i = 1:numel(x)
     curr_node = docNode.createElement('node');
