@@ -81,6 +81,7 @@ struct GeneralParams {
 	double temperature = 300.0;
 	double kB = 1.3806488e-8;
 	double memNodeMass = 1.0;
+    double memSpringStiffness = 30.0;
 };
 
 
