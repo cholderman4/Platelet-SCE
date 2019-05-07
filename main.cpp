@@ -99,6 +99,12 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 		__attribute__ ((unused)) int unused = pltBuilder->addMembraneEdge( n1, n2 );
     }
 
+    pugi::xml_node fixedRoot = root.child("fixed");
+	if (fixedRoot) {
+		for (auto node = fixedRoot.child("node"); node; node = node.next_sibling("node"))
+			pltBuilder->fixNode(node.text().as_uint());
+	}
+
     // pltBuilder->printEdges();
     // *****************************************************
 	// Create and initialize (the pointer to) the final system on device().

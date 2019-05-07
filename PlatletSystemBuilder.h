@@ -56,6 +56,8 @@ public:
 
     void printEdges();
 
+    void fixNode(unsigned);
+
     // Final goal of SystemBuilder is to create a copy of the system on device.
     std::shared_ptr<PlatletSystem> Create_Platlet_System_On_Device();
 };

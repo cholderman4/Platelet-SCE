@@ -65,6 +65,10 @@ void PlatletSystemBuilder::printEdges() {
 	}
 }
 
+void PlatletSystemBuilder::fixNode(unsigned id) {
+	isFixed[id] = true;
+}
+
 
 std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_Device() {
 
