@@ -16,7 +16,7 @@
 
 
 __host__ __device__ double springForceByCoord(double dist, double coordDist, double l_0) {
-    double k = 0.1;
+    double k = -20;
     // double eq = 3.0;
 
     return k*(dist - l_0)*coordDist/dist;
@@ -103,7 +103,7 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
             unsigned springID = nodeConnections[i];
-            double length_0 = 0.8 * len_0[springID];
+            double length_0 = 0.5 * len_0[springID];
 
             // Temporary test value.
             // double length_0 = 0.50;
