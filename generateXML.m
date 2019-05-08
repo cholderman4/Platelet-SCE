@@ -1,5 +1,10 @@
 format long
 
+clear
+th = 0:pi/20:2*pi;
+x=cos(th(1:end-1));
+y=sin(th(1:end-1));
+
 docNode = com.mathworks.xml.XMLUtils.createDocument('data');
 
 data = docNode.getDocumentElement;
@@ -8,7 +13,7 @@ data = docNode.getDocumentElement;
 product = docNode.createElement('settings');
 data.appendChild(product);
 
-settingsList = {'resistance', 'memSpringStiffness', 'mass'};
+settingsList = {'viscousDamp', 'memSpringStiffness', 'mass'};
 %values = {'3.769911184308', '50'};
 values = [3.769911184308, 50.0, 1.0];
 
@@ -30,7 +35,7 @@ for i = 1:numel(x)
     %curr_node.setAttribute('target',curr_file);
     
     % Child text is the function name.
-    curr_node.appendChild(docNode.createTextNode(num2str([x(i), 0, 0])));
+    curr_node.appendChild(docNode.createTextNode(num2str([x(i), y(i), 0])));
     product.appendChild(curr_node);
 end
 
