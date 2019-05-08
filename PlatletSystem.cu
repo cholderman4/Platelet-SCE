@@ -41,7 +41,7 @@ void PlatletSystem::initializePlatletSystem(
 
 
 
-    // printConnections();
+    printConnections();
 
 }
 
@@ -183,9 +183,10 @@ void PlatletSystem::printPoints() {
 void PlatletSystem::printConnections() {
     std::cout << "Testing edge connections in PlatletSystem: \n";
     for(auto i = 0; i < generalParams.springEdgeCount; ++i) {
-        std::cout << "Node " << i << " is connected to: "
+        std::cout << "Spring " << i << " is connected to: "
             << springEdge.nodeID_L[i] << ", "
-            << springEdge.nodeID_R[i] << '\n';
+            << springEdge.nodeID_R[i] 
+            << " with equilibrium length " << springEdge.len_0[i] << '\n';
     }
 
     std::cout << "Testing nodeConnections vector:\n";

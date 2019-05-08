@@ -165,7 +165,7 @@ void run() {
 
 int main(int argc, char** argv) {  
 
-    // run();
+    run();
            
     return 0;
 }

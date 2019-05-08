@@ -13,10 +13,6 @@
 #include <stdlib.h>
 //********************************
 
-// Temporary fix until I can figure out GLM.
-/* struct vec3 {
-	double x, y, z;
-}; */
 
 class PlatletSystemBuilder {
 public:
