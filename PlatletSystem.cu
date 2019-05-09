@@ -152,18 +152,18 @@ void PlatletSystem::setSpringEdge(
     thrust::copy(host_nodeID_R.begin(), host_nodeID_R.end(), springEdge.nodeID_R.begin());
     thrust::copy(host_len_0.begin(), host_len_0.end(), springEdge.len_0.begin());
 
-    // Merge nodeID_(R/L) into nodeConnections with maxConnectedSpringCount.
-    // Build nodeDegree as we go.
+    // Merge nodeID_(R/L) into springConnections using maxConnectedSpringCount.
+    // Build numConnectedSprings as we go.
     for (auto s = 0; s < generalParams.springEdgeCount; ++s) {
-        unsigned node = springEdge.nodeID_L[s];
-        unsigned index = node * generalParams.maxConnectedSpringCount + node.numConnectedSprings[node];
+        unsigned n = springEdge.nodeID_L[s];
+        unsigned index = n * generalParams.maxConnectedSpringCount + node.numConnectedSprings[n];
         node.springConnections[index] = s;
-        ++node.numConnectedSprings[node];
+        ++node.numConnectedSprings[n];
 
-        node = springEdge.nodeID_R[s];
-        index = node * generalParams.maxConnectedSpringCount + node.numConnectedSprings[node];
+        n = springEdge.nodeID_R[s];
+        index = n * generalParams.maxConnectedSpringCount + node.numConnectedSprings[n];
         node.springConnections[index] = s;
-        ++node.numConnectedSprings[node];
+        ++node.numConnectedSprings[n];
     }
 
 }
