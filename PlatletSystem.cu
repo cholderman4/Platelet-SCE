@@ -142,11 +142,11 @@ void PlatletSystem::setSpringEdge(
     springEdge.nodeID_R.resize(generalParams.springEdgeCount);
     springEdge.len_0.resize(generalParams.springEdgeCount);
 
-    springEdge.nodeConnections.resize(generalParams.memNodeCount * generalParams.maxConnectedSpringCount);
-    springEdge.nodeDegree.resize(generalParams.memNodeCount);
+    node.springConnections.resize(generalParams.memNodeCount * generalParams.maxConnectedSpringCount);
+    node.numConnectedSprings.resize(generalParams.memNodeCount);
 
-    thrust::fill(springEdge.nodeDegree.begin(), springEdge.nodeDegree.end(), 0);
-    thrust::fill(springEdge.nodeConnections.begin(), springEdge.nodeConnections.end(), 47);
+    thrust::fill(node.numConnectedSprings.begin(), node.numConnectedSprings.end(), 0);
+    thrust::fill(node.springConnections.begin(), node.springConnections.end(), 47);
 
     thrust::copy(host_nodeID_L.begin(), host_nodeID_L.end(), springEdge.nodeID_L.begin());
     thrust::copy(host_nodeID_R.begin(), host_nodeID_R.end(), springEdge.nodeID_R.begin());
@@ -156,14 +156,14 @@ void PlatletSystem::setSpringEdge(
     // Build nodeDegree as we go.
     for (auto s = 0; s < generalParams.springEdgeCount; ++s) {
         unsigned node = springEdge.nodeID_L[s];
-        unsigned index = node * generalParams.maxConnectedSpringCount + springEdge.nodeDegree[node];
-        springEdge.nodeConnections[index] = s;
-        ++springEdge.nodeDegree[node];
+        unsigned index = node * generalParams.maxConnectedSpringCount + node.numConnectedSprings[node];
+        node.springConnections[index] = s;
+        ++node.numConnectedSprings[node];
 
         node = springEdge.nodeID_R[s];
-        index = node * generalParams.maxConnectedSpringCount + springEdge.nodeDegree[node];
-        springEdge.nodeConnections[index] = s;
-        ++springEdge.nodeDegree[node];
+        index = node * generalParams.maxConnectedSpringCount + node.numConnectedSprings[node];
+        node.springConnections[index] = s;
+        ++node.numConnectedSprings[node];
     }
 
 }
@@ -189,13 +189,13 @@ void PlatletSystem::printConnections() {
             << " with equilibrium length " << springEdge.len_0[i] << '\n';
     }
 
-    std::cout << "Testing nodeConnections vector:\n";
-    for(auto i = 0; i <  springEdge.nodeConnections.size(); ++i) {
-        std::cout << springEdge.nodeConnections[i] << '\n';
+    std::cout << "Testing springConnections vector:\n";
+    for(auto i = 0; i <  node.springConnections.size(); ++i) {
+        std::cout << node.springConnections[i] << '\n';
     }
 
     std::cout << "Testing nodeDegree vector:\n";
-    for(auto i = springEdge.nodeDegree.begin(); i != springEdge.nodeDegree.end(); ++i) {
+    for(auto i = node.numConnectedSprings.begin(); i != node.numConnectedSprings.end(); ++i) {
         std::cout << *i << '\n';
     }
 }

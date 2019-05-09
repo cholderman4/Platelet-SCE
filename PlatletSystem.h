@@ -14,17 +14,10 @@ struct SpringEdge {
 
     thrust::device_vector<double> len_0;
 
-    // Vector size is M * N, 
-    // where    M = maxConnectedSpringCount
-    // and      N = memNodeCount.
-    // Each entry corresponds to the ID of a spring that node is connected to.
-    thrust::device_vector<unsigned> nodeConnections;
-    thrust::device_vector<unsigned> nodeDegree;
-
     // ****************************************
     // These will be used if we calculate force by spring
     // instead of by node, then sort, reduce (by key).
-    thrust::device_vector<unsigned> tempNodeID;
+    /* thrust::device_vector<unsigned> tempNodeID;
     thrust::device_vector<double> tempForce_x;
     thrust::device_vector<double> tempForce_y;
     thrust::device_vector<double> tempForce_z;
@@ -33,7 +26,7 @@ struct SpringEdge {
     // Probably don't need these. Can just += to force vectors.
     thrust::device_vector<double> reducedForce_x;
     thrust::device_vector<double> reducedForce_y;
-    thrust::device_vector<double> reducedForce_z;
+    thrust::device_vector<double> reducedForce_z; */
     // ****************************************
 };
 
@@ -51,15 +44,23 @@ struct Node {
 
     thrust::device_vector<bool> isFixed;
 
-    /* Keep track of the number of springs connected to each node
-    Possibly not needed if we just resize to memNodeCount * maxConnectedSpringCount
-    and fill empty connections with ULONGMAX */
-    //thrust::device_vector<unsigned> numConnectedSprings;
+
+    // Vector size is M * N, 
+    // where    M = maxConnectedSpringCount
+    // and      N = memNodeCount.
+    // Each entry corresponds to the ID of a spring that node is connected to.
+    thrust::device_vector<unsigned> springConnections;
+    thrust::device_vector<unsigned> numConnectedSprings;
+
+    //  Keep track of the number of springs connected to each node
+    // Possibly not needed if we just resize to memNodeCount * maxConnectedSpringCount
+    // and fill empty connections with ULONG_MAX 
+    // thrust::device_vector<unsigned> numConnectedSprings;
 };
 
 struct SimulationParams {
 
-    /* For tracking the simulation while it is running. */
+    // For tracking the simulation while it is running. 
     bool runSim = true;
     bool currentTime = 0.0;
     unsigned iterationCounter = 0;
@@ -68,15 +69,16 @@ struct SimulationParams {
 
 struct GeneralParams {
 
-    /* Parameters related to nodes, edges, and connections. */ 
+    // Parameters related to nodes, edges, and connections.  
     unsigned springEdgeCount;
     unsigned memNodeCount;
     unsigned maxConnectedSpringCount = 2;
 
 
-    /* Parameters used in various formulae. */
+    // Parameters used in various formulae. 
     double epsilon = 0.001;
     double dt = 0.1;
+
 	double viscousDamp = 3.769911184308; //???
 	double temperature = 300.0;
 	double kB = 1.3806488e-8;
