@@ -17,7 +17,6 @@
 
 __host__ __device__ double springForceByCoord(double dist, double coordDist, double l_0) {
     double k = -20;
-    // double eq = 3.0;
 
     return k*(dist - l_0)*coordDist/dist;
 }
