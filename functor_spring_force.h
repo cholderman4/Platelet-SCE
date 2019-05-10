@@ -16,7 +16,7 @@
 
 
 __host__ __device__ double springForceByCoord(double dist, double coordDist, double l_0) {
-    double k = -20;
+    double k = 20;
 
     return k*(dist - l_0)*coordDist/dist;
 }
@@ -115,9 +115,9 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
                 idB = nodeIDVec_L[springID];
             }
 
-            double distAB_x = posA_x - posVec_x[idB];
-            double distAB_y = posA_y - posVec_y[idB];
-            double distAB_z = posA_z - posVec_z[idB];
+            double distAB_x = posVec_x[idB] - posA_x;
+            double distAB_y = posVec_y[idB] - posA_y;
+            double distAB_z = posVec_z[idB] - posA_z;
 
             double dist = norm(distAB_x, distAB_y, distAB_z);
 
