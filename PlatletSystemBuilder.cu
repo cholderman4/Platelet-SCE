@@ -101,12 +101,14 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 	// Not sure what this should be in general.
 	ptr_Platlet_System_Host->generalParams.maxConnectedSpringCount = 2;
 	
-	ptr_Platlet_System_Host->generalParams.epsilon = generalParams.epsilon;
+	/* ptr_Platlet_System_Host->generalParams.epsilon = generalParams.epsilon;
 	ptr_Platlet_System_Host->generalParams.dt = generalParams.dt;
 	ptr_Platlet_System_Host->generalParams.viscousDamp = generalParams.viscousDamp;
 	ptr_Platlet_System_Host->generalParams.temperature = generalParams.temperature;
 	ptr_Platlet_System_Host->generalParams.kB = generalParams.kB;
-	ptr_Platlet_System_Host->generalParams.memNodeMass = generalParams.memNodeMass;
+	ptr_Platlet_System_Host->generalParams.memNodeMass = generalParams.memNodeMass; */
+
+	ptr_Platlet_System_Host->generalParams = generalParams;
 
 	// *****************************************************
 
