@@ -3,7 +3,9 @@
    <settings>
       <viscousDamp>3.769911184308</viscousDamp>
       <memSpringStiffness>50</memSpringStiffness>
-      <mass>1</mass>
+      <memNodeMass>1</memNodeMass>
+      <absoluteTemperature>300</absoluteTemperature>
+      <kB>1.3806488e-08</kB>
    </settings>
    <nodes default-mass="1.0">
       <node>1  0  0</node>
@@ -87,6 +89,5 @@
       <link>36  37</link>
       <link>37  38</link>
       <link>38  39</link>
-      <link>39  0</link>
    </links>
 </data>

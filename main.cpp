@@ -61,9 +61,21 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     // Load properties from the "settings" section.
     // Check for parameters that match with GeneralParams (?)
 
-    /* if (auto p = props.child("absolute-temperature"))
-        pltBuilder->defaultTemperature = (p.text().as_double());
-         */
+    if (auto p = props.child("absoluteTemperature"))
+        pltBuilder->generalParams.temperature = (p.text().as_double());
+        
+    if (auto p = props.child("viscousDamp"))
+        pltBuilder->generalParams.viscousDamp = (p.text().as_double());
+
+    if (auto p = props.child("memSpringStiffness"))
+        pltBuilder->generalParams.memSpringStiffness = (p.text().as_double());
+    
+    if (auto p = props.child("memNodeMass"))
+        pltBuilder->generalParams.memNodeMass = (p.text().as_double());
+
+    if (auto p = props.child("kB"))
+        pltBuilder->generalParams.memNodeMass = (p.text().as_double());
+     
     // *****************************************************
 
     // Add membrane nodes.

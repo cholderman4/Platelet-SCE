@@ -13,9 +13,9 @@ data = docNode.getDocumentElement;
 product = docNode.createElement('settings');
 data.appendChild(product);
 
-settingsList = {'viscousDamp', 'memSpringStiffness', 'mass'};
+settingsList = {'viscousDamp', 'memSpringStiffness', 'memNodeMass', 'absoluteTemperature', 'kB'};
 %values = {'3.769911184308', '50'};
-values = [3.769911184308, 50.0, 1.0];
+values = [3.769911184308, 50.0, 1.0, 300.0, 1.3806488e-8];
 
 for k = 1:numel(settingsList)
    curr_node = docNode.createElement(settingsList(k));
