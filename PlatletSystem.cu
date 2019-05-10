@@ -59,7 +59,7 @@ void PlatletSystem::solvePltSystem() {
 
         Advance_Positions(node, generalParams);
 
-        if (simulationParams.iterationCounter % 10 == 0) {
+        if (simulationParams.iterationCounter % 50 == 0) {
 
             pltStorage->print_VTK_File(); 
 
@@ -69,7 +69,7 @@ void PlatletSystem::solvePltSystem() {
 
         // Hard cap on the number of simulation steps. 
         // Currently the only way to stop the simulation.
-        if (simulationParams.iterationCounter >= 1000) {
+        if (simulationParams.iterationCounter >= 5000) {
             simulationParams.runSim = false;
         }
 
