@@ -31,7 +31,8 @@ void Spring_Force(
             thrust::raw_pointer_cast(node.springConnections.data()),
             thrust::raw_pointer_cast(node.numConnectedSprings.data()),
             
-            generalParams.maxConnectedSpringCount) );
+            generalParams.maxConnectedSpringCount,
+            generalParams.memSpringStiffness) );
     
 }
 // ******************************************************

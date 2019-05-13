@@ -11,12 +11,13 @@
 /* Update:  node.force_(x,y,z) on given node based on all spring connections. */
 
 // This functor does not account for fixed nodes.
+// (Perhaps it should.)
 
 
 
 
-__host__ __device__ double springForceByCoord(double dist, double coordDist, double l_0) {
-    double k = 20;
+__host__ __device__ double springForceByCoord(double dist, double coordDist, double k, double l_0) {
+    // double k = 20;
 
     return k*(dist - l_0)*coordDist/dist;
 }
@@ -43,6 +44,7 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
     unsigned* nodeDegreeVec;
 
     unsigned maxConnectedSpringCount;
+    double memSpringStiffness;
 
 
     __host__ __device__
@@ -61,7 +63,8 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
             unsigned* _nodeConnections,
             unsigned* _nodeDegreeVec,
 
-            unsigned& _maxConnectedSpringCount) :
+            unsigned& _maxConnectedSpringCount,
+            double & _memSpringStiffness) :
 
         posVec_x(_posVec_x),
         posVec_y(_posVec_y),
@@ -77,7 +80,8 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         nodeConnections(_nodeConnections),
         nodeDegreeVec(_nodeDegreeVec),
 
-        maxConnectedSpringCount(_maxConnectedSpringCount) {}
+        maxConnectedSpringCount(_maxConnectedSpringCount),
+        memSpringStiffness(_memSpringStiffness) {}
 
 
     __device__
@@ -102,7 +106,8 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
         for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
             unsigned springID = nodeConnections[i];
-            double length_0 = 0.5 * len_0[springID];
+            // double length_0 = len_0[springID];
+            double length_0 = 0.060;
 
             // Temporary test value.
             // double length_0 = 0.50;
@@ -123,9 +128,9 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
 
             if (fabs(dist)>=1.0e-12) {
                 //Calculate force from linear spring (Hooke's Law) on node.
-                sumForce_x += springForceByCoord(dist, distAB_x, length_0);
-                sumForce_y += springForceByCoord(dist, distAB_y, length_0);
-                sumForce_z += springForceByCoord(dist, distAB_z, length_0);            
+                sumForce_x += springForceByCoord(dist, distAB_x, memSpringStiffness, length_0);
+                sumForce_y += springForceByCoord(dist, distAB_y, memSpringStiffness, length_0);
+                sumForce_z += springForceByCoord(dist, distAB_z, memSpringStiffness, length_0);            
             }
         }
 
