@@ -74,7 +74,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
         pltBuilder->generalParams.memNodeMass = (p.text().as_double());
 
     if (auto p = props.child("kB"))
-        pltBuilder->generalParams.memNodeMass = (p.text().as_double());
+        pltBuilder->generalParams.kB = (p.text().as_double());
      
     // *****************************************************
 
@@ -145,7 +145,7 @@ void run() {
 	t0 = time(0);
 
     double epsilon = 0.01;
-    double timeStep = 0.01;
+    double timeStep = 0.001;
 
     // Inital creation of pointer to the PlatletSystemBuilder.
     auto pltBuilder = std::make_shared<PlatletSystemBuilder>(epsilon, timeStep);
