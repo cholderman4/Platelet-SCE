@@ -2,52 +2,112 @@
 <data>
    <settings>
       <viscousDamp>3.769911184308</viscousDamp>
-      <memSpringStiffness>50</memSpringStiffness>
+      <memSpringStiffness>200</memSpringStiffness>
       <memNodeMass>1</memNodeMass>
       <absoluteTemperature>300</absoluteTemperature>
       <kB>1.3806488e-08</kB>
    </settings>
    <nodes default-mass="1.0">
       <node>1  0  0</node>
-      <node>0.98769     0.15643           0</node>
+      <node>0.99803    0.062791           0</node>
+      <node>0.99211     0.12533           0</node>
+      <node>0.98229     0.18738           0</node>
+      <node>0.96858     0.24869           0</node>
       <node>0.95106     0.30902           0</node>
-      <node>0.89101     0.45399           0</node>
+      <node>0.92978     0.36812           0</node>
+      <node>0.90483     0.42578           0</node>
+      <node>0.87631     0.48175           0</node>
+      <node>0.84433     0.53583           0</node>
       <node>0.80902     0.58779           0</node>
-      <node>0.70711     0.70711           0</node>
+      <node>0.77051     0.63742           0</node>
+      <node>0.72897     0.68455           0</node>
+      <node>0.68455     0.72897           0</node>
+      <node>0.63742     0.77051           0</node>
       <node>0.58779     0.80902           0</node>
-      <node>0.45399     0.89101           0</node>
+      <node>0.53583     0.84433           0</node>
+      <node>0.48175     0.87631           0</node>
+      <node>0.42578     0.90483           0</node>
+      <node>0.36812     0.92978           0</node>
       <node>0.30902     0.95106           0</node>
-      <node>0.15643     0.98769           0</node>
-      <node>6.1232e-17           1           0</node>
-      <node>-0.15643     0.98769           0</node>
+      <node>0.24869     0.96858           0</node>
+      <node>0.18738     0.98229           0</node>
+      <node>0.12533     0.99211           0</node>
+      <node>0.062791     0.99803           0</node>
+      <node>-1.6081e-16           1           0</node>
+      <node>-0.062791     0.99803           0</node>
+      <node>-0.12533     0.99211           0</node>
+      <node>-0.18738     0.98229           0</node>
+      <node>-0.24869     0.96858           0</node>
       <node>-0.30902     0.95106           0</node>
-      <node>-0.45399     0.89101           0</node>
+      <node>-0.36812     0.92978           0</node>
+      <node>-0.42578     0.90483           0</node>
+      <node>-0.48175     0.87631           0</node>
+      <node>-0.53583     0.84433           0</node>
       <node>-0.58779     0.80902           0</node>
-      <node>-0.70711     0.70711           0</node>
+      <node>-0.63742     0.77051           0</node>
+      <node>-0.68455     0.72897           0</node>
+      <node>-0.72897     0.68455           0</node>
+      <node>-0.77051     0.63742           0</node>
       <node>-0.80902     0.58779           0</node>
-      <node>-0.89101     0.45399           0</node>
+      <node>-0.84433     0.53583           0</node>
+      <node>-0.87631     0.48175           0</node>
+      <node>-0.90483     0.42578           0</node>
+      <node>-0.92978     0.36812           0</node>
       <node>-0.95106     0.30902           0</node>
-      <node>-0.98769     0.15643           0</node>
+      <node>-0.96858     0.24869           0</node>
+      <node>-0.98229     0.18738           0</node>
+      <node>-0.99211     0.12533           0</node>
+      <node>-0.99803    0.062791           0</node>
       <node>-1  1.2246e-16           0</node>
-      <node>-0.98769    -0.15643           0</node>
+      <node>-0.99803   -0.062791           0</node>
+      <node>-0.99211    -0.12533           0</node>
+      <node>-0.98229    -0.18738           0</node>
+      <node>-0.96858    -0.24869           0</node>
       <node>-0.95106    -0.30902           0</node>
-      <node>-0.89101    -0.45399           0</node>
+      <node>-0.92978    -0.36812           0</node>
+      <node>-0.90483    -0.42578           0</node>
+      <node>-0.87631    -0.48175           0</node>
+      <node>-0.84433    -0.53583           0</node>
       <node>-0.80902    -0.58779           0</node>
-      <node>-0.70711    -0.70711           0</node>
+      <node>-0.77051    -0.63742           0</node>
+      <node>-0.72897    -0.68455           0</node>
+      <node>-0.68455    -0.72897           0</node>
+      <node>-0.63742    -0.77051           0</node>
       <node>-0.58779    -0.80902           0</node>
-      <node>-0.45399    -0.89101           0</node>
+      <node>-0.53583    -0.84433           0</node>
+      <node>-0.48175    -0.87631           0</node>
+      <node>-0.42578    -0.90483           0</node>
+      <node>-0.36812    -0.92978           0</node>
       <node>-0.30902    -0.95106           0</node>
-      <node>-0.15643    -0.98769           0</node>
+      <node>-0.24869    -0.96858           0</node>
+      <node>-0.18738    -0.98229           0</node>
+      <node>-0.12533    -0.99211           0</node>
+      <node>-0.062791    -0.99803           0</node>
       <node>-1.837e-16          -1           0</node>
-      <node>0.15643    -0.98769           0</node>
+      <node>0.062791    -0.99803           0</node>
+      <node>0.12533    -0.99211           0</node>
+      <node>0.18738    -0.98229           0</node>
+      <node>0.24869    -0.96858           0</node>
       <node>0.30902    -0.95106           0</node>
-      <node>0.45399    -0.89101           0</node>
+      <node>0.36812    -0.92978           0</node>
+      <node>0.42578    -0.90483           0</node>
+      <node>0.48175    -0.87631           0</node>
+      <node>0.53583    -0.84433           0</node>
       <node>0.58779    -0.80902           0</node>
-      <node>0.70711    -0.70711           0</node>
+      <node>0.63742    -0.77051           0</node>
+      <node>0.68455    -0.72897           0</node>
+      <node>0.72897    -0.68455           0</node>
+      <node>0.77051    -0.63742           0</node>
       <node>0.80902    -0.58779           0</node>
-      <node>0.89101    -0.45399           0</node>
+      <node>0.84433    -0.53583           0</node>
+      <node>0.87631    -0.48175           0</node>
+      <node>0.90483    -0.42578           0</node>
+      <node>0.92978    -0.36812           0</node>
       <node>0.95106    -0.30902           0</node>
-      <node>0.98769    -0.15643           0</node>
+      <node>0.96858    -0.24869           0</node>
+      <node>0.98229    -0.18738           0</node>
+      <node>0.99211    -0.12533           0</node>
+      <node>0.99803   -0.062791           0</node>
    </nodes>
    <links>
       <link>0  1</link>
@@ -89,5 +149,66 @@
       <link>36  37</link>
       <link>37  38</link>
       <link>38  39</link>
+      <link>39  40</link>
+      <link>40  41</link>
+      <link>41  42</link>
+      <link>42  43</link>
+      <link>43  44</link>
+      <link>44  45</link>
+      <link>45  46</link>
+      <link>46  47</link>
+      <link>47  48</link>
+      <link>48  49</link>
+      <link>49  50</link>
+      <link>50  51</link>
+      <link>51  52</link>
+      <link>52  53</link>
+      <link>53  54</link>
+      <link>54  55</link>
+      <link>55  56</link>
+      <link>56  57</link>
+      <link>57  58</link>
+      <link>58  59</link>
+      <link>59  60</link>
+      <link>60  61</link>
+      <link>61  62</link>
+      <link>62  63</link>
+      <link>63  64</link>
+      <link>64  65</link>
+      <link>65  66</link>
+      <link>66  67</link>
+      <link>67  68</link>
+      <link>68  69</link>
+      <link>69  70</link>
+      <link>70  71</link>
+      <link>71  72</link>
+      <link>72  73</link>
+      <link>73  74</link>
+      <link>74  75</link>
+      <link>75  76</link>
+      <link>76  77</link>
+      <link>77  78</link>
+      <link>78  79</link>
+      <link>79  80</link>
+      <link>80  81</link>
+      <link>81  82</link>
+      <link>82  83</link>
+      <link>83  84</link>
+      <link>84  85</link>
+      <link>85  86</link>
+      <link>86  87</link>
+      <link>87  88</link>
+      <link>88  89</link>
+      <link>89  90</link>
+      <link>90  91</link>
+      <link>91  92</link>
+      <link>92  93</link>
+      <link>93  94</link>
+      <link>94  95</link>
+      <link>95  96</link>
+      <link>96  97</link>
+      <link>97  98</link>
+      <link>98  99</link>
+      <link>99  0</link>
    </links>
 </data>

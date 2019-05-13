@@ -1,9 +1,10 @@
 format long
 
 clear
-th = 0:pi/20:2*pi;
-x=cos(th(1:end-1));
-y=sin(th(1:end-1));
+r = 1.0;
+th = 0:pi/50:2*pi;
+x=r*cos(th(1:end-1));
+y=r*sin(th(1:end-1));
 
 docNode = com.mathworks.xml.XMLUtils.createDocument('data');
 
@@ -15,7 +16,7 @@ data.appendChild(product);
 
 settingsList = {'viscousDamp', 'memSpringStiffness', 'memNodeMass', 'absoluteTemperature', 'kB'};
 %values = {'3.769911184308', '50'};
-values = [3.769911184308, 50.0, 1.0, 300.0, 1.3806488e-8];
+values = [3.769911184308, 200.0, 1.0, 300.0, 1.3806488e-8];
 
 for k = 1:numel(settingsList)
    curr_node = docNode.createElement(settingsList(k));
@@ -44,7 +45,7 @@ product = docNode.createElement('links');
 data.appendChild(product);
 
 % Connect everything in a line.
-for j = 1:numel(x)-1
+for j = 1:numel(x)
    curr_node = docNode.createElement('link');
    curr_node.appendChild(docNode.createTextNode(num2str([j-1, j])));
    product.appendChild(curr_node);
