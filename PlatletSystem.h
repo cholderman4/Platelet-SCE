@@ -141,6 +141,9 @@ public:
 
     void printForces();
 
+
+    void printParams();
+
 };
 
 

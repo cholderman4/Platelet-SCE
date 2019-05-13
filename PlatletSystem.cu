@@ -41,7 +41,9 @@ void PlatletSystem::initializePlatletSystem(
 
 
 
-    printConnections();
+    // printConnections();
+
+    printParams();
 
 }
 
@@ -209,4 +211,17 @@ void PlatletSystem::printForces() {
                 << node.force_y[i] << ", "
                 << node.force_z[i] << ")" << std::endl;
         }
+}
+
+
+void PlatletSystem::printParams() {
+    std::cout << "Testing parameter initialization: \n";
+
+    std::cout << "epsilon: " << generalParams.epsilon << '\n';
+    std::cout << "dt: " << generalParams.dt << '\n';
+    std::cout << "viscousDamp: " << generalParams.viscousDamp << '\n';
+    std::cout << "temperature: " << generalParams.temperature << '\n';
+    std::cout << "kB: " << generalParams.kB << '\n';
+    std::cout << "memNodeMass: " << generalParams.memNodeMass << '\n';
+    std::cout << "memSpringStiffness: " << generalParams.memSpringStiffness << '\n';
 }
