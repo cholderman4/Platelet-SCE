@@ -13,7 +13,10 @@
 
 
 PlatletSystemBuilder::PlatletSystemBuilder(double _epsilon, double _dt):
-	epsilon(_epsilon), dt(_dt) {};
+	epsilon(_epsilon), dt(_dt) {
+		generalParams.epsilon = epsilon;
+		generalParams.dt = dt;
+	};
 
 PlatletSystemBuilder::~PlatletSystemBuilder() {
 }
