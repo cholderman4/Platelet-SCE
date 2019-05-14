@@ -8,7 +8,7 @@
 
 /* Output:  VOID */
 
-/* Update:  node.force_(x,y,z) on given node based on all spring connections. */
+/* Update:  memNode.force_(x,y,z) on given node based on all spring connections. */
 
 // This functor does not account for fixed nodes.
 // (Perhaps it should.)

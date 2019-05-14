@@ -43,8 +43,9 @@ struct Node {
     thrust::device_vector<double> force_z;
 
     thrust::device_vector<bool> isFixed;
+};
 
-
+struct MembraneNode : public Node {
     // Vector size is M * N, 
     // where    M = maxConnectedSpringCount
     // and      N = memNodeCount.
@@ -57,6 +58,11 @@ struct Node {
     // and fill empty connections with ULONG_MAX 
     // thrust::device_vector<unsigned> numConnectedSprings;
 };
+
+
+/* struct InternalNode : public Node {
+
+}; */
 
 struct SimulationParams {
 
@@ -89,7 +95,8 @@ struct GeneralParams {
 
 class PlatletSystem {
 public:
-    Node node;
+    MembraneNode memNode;
+    Node intNode;
     SpringEdge springEdge;
     SimulationParams simulationParams;
     GeneralParams generalParams;
