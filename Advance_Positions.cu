@@ -15,10 +15,10 @@ double Advance_Positions(
 		Random number generation.  */
 		unsigned _seed = rand();
     	thrust::device_vector<double> gaussianData;
-    	gaussianData.resize(generalParams.memNodeCount); //
+    	gaussianData.resize(node.count); //
 		thrust::counting_iterator<unsigned> index_sequence_begin(_seed);
 
-    	thrust::transform(thrust::device, index_sequence_begin, index_sequence_begin + (generalParams.memNodeCount),
+    	thrust::transform(thrust::device, index_sequence_begin, index_sequence_begin + (node.count),
 		gaussianData.begin(), psrunifgen(-1.0, 1.0));
 		
 		/* ***************************************************************************************** */
@@ -38,7 +38,7 @@ double Advance_Positions(
 					nodeIndexBegin,
 					node.pos_x.begin(),
 					node.pos_y.begin(),
-					node.pos_z.begin())) + generalParams.memNodeCount,
+					node.pos_z.begin())) + node.count,
 			// Input vector #2
 			thrust::make_zip_iterator(
 				thrust::make_tuple(
@@ -59,7 +59,8 @@ double Advance_Positions(
 				generalParams.viscousDamp,
 				generalParams.temperature,
 				generalParams.kB,
-				generalParams.memNodeMass));
+
+				node.mass));
 
 		// Clear the random data.
         gaussianData.clear();
