@@ -23,6 +23,7 @@ PlatletSystemBuilder::~PlatletSystemBuilder() {
 
 unsigned PlatletSystemBuilder::addMembraneNode(glm::dvec3 pos) {
 
+	// We want this to easily calculate distance between nodes during initialization.
 	nodePosition.push_back(pos);
 
 	pos_x.push_back(pos.x);
@@ -30,14 +31,28 @@ unsigned PlatletSystemBuilder::addMembraneNode(glm::dvec3 pos) {
 	pos_z.push_back(pos.z);
 	
 	// Include this part with create_system_on_device().
-	// node.isFixed.push_back(false);
+	isFixed.push_back(false);
 
 	return pos_x.size();
+}
 
+unsigned PlatletSystemBuilder::addInteriorNode(glm::dvec3 pos) {
+
+	// We want this to easily calculate distance between nodes during initialization.
+	// nodePosition.push_back(pos);
+
+	pos_x.push_back(pos.x);
+	pos_y.push_back(pos.y);
+	pos_z.push_back(pos.z);
+	
+	return pos_x.size();
 }
 
 void PlatletSystemBuilder::printNodes() {
-	std::cout << "Testing initialization of vector position:\n";
+	std::cout << "memNodeCount: " << memNodeCount << '\n';
+	std::cout << "intNodeCount: " << intNodeCount << '\n';
+	std::cout << "pos_x.size(): " << pos_x.size() << '\n';
+	std::cout << "Testing initialization of position vector:\n";
 	for(auto i = 0; i < pos_x.size(); ++i) {
 		std::cout << "Node " << i << ": ("
 			<< pos_x[i] << ", "
@@ -48,7 +63,7 @@ void PlatletSystemBuilder::printNodes() {
 
 
 unsigned PlatletSystemBuilder::addMembraneEdge(unsigned n1, unsigned n2) {
-
+	
 	double length = glm::length(nodePosition[n1] - nodePosition[n2]);
 
 	len_0.push_back(length);
@@ -83,18 +98,14 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 
 	// *****************************************************
 	// Calculations of parameter values based on vector info (size, max, etc.)
-	if ( (pos_x.size() == pos_y.size()) && (pos_y.size() == pos_z.size()) ) {
-		generalParams.memNodeCount = pos_x.size();
-		ptr_Platlet_System_Host->generalParams.memNodeCount = generalParams.memNodeCount;
-	} else {
+	if ( (pos_x.size() != pos_y.size()) || (pos_y.size() != pos_z.size()) || (pos_z.size() != memNodeCount + intNodeCount) ) {
 		std::cout << "ERROR: Position vectors not all the same size.\n";
 		return nullptr;
 	}
 
 	if (nodeID_L.size() == nodeID_R.size()) {
-		generalParams.springEdgeCount = nodeID_L.size();
-		ptr_Platlet_System_Host->generalParams.springEdgeCount = generalParams.springEdgeCount;
-
+		springEdgeCount = nodeID_L.size();
+		ptr_Platlet_System_Host->springEdge.count = springEdgeCount;
 	} else {
 		std::cout << "ERROR: Missing entry on membrane edge connection.\n";
 		return nullptr;
@@ -102,14 +113,12 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 
 	// Temporary value for 2D.
 	// Not sure what this should be in general.
-	ptr_Platlet_System_Host->generalParams.maxConnectedSpringCount = 2;
-	
-	/* ptr_Platlet_System_Host->generalParams.epsilon = generalParams.epsilon;
-	ptr_Platlet_System_Host->generalParams.dt = generalParams.dt;
-	ptr_Platlet_System_Host->generalParams.viscousDamp = generalParams.viscousDamp;
-	ptr_Platlet_System_Host->generalParams.temperature = generalParams.temperature;
-	ptr_Platlet_System_Host->generalParams.kB = generalParams.kB;
-	ptr_Platlet_System_Host->generalParams.memNodeMass = generalParams.memNodeMass; */
+	ptr_Platlet_System_Host->memNode.maxConnectedSpringCount = 2;
+	ptr_Platlet_System_Host->memNode.count = memNodeCount;
+	ptr_Platlet_System_Host->memNode.mass = memNodeMass;
+	ptr_Platlet_System_Host->intNode.count = intNodeCount;
+	ptr_Platlet_System_Host->intNode.mass = intNodeMass;
+	ptr_Platlet_System_Host->springEdge.stiffness = memSpringStiffness;
 
 	ptr_Platlet_System_Host->generalParams = generalParams;
 

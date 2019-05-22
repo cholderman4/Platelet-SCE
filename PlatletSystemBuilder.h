@@ -31,12 +31,20 @@ public:
     
     thrust::host_vector<bool> isFixed;
 
+    unsigned memNodeCount{ 0 };
+    unsigned intNodeCount{ 0 };
+    double memNodeMass{ 1.0 };
+    double intNodeMass{ 1.0 };
+    double memSpringStiffness{ 30.0 };
+
 
     // Host version of SpringEdge.
     thrust::host_vector<unsigned> nodeID_L;
     thrust::host_vector<unsigned> nodeID_R;
 
     thrust::host_vector<double> len_0;
+
+    unsigned springEdgeCount{ 0 };
 
 
     GeneralParams generalParams;
@@ -45,7 +53,8 @@ public:
 
     // Bunch of methods for adding to vectors from XML.
     unsigned addMembraneNode(glm::dvec3 pos);
-    
+    unsigned addInteriorNode(glm::dvec3 pos);
+   
     unsigned addMembraneEdge(unsigned n1, unsigned n2);
 
     void printNodes();
