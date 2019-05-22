@@ -14,6 +14,9 @@ struct SpringEdge {
 
     thrust::device_vector<double> len_0;
 
+    double stiffness = 30.0;
+    unsigned count = 0;
+
     // ****************************************
     // These will be used if we calculate force by spring
     // instead of by node, then sort, reduce (by key).
@@ -42,21 +45,24 @@ struct Node {
     thrust::device_vector<double> force_y;
     thrust::device_vector<double> force_z;
 
-    thrust::device_vector<bool> isFixed;
+    double mass = 1.0;
+    unsigned count = 0;
+
 };
 
 struct MembraneNode : public Node {
+
+    thrust::device_vector<bool> isFixed;
+
     // Vector size is M * N, 
     // where    M = maxConnectedSpringCount
     // and      N = memNodeCount.
     // Each entry corresponds to the ID of a spring that node is connected to.
-    thrust::device_vector<unsigned> springConnections;
-    thrust::device_vector<unsigned> numConnectedSprings;
+    thrust::device_vector<unsigned> connectedSpringID;
+    thrust::device_vector<unsigned> connectedSpringCount;
 
-    //  Keep track of the number of springs connected to each node
-    // Possibly not needed if we just resize to memNodeCount * maxConnectedSpringCount
-    // and fill empty connections with ULONG_MAX 
-    // thrust::device_vector<unsigned> numConnectedSprings;
+    // Used for indexing purposes.
+    unsigned maxConnectedSpringCount = 2;
 };
 
 
@@ -75,21 +81,13 @@ struct SimulationParams {
 
 struct GeneralParams {
 
-    // Parameters related to nodes, edges, and connections.  
-    unsigned springEdgeCount;
-    unsigned memNodeCount;
-    unsigned maxConnectedSpringCount = 2;
-
-
     // Parameters used in various formulae. 
     double epsilon = 0.001;
     double dt = 0.1;
 
-	double viscousDamp = 3.769911184308; //???
+	double viscousDamp = 3.769911184308; // ???
 	double temperature = 300.0;
-	double kB = 1.3806488e-8;
-	double memNodeMass = 1.0;
-    double memSpringStiffness = 30.0;
+	double kB = 1.3806488e-8;    
 };
 
 
@@ -126,7 +124,7 @@ public:
     void solvePltForces();
 
 
-    void setMembraneNodes(
+    void setNodes(
         thrust::host_vector<double> &host_pos_x,
         thrust::host_vector<double> &host_pos_y,
         thrust::host_vector<double> &host_pos_z,    
