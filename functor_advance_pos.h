@@ -22,6 +22,7 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 	double viscousDamp;
 	double temperature;
 	double kB;
+
 	double mass;
 
 	__host__ __device__
@@ -31,12 +32,14 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 			double& _viscousDamp,
 			double& _temperature,
 			double& _kB,
+
 			double& _mass) :
 
 		dt(_dt),
 		viscousDamp(_viscousDamp),
 		temperature(_temperature),
 		kB(_kB),
+		
 		mass(_mass) {}
 
 	__device__
