@@ -47,10 +47,10 @@ void PlatletStorage::print_VTK_File() {
 		ofs.open(Filename.c_str());
 
 
-		unsigned memNodeCount = pltSys->generalParams.memNodeCount;
+		unsigned memNodeCount = pltSys->memNode.count;
 		//__attribute__ ((unused)) unsigned maxNeighborCount = (pltSys->generalParams).maxNeighborCount;
 
-		unsigned springEdgeCount = pltSys->generalParams.springEdgeCount;
+		unsigned springEdgeCount = pltSys->springEdge.count;
 
 		ofs << "# vtk DataFile Version 3.0" << std::endl;
 		ofs << "Point representing Sub_cellular elem model" << std::endl;
