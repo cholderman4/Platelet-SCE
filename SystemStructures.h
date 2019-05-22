@@ -51,6 +51,7 @@ Eventually these will replace pltInfoVecs and similar structures.
 struct SpringEdge;
 
 struct Node;
+struct MembraneNode;
 // **********************************************
 
 
@@ -89,6 +90,7 @@ typedef thrust::tuple<double, double, double, double, double> CVec5;
 typedef thrust::tuple<double, double, double, double> CVec4;
 typedef thrust::tuple<double, double, double> CVec3;
 typedef thrust::tuple<double, double> CVec2;
+
 
 struct CVec3Add : public thrust::binary_function<CVec3, CVec3, CVec3> {
 	__host__ __device__
