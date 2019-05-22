@@ -14,8 +14,14 @@ void Spring_Force(
     thrust::counting_iterator<unsigned> startEdgeIter(0);
 
     thrust::for_each(
-        startEdgeIter,
-        startEdgeIter + generalParams.memNodeCount,
+        thrust::make_zip_iterator(
+            thrust::make_tuple(
+                startEdgeIter,
+                memNode.isFixed.begin())),
+        thrust::make_zip_iterator(
+            thrust::make_tuple(
+                startEdgeIter,
+                memNode.isFixed.begin())) + memNode.count,
         functor_spring_force(
             thrust::raw_pointer_cast(memNode.pos_x.data()),
             thrust::raw_pointer_cast(memNode.pos_y.data()),
@@ -25,14 +31,18 @@ void Spring_Force(
             thrust::raw_pointer_cast(memNode.force_y.data()),
             thrust::raw_pointer_cast(memNode.force_z.data()),
 
+            thrust::raw_pointer_cast(memNode.isFixed.data()),
+
+            thrust::raw_pointer_cast(memNode.connectedSpringID.data()),
+            thrust::raw_pointer_cast(memNode.connectedSpringCount.data()),
+
+            memNode.maxConnectedSpringCount,
+
             thrust::raw_pointer_cast(springEdge.nodeID_L.data()),
             thrust::raw_pointer_cast(springEdge.nodeID_R.data()),
             thrust::raw_pointer_cast(springEdge.len_0.data()),
-            thrust::raw_pointer_cast(memNode.springConnections.data()),
-            thrust::raw_pointer_cast(memNode.numConnectedSprings.data()),
             
-            generalParams.maxConnectedSpringCount,
-            generalParams.memSpringStiffness) );
+            springEdge.stiffness) );
     
 }
 // ******************************************************
