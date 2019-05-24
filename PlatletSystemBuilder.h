@@ -17,7 +17,8 @@
 class PlatletSystemBuilder {
 public:
 
-    double epsilon, dt;
+    double epsilon{ 0.0001 };
+    double dt{ 0.001 };
 
     PlatletSystemBuilder(double _epsilon, double _dt);
 	~PlatletSystemBuilder();
