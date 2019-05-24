@@ -1,147 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data>
    <settings>
-      <memNodeCount>100</memNodeCount>
-      <intNodeCount>30</intNodeCount>
+      <memNodeCount>200</memNodeCount>
+      <intNodeCount>3</intNodeCount>
       <viscousDamp>3.769911184308</viscousDamp>
-      <memSpringStiffness>200</memSpringStiffness>
+      <memSpringStiffness>500</memSpringStiffness>
       <memNodeMass>1</memNodeMass>
       <temperature>300</temperature>
       <kB>1.3806488e-08</kB>
    </settings>
    <membrane-nodes>
       <mem-node>1  0  0</mem-node>
+      <mem-node>0.99951    0.031411           0</mem-node>
       <mem-node>0.99803    0.062791           0</mem-node>
+      <mem-node>0.99556    0.094108           0</mem-node>
       <mem-node>0.99211     0.12533           0</mem-node>
+      <mem-node>0.98769     0.15643           0</mem-node>
       <mem-node>0.98229     0.18738           0</mem-node>
+      <mem-node>0.97592     0.21814           0</mem-node>
       <mem-node>0.96858     0.24869           0</mem-node>
+      <mem-node>0.96029     0.27899           0</mem-node>
       <mem-node>0.95106     0.30902           0</mem-node>
+      <mem-node>0.94088     0.33874           0</mem-node>
       <mem-node>0.92978     0.36812           0</mem-node>
+      <mem-node>0.91775     0.39715           0</mem-node>
       <mem-node>0.90483     0.42578           0</mem-node>
+      <mem-node>0.89101     0.45399           0</mem-node>
       <mem-node>0.87631     0.48175           0</mem-node>
+      <mem-node>0.86074     0.50904           0</mem-node>
       <mem-node>0.84433     0.53583           0</mem-node>
+      <mem-node>0.82708     0.56208           0</mem-node>
       <mem-node>0.80902     0.58779           0</mem-node>
+      <mem-node>0.79016     0.61291           0</mem-node>
       <mem-node>0.77051     0.63742           0</mem-node>
+      <mem-node>0.75011     0.66131           0</mem-node>
       <mem-node>0.72897     0.68455           0</mem-node>
+      <mem-node>0.70711     0.70711           0</mem-node>
       <mem-node>0.68455     0.72897           0</mem-node>
+      <mem-node>0.66131     0.75011           0</mem-node>
       <mem-node>0.63742     0.77051           0</mem-node>
+      <mem-node>0.61291     0.79016           0</mem-node>
       <mem-node>0.58779     0.80902           0</mem-node>
+      <mem-node>0.56208     0.82708           0</mem-node>
       <mem-node>0.53583     0.84433           0</mem-node>
+      <mem-node>0.50904     0.86074           0</mem-node>
       <mem-node>0.48175     0.87631           0</mem-node>
+      <mem-node>0.45399     0.89101           0</mem-node>
       <mem-node>0.42578     0.90483           0</mem-node>
+      <mem-node>0.39715     0.91775           0</mem-node>
       <mem-node>0.36812     0.92978           0</mem-node>
+      <mem-node>0.33874     0.94088           0</mem-node>
       <mem-node>0.30902     0.95106           0</mem-node>
+      <mem-node>0.27899     0.96029           0</mem-node>
       <mem-node>0.24869     0.96858           0</mem-node>
+      <mem-node>0.21814     0.97592           0</mem-node>
       <mem-node>0.18738     0.98229           0</mem-node>
+      <mem-node>0.15643     0.98769           0</mem-node>
       <mem-node>0.12533     0.99211           0</mem-node>
+      <mem-node>0.094108     0.99556           0</mem-node>
       <mem-node>0.062791     0.99803           0</mem-node>
+      <mem-node>0.031411     0.99951           0</mem-node>
       <mem-node>6.1232e-17           1           0</mem-node>
+      <mem-node>-0.031411     0.99951           0</mem-node>
       <mem-node>-0.062791     0.99803           0</mem-node>
+      <mem-node>-0.094108     0.99556           0</mem-node>
       <mem-node>-0.12533     0.99211           0</mem-node>
+      <mem-node>-0.15643     0.98769           0</mem-node>
       <mem-node>-0.18738     0.98229           0</mem-node>
+      <mem-node>-0.21814     0.97592           0</mem-node>
       <mem-node>-0.24869     0.96858           0</mem-node>
+      <mem-node>-0.27899     0.96029           0</mem-node>
       <mem-node>-0.30902     0.95106           0</mem-node>
+      <mem-node>-0.33874     0.94088           0</mem-node>
       <mem-node>-0.36812     0.92978           0</mem-node>
+      <mem-node>-0.39715     0.91775           0</mem-node>
       <mem-node>-0.42578     0.90483           0</mem-node>
+      <mem-node>-0.45399     0.89101           0</mem-node>
       <mem-node>-0.48175     0.87631           0</mem-node>
+      <mem-node>-0.50904     0.86074           0</mem-node>
       <mem-node>-0.53583     0.84433           0</mem-node>
+      <mem-node>-0.56208     0.82708           0</mem-node>
       <mem-node>-0.58779     0.80902           0</mem-node>
+      <mem-node>-0.61291     0.79016           0</mem-node>
       <mem-node>-0.63742     0.77051           0</mem-node>
+      <mem-node>-0.66131     0.75011           0</mem-node>
       <mem-node>-0.68455     0.72897           0</mem-node>
+      <mem-node>-0.70711     0.70711           0</mem-node>
       <mem-node>-0.72897     0.68455           0</mem-node>
+      <mem-node>-0.75011     0.66131           0</mem-node>
       <mem-node>-0.77051     0.63742           0</mem-node>
+      <mem-node>-0.79016     0.61291           0</mem-node>
       <mem-node>-0.80902     0.58779           0</mem-node>
+      <mem-node>-0.82708     0.56208           0</mem-node>
       <mem-node>-0.84433     0.53583           0</mem-node>
+      <mem-node>-0.86074     0.50904           0</mem-node>
       <mem-node>-0.87631     0.48175           0</mem-node>
+      <mem-node>-0.89101     0.45399           0</mem-node>
       <mem-node>-0.90483     0.42578           0</mem-node>
+      <mem-node>-0.91775     0.39715           0</mem-node>
       <mem-node>-0.92978     0.36812           0</mem-node>
+      <mem-node>-0.94088     0.33874           0</mem-node>
       <mem-node>-0.95106     0.30902           0</mem-node>
+      <mem-node>-0.96029     0.27899           0</mem-node>
       <mem-node>-0.96858     0.24869           0</mem-node>
+      <mem-node>-0.97592     0.21814           0</mem-node>
       <mem-node>-0.98229     0.18738           0</mem-node>
+      <mem-node>-0.98769     0.15643           0</mem-node>
       <mem-node>-0.99211     0.12533           0</mem-node>
+      <mem-node>-0.99556    0.094108           0</mem-node>
       <mem-node>-0.99803    0.062791           0</mem-node>
+      <mem-node>-0.99951    0.031411           0</mem-node>
       <mem-node>-1  1.2246e-16           0</mem-node>
+      <mem-node>-0.99951   -0.031411           0</mem-node>
       <mem-node>-0.99803   -0.062791           0</mem-node>
+      <mem-node>-0.99556   -0.094108           0</mem-node>
       <mem-node>-0.99211    -0.12533           0</mem-node>
+      <mem-node>-0.98769    -0.15643           0</mem-node>
       <mem-node>-0.98229    -0.18738           0</mem-node>
+      <mem-node>-0.97592    -0.21814           0</mem-node>
       <mem-node>-0.96858    -0.24869           0</mem-node>
+      <mem-node>-0.96029    -0.27899           0</mem-node>
       <mem-node>-0.95106    -0.30902           0</mem-node>
+      <mem-node>-0.94088    -0.33874           0</mem-node>
       <mem-node>-0.92978    -0.36812           0</mem-node>
+      <mem-node>-0.91775    -0.39715           0</mem-node>
       <mem-node>-0.90483    -0.42578           0</mem-node>
+      <mem-node>-0.89101    -0.45399           0</mem-node>
       <mem-node>-0.87631    -0.48175           0</mem-node>
+      <mem-node>-0.86074    -0.50904           0</mem-node>
       <mem-node>-0.84433    -0.53583           0</mem-node>
+      <mem-node>-0.82708    -0.56208           0</mem-node>
       <mem-node>-0.80902    -0.58779           0</mem-node>
+      <mem-node>-0.79016    -0.61291           0</mem-node>
       <mem-node>-0.77051    -0.63742           0</mem-node>
+      <mem-node>-0.75011    -0.66131           0</mem-node>
       <mem-node>-0.72897    -0.68455           0</mem-node>
+      <mem-node>-0.70711    -0.70711           0</mem-node>
       <mem-node>-0.68455    -0.72897           0</mem-node>
+      <mem-node>-0.66131    -0.75011           0</mem-node>
       <mem-node>-0.63742    -0.77051           0</mem-node>
+      <mem-node>-0.61291    -0.79016           0</mem-node>
       <mem-node>-0.58779    -0.80902           0</mem-node>
+      <mem-node>-0.56208    -0.82708           0</mem-node>
       <mem-node>-0.53583    -0.84433           0</mem-node>
+      <mem-node>-0.50904    -0.86074           0</mem-node>
       <mem-node>-0.48175    -0.87631           0</mem-node>
+      <mem-node>-0.45399    -0.89101           0</mem-node>
       <mem-node>-0.42578    -0.90483           0</mem-node>
+      <mem-node>-0.39715    -0.91775           0</mem-node>
       <mem-node>-0.36812    -0.92978           0</mem-node>
+      <mem-node>-0.33874    -0.94088           0</mem-node>
       <mem-node>-0.30902    -0.95106           0</mem-node>
+      <mem-node>-0.27899    -0.96029           0</mem-node>
       <mem-node>-0.24869    -0.96858           0</mem-node>
+      <mem-node>-0.21814    -0.97592           0</mem-node>
       <mem-node>-0.18738    -0.98229           0</mem-node>
+      <mem-node>-0.15643    -0.98769           0</mem-node>
       <mem-node>-0.12533    -0.99211           0</mem-node>
+      <mem-node>-0.094108    -0.99556           0</mem-node>
       <mem-node>-0.062791    -0.99803           0</mem-node>
+      <mem-node>-0.031411    -0.99951           0</mem-node>
       <mem-node>-1.837e-16          -1           0</mem-node>
+      <mem-node>0.031411    -0.99951           0</mem-node>
       <mem-node>0.062791    -0.99803           0</mem-node>
+      <mem-node>0.094108    -0.99556           0</mem-node>
       <mem-node>0.12533    -0.99211           0</mem-node>
+      <mem-node>0.15643    -0.98769           0</mem-node>
       <mem-node>0.18738    -0.98229           0</mem-node>
+      <mem-node>0.21814    -0.97592           0</mem-node>
       <mem-node>0.24869    -0.96858           0</mem-node>
+      <mem-node>0.27899    -0.96029           0</mem-node>
       <mem-node>0.30902    -0.95106           0</mem-node>
+      <mem-node>0.33874    -0.94088           0</mem-node>
       <mem-node>0.36812    -0.92978           0</mem-node>
+      <mem-node>0.39715    -0.91775           0</mem-node>
       <mem-node>0.42578    -0.90483           0</mem-node>
+      <mem-node>0.45399    -0.89101           0</mem-node>
       <mem-node>0.48175    -0.87631           0</mem-node>
+      <mem-node>0.50904    -0.86074           0</mem-node>
       <mem-node>0.53583    -0.84433           0</mem-node>
+      <mem-node>0.56208    -0.82708           0</mem-node>
       <mem-node>0.58779    -0.80902           0</mem-node>
+      <mem-node>0.61291    -0.79016           0</mem-node>
       <mem-node>0.63742    -0.77051           0</mem-node>
+      <mem-node>0.66131    -0.75011           0</mem-node>
       <mem-node>0.68455    -0.72897           0</mem-node>
+      <mem-node>0.70711    -0.70711           0</mem-node>
       <mem-node>0.72897    -0.68455           0</mem-node>
+      <mem-node>0.75011    -0.66131           0</mem-node>
       <mem-node>0.77051    -0.63742           0</mem-node>
+      <mem-node>0.79016    -0.61291           0</mem-node>
       <mem-node>0.80902    -0.58779           0</mem-node>
+      <mem-node>0.82708    -0.56208           0</mem-node>
       <mem-node>0.84433    -0.53583           0</mem-node>
+      <mem-node>0.86074    -0.50904           0</mem-node>
       <mem-node>0.87631    -0.48175           0</mem-node>
+      <mem-node>0.89101    -0.45399           0</mem-node>
       <mem-node>0.90483    -0.42578           0</mem-node>
+      <mem-node>0.91775    -0.39715           0</mem-node>
       <mem-node>0.92978    -0.36812           0</mem-node>
+      <mem-node>0.94088    -0.33874           0</mem-node>
       <mem-node>0.95106    -0.30902           0</mem-node>
+      <mem-node>0.96029    -0.27899           0</mem-node>
       <mem-node>0.96858    -0.24869           0</mem-node>
+      <mem-node>0.97592    -0.21814           0</mem-node>
       <mem-node>0.98229    -0.18738           0</mem-node>
+      <mem-node>0.98769    -0.15643           0</mem-node>
       <mem-node>0.99211    -0.12533           0</mem-node>
+      <mem-node>0.99556   -0.094108           0</mem-node>
       <mem-node>0.99803   -0.062791           0</mem-node>
+      <mem-node>0.99951   -0.031411           0</mem-node>
    </membrane-nodes>
    <interior-nodes>
-      <int-node>-0.018513    0.010596           0</int-node>
-      <int-node>0.18309    0.059051           0</int-node>
-      <int-node>0.00075902 -0.00053191           0</int-node>
-      <int-node>0.14575   -0.052693           0</int-node>
-      <int-node>-0.16319   0.0093779           0</int-node>
-      <int-node>-0.17334    0.011723           0</int-node>
-      <int-node>-0.0088434    0.014387           0</int-node>
-      <int-node>0.064702   -0.046975           0</int-node>
-      <int-node>-0.035399    0.038055           0</int-node>
-      <int-node>0.12252     0.10293           0</int-node>
-      <int-node>0.016302   -0.084729           0</int-node>
-      <int-node>-0.14014     0.11632           0</int-node>
-      <int-node>0.0018978     0.03632           0</int-node>
-      <int-node>-0.043434    0.029953           0</int-node>
-      <int-node>0.023924     0.01658           0</int-node>
-      <int-node>0.018382    0.020067           0</int-node>
-      <int-node>0.16246   -0.061914           0</int-node>
-      <int-node>0.11157   -0.031552           0</int-node>
-      <int-node>-0.09792   -0.050055           0</int-node>
-      <int-node>0.02697    0.010635           0</int-node>
-      <int-node>0.01629     0.16983           0</int-node>
-      <int-node>-0.07511     0.09918           0</int-node>
-      <int-node>0.030361   -0.063284           0</int-node>
-      <int-node>0.10217   0.0099192           0</int-node>
-      <int-node>0.077443     0.02146           0</int-node>
-      <int-node>0.0074038    0.013267           0</int-node>
-      <int-node>-0.028419   -0.038662           0</int-node>
-      <int-node>-0.0028262   -0.024501           0</int-node>
-      <int-node>-0.022039   -0.029448           0</int-node>
-      <int-node>-0.045727    0.014565           0</int-node>
+      <int-node>0.05435   -0.012189           0</int-node>
+      <int-node>0.059985     0.09146           0</int-node>
+      <int-node>0.18824   -0.035183           0</int-node>
    </interior-nodes>
    <links>
       <link>0  1</link>
@@ -243,7 +316,107 @@
       <link>96  97</link>
       <link>97  98</link>
       <link>98  99</link>
-      <link>99   0</link>
+      <link>99  100</link>
+      <link>100  101</link>
+      <link>101  102</link>
+      <link>102  103</link>
+      <link>103  104</link>
+      <link>104  105</link>
+      <link>105  106</link>
+      <link>106  107</link>
+      <link>107  108</link>
+      <link>108  109</link>
+      <link>109  110</link>
+      <link>110  111</link>
+      <link>111  112</link>
+      <link>112  113</link>
+      <link>113  114</link>
+      <link>114  115</link>
+      <link>115  116</link>
+      <link>116  117</link>
+      <link>117  118</link>
+      <link>118  119</link>
+      <link>119  120</link>
+      <link>120  121</link>
+      <link>121  122</link>
+      <link>122  123</link>
+      <link>123  124</link>
+      <link>124  125</link>
+      <link>125  126</link>
+      <link>126  127</link>
+      <link>127  128</link>
+      <link>128  129</link>
+      <link>129  130</link>
+      <link>130  131</link>
+      <link>131  132</link>
+      <link>132  133</link>
+      <link>133  134</link>
+      <link>134  135</link>
+      <link>135  136</link>
+      <link>136  137</link>
+      <link>137  138</link>
+      <link>138  139</link>
+      <link>139  140</link>
+      <link>140  141</link>
+      <link>141  142</link>
+      <link>142  143</link>
+      <link>143  144</link>
+      <link>144  145</link>
+      <link>145  146</link>
+      <link>146  147</link>
+      <link>147  148</link>
+      <link>148  149</link>
+      <link>149  150</link>
+      <link>150  151</link>
+      <link>151  152</link>
+      <link>152  153</link>
+      <link>153  154</link>
+      <link>154  155</link>
+      <link>155  156</link>
+      <link>156  157</link>
+      <link>157  158</link>
+      <link>158  159</link>
+      <link>159  160</link>
+      <link>160  161</link>
+      <link>161  162</link>
+      <link>162  163</link>
+      <link>163  164</link>
+      <link>164  165</link>
+      <link>165  166</link>
+      <link>166  167</link>
+      <link>167  168</link>
+      <link>168  169</link>
+      <link>169  170</link>
+      <link>170  171</link>
+      <link>171  172</link>
+      <link>172  173</link>
+      <link>173  174</link>
+      <link>174  175</link>
+      <link>175  176</link>
+      <link>176  177</link>
+      <link>177  178</link>
+      <link>178  179</link>
+      <link>179  180</link>
+      <link>180  181</link>
+      <link>181  182</link>
+      <link>182  183</link>
+      <link>183  184</link>
+      <link>184  185</link>
+      <link>185  186</link>
+      <link>186  187</link>
+      <link>187  188</link>
+      <link>188  189</link>
+      <link>189  190</link>
+      <link>190  191</link>
+      <link>191  192</link>
+      <link>192  193</link>
+      <link>193  194</link>
+      <link>194  195</link>
+      <link>195  196</link>
+      <link>196  197</link>
+      <link>197  198</link>
+      <link>198  199</link>
+      <link>199    0</link>
    </links>
    <fixed>
       <nodeID>50</nodeID>

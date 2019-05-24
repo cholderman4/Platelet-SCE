@@ -1,8 +1,8 @@
 clear
 format long
 
-memNodeCount = 100;
-intNodeCount = 30;
+memNodeCount = 200;
+intNodeCount = 3;
 fixedNodeCount = 1;
 fixedNodeID = 50;
 
@@ -27,7 +27,7 @@ product = docNode.createElement('settings');
 data.appendChild(product);
 
 settingsList = {'memNodeCount', 'intNodeCount', 'viscousDamp', 'memSpringStiffness', 'memNodeMass', 'temperature', 'kB'};
-values = [memNodeCount, intNodeCount, 3.769911184308, 200.0, 1.0, 300.0, 1.3806488e-8];
+values = [memNodeCount, intNodeCount, 3.769911184308, 500.0, 1.0, 300.0, 1.3806488e-8];
 
 for k = 1:numel(settingsList)
    curr_node = docNode.createElement(settingsList(k));

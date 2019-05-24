@@ -120,8 +120,8 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
             for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
                 unsigned connectedSpringID = vec_connectedSpringID[i];
-                // double length_0 = vec_len_0[connectedSpringID];
-                double length_0 = 0.060;
+                double length_0 = vec_len_0[connectedSpringID];
+                // double length_0 = 0.060;
 
                 // Temporary test value.
                 // double length_0 = 0.50;
