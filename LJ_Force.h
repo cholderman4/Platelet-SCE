@@ -4,8 +4,8 @@
 #include "SystemStructures.h"
 
 void LJ_Force(
-    Node& node, 
-    SpringEdge& springEdge, 
+    MembraneNode& memNode,
+    Node& intNode, 
     GeneralParams& generalParams);
 
 

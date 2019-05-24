@@ -15,9 +15,10 @@
 
 
 
-__host__ __device__ double LJForceByCoord(double dist, double coordDist, double U, double K, double W) {
+__host__ __device__ double LJForceByCoord(double dist, double coordDist, 
+        double U, double K, double W, double G, double L) {
 
-    return (U/xi) * exp(-dist/xi) * (coordDist/dist)
+    return ( (U/K) * exp(-(dist - L)/K) - (W/G) * exp(-(dist-L)/G) ) * (coordDist/dist);
 }
 
 template <typename T>
@@ -49,12 +50,16 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
     unsigned intNodeCount;
 
+    double U_II;
+    double K_II;
+    double W_II;
+    double G_II;
+    double L_II;
     double U_MI;
-    double k_MI;
+    double K_MI;
     double W_MI;
-    double u_II;
-    double k_II;
-    double w_II;
+    double G_MI;
+    double L_MI;
 
 
     __host__ __device__
@@ -81,12 +86,16 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
             unsigned& _intNodeCount,
 
-            double& _U_MI,
-            double& _k_MI,
-            double& _W_MI,
-            double& _u_II,
-            double& _k_II,
-            double& _w_II   ) :
+            double _U_II,
+            double _K_II,
+            double _W_II,
+            double _G_II,
+            double _L_II,
+            double _U_MI,
+            double _K_MI,
+            double _W_MI,
+            double _G_MI,
+            double _L_MI ) :
 
         vec_memPos_x(_vec_memPos_x),
         vec_memPos_y(_vec_memPos_y),
@@ -110,16 +119,20 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
         intNodeCount(_intNodeCount),
 
+        U_II(_U_II),
+        K_II(_K_II),
+        W_II(_W_II),
+        G_II(_G_II),
+        L_II(_L_II),
         U_MI(_U_MI),
-        k_MI(_k_MI),
+        K_MI(_K_MI),
         W_MI(_W_MI),
-        u_II(_u_II),
-        k_II(_k_II),
-        w_II(_w_II) {}
+        G_MI(_G_MI),
+        L_MI(_L_MI) {}
 
 
     __device__
-    void operator()(const unsigned idA) {
+    void operator()(const unsigned id) {
         // ID of the node being acted on.
         // Membrane nodes first, then internal nodes.
 
@@ -135,16 +148,23 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         // Set parameters as MI.
         // These will be the first values no matter what.
         double U = U_MI;
-        double W = W_MI;
         double K = K_MI;
+        double W = W_MI;
+        double G = G_MI;
+        double L = L_MI;
+
         // ********************************************
 
         double* vec_force_x;
         double* vec_force_y;
-        double* vec_force_z;        
+        double* vec_force_z;
 
+        bool isFixed{ false };
+        bool isMemNode = (id < memNodeCount) ? true : false;
 
-        if (idA < memNodeCount) {
+        unsigned idA;
+        if (isMemNode) {
+            idA = id;
             posA_x = vec_memPos_x[idA];
             posA_y = vec_memPos_y[idA];
             posA_z = vec_memPos_z[idA];
@@ -153,13 +173,13 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
             vec_force_y = vec_memForce_y;
             vec_force_z = vec_memForce_z;
 
+            isFixed = vec_isFixed[idA];
+
             // Don't need LJ force from other membrane nodes.
             indexBegin = memNodeCount;
-
-
         } else {
             // The ID has moved passed the membrane nodes and is now into internal nodes.
-            idA = idA - memNodeCount;
+            idA = id - memNodeCount;
             posA_x = vec_intPos_x[idA];
             posA_y = vec_intPos_y[idA];
             posA_z = vec_intPos_z[idA];
@@ -175,54 +195,56 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         double sumForce_x = 0.0;
         double sumForce_y = 0.0;
         double sumForce_z = 0.0;
+        if (!isFixed) {
+            for (unsigned i = indexBegin; i < indexEnd; ++i) {
 
-        for (unsigned i = indexBegin; i < indexEnd; ++i) {
+                double distAB_x;
+                double distAB_y;
+                double distAB_z;
 
-            double distAB_x;
-            double distAB_y;
-            double distAB_z;
+                unsigned idB;
+                if (i < memNodeCount) { // MI, since idA must be internal node.
+                    // Parameters stay at MI.
+                    idB = i;
+                    distAB_x = vec_memPos_x[idB] - posA_x;
+                    distAB_y = vec_memPos_y[idB] - posA_y;
+                    distAB_z = vec_memPos_z[idB] - posA_z;
+                } else { // MI or II
+                    if (!isMemNode) {
+                        // Change parameters to II.
+                        U = U_II;
+                        K = K_II;
+                        W = W_II;
+                        G = G_II;
+                        L = L_II;
+                    }
 
-            unsigned idB;
-
-            if (i < memNodeCount) { // MI, since idA must be internal node.
-                // Parameters stay at MI.
-                idB = i;
-                distAB_x = vec_memPos_x[idB] - posA_x;
-                distAB_y = vec_memPos_y[idB] - posA_y;
-                distAB_z = vec_memPos_z[idB] - posA_z;
-            } else { // MI or II
-                if (idA >= memNodeCount) {
-                    // Change parameters to II.
-                    double U = U_II;
-                    double W = W_II;
-                    double K = K_II;
+                    idB = i - memNodeCount;
+                    distAB_x = vec_intPos_x[idB] - posA_x;
+                    distAB_y = vec_intPos_y[idB] - posA_y;
+                    distAB_z = vec_intPos_z[idB] - posA_z;
                 }
 
-                idB = i - memNodeCount;
-                distAB_x = vec_intPos_x[idB] - posA_x;
-                distAB_y = vec_intPos_y[idB] - posA_y;
-                distAB_z = vec_intPos_z[idB] - posA_z;
+                double dist = norm(distAB_x, distAB_y, distAB_z);
+
+                if (fabs(dist)>=1.0e-12) {
+                    //Calculate force from LJ potential.
+                    sumForce_x += LJForceByCoord(dist, distAB_x, U, K, W, G, L);
+                    sumForce_y += LJForceByCoord(dist, distAB_y, U, K, W, G, L);
+                    sumForce_z += LJForceByCoord(dist, distAB_z, U, K, W, G, L);            
+                }
             }
 
-            double dist = norm(distAB_x, distAB_y, distAB_z);
-
-            if (fabs(dist)>=1.0e-12) {
-                //Calculate force from LJ potential.
-                sumForce_x += LJForceByCoord(dist, distAB_x, U, K, W);
-                sumForce_y += LJForceByCoord(dist, distAB_y, U, K, W);
-                sumForce_z += LJForceByCoord(dist, distAB_z, U, K, W);            
+            if(isfinite(sumForce_x)) {
+                vec_force_x[idA] += sumForce_x;
             }
-        }
-
-        if(isfinite(sumForce_x)) {
-            vec_force_x[idA] += sumForce_x;
-        }
-        if(isfinite(sumForce_x)) {
-            vec_force_y[idA] += sumForce_y;
-        }
-        if(isfinite(sumForce_x)) {
-            vec_force_z[idA] += sumForce_z;
-        }    
+            if(isfinite(sumForce_x)) {
+                vec_force_y[idA] += sumForce_y;
+            }
+            if(isfinite(sumForce_x)) {
+                vec_force_z[idA] += sumForce_z;
+            }
+        }            
         
     } // End operator()
 }; // End struct
