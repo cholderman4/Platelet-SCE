@@ -7,6 +7,7 @@
 #include "PlatletSystem.h" 
 #include "Advance_Positions.h"
 #include "Spring_Force.h"
+#include "LJ_Force.h"
 
 
 PlatletSystem::PlatletSystem() {};
@@ -55,6 +56,8 @@ void PlatletSystem::initializePlatletSystem(
 
 void PlatletSystem::solvePltSystem() {
 
+    
+
 
     while (simulationParams.runSim == true) {
 
@@ -66,9 +69,9 @@ void PlatletSystem::solvePltSystem() {
 
         Advance_Positions(memNode, generalParams);
 
-        // Advance_Positions(intNode, generalParams);
+        Advance_Positions(intNode, generalParams);
 
-        if (simulationParams.iterationCounter % 50 == 0) {
+        if (simulationParams.iterationCounter % simulationParams.printFileStepSize == 0) {
 
             pltStorage->print_VTK_File(); 
 
@@ -78,7 +81,7 @@ void PlatletSystem::solvePltSystem() {
 
         // Hard cap on the number of simulation steps. 
         // Currently the only way to stop the simulation.
-        if (simulationParams.iterationCounter >= 5000) {
+        if (simulationParams.iterationCounter >= simulationParams.maxIterations) {
             simulationParams.runSim = false;
         }
 
@@ -95,6 +98,10 @@ void PlatletSystem::solvePltForces() {
     thrust::fill(memNode.force_y.begin(), memNode.force_y.end(), 0.0);    
     thrust::fill(memNode.force_z.begin(), memNode.force_z.end(), 0.0);
 
+    thrust::fill(intNode.force_x.begin(), intNode.force_x.end(), 0.0);    
+    thrust::fill(intNode.force_y.begin(), intNode.force_y.end(), 0.0);    
+    thrust::fill(intNode.force_z.begin(), intNode.force_z.end(), 0.0);
+
 
     Spring_Force(memNode, springEdge, generalParams);
 
@@ -102,7 +109,7 @@ void PlatletSystem::solvePltForces() {
     // printForces();
 
 
-    // LJ_Force(node);
+    LJ_Force(memNode, intNode, generalParams);
 
 
     // Fixed nodes. Set forces to zero.
@@ -171,7 +178,7 @@ void PlatletSystem::setSpringEdge(
     thrust::host_vector<unsigned> &host_nodeID_R,
     thrust::host_vector<double> &host_len_0) {
         
-    std::cout << "Resizing springEdge vectors.\n";
+    // std::cout << "Resizing springEdge vectors.\n";
 
     springEdge.nodeID_L.resize(springEdge.count);
     springEdge.nodeID_R.resize(springEdge.count);
@@ -180,25 +187,25 @@ void PlatletSystem::setSpringEdge(
     memNode.connectedSpringID.resize(memNode.count * memNode.maxConnectedSpringCount);
     memNode.connectedSpringCount.resize(memNode.count);
 
-    std::cout << "Filling vectors with garbage values.\n";
+    // std::cout << "Filling vectors with garbage values.\n";
 
     thrust::fill(memNode.connectedSpringCount.begin(), memNode.connectedSpringCount.end(), 0);
     thrust::fill(memNode.connectedSpringID.begin(), memNode.connectedSpringID.end(), 47);
 
-    std::cout << "Copying from host to device.\n";
+    // std::cout << "Copying from host to device.\n";
 
-    std::cout << "nodeID_L\n";
-    std::cout << "springEdge.count: " << springEdge.count 
-        << "\t host_nodeID.size: " << host_nodeID_L.size() << '\n';
+    // std::cout << "nodeID_L\n";
+    // std::cout << "springEdge.count: " << springEdge.count 
+        // << "\t host_nodeID.size: " << host_nodeID_L.size() << '\n';
     thrust::copy(host_nodeID_L.begin(), host_nodeID_L.end(), springEdge.nodeID_L.begin());
      
-    std::cout << "nodeID_R\n";
+    // std::cout << "nodeID_R\n";
     thrust::copy(host_nodeID_R.begin(), host_nodeID_R.end(), springEdge.nodeID_R.begin());
     
-    std::cout << "len_0\n";
+    // std::cout << "len_0\n";
     thrust::copy(host_len_0.begin(), host_len_0.end(), springEdge.len_0.begin());
 
-    std::cout << "Building connectedSpringID vector.\n";
+    // std::cout << "Building connectedSpringID vector.\n";
     // Merge nodeID_(R/L) into connectedSpringID using maxConnectedSpringCount.
     // Build connectedSpringCount as we go.
     for (auto s = 0; s < springEdge.count; ++s) {
