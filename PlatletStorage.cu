@@ -59,13 +59,23 @@ void PlatletStorage::print_VTK_File() {
 
 
 		ofs << "POINTS " << memNodeCount << " float" << std::endl;
-		for (unsigned i = 0; i < memNodeCount; i++) { 
+		for (unsigned i = 0; i < memNodeCount; ++i) { 
 			double pos_x = pltSys->memNode.pos_x[i];
 			double pos_y = pltSys->memNode.pos_y[i];
 			double pos_z = pltSys->memNode.pos_z[i];
 
 			ofs << std::setprecision(5) <<std::fixed<< pos_x << " " << pos_y << " " << pos_z << " " << '\n'<< std::fixed;
-		}		
+		}
+
+		unsigned intNodeCount = pltSys->intNode.count;
+
+		for (unsigned i = 0; i < intNodeCount; ++i) { 
+			double pos_x = pltSys->intNode.pos_x[i];
+			double pos_y = pltSys->intNode.pos_y[i];
+			double pos_z = pltSys->intNode.pos_z[i];
+
+			ofs << std::setprecision(5) <<std::fixed<< pos_x << " " << pos_y << " " << pos_z << " " << '\n'<< std::fixed;
+		}
 		
 		ofs.close();
 	}
