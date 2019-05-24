@@ -47,7 +47,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 		return nullptr;
 	}
 
-    std::cout << "Setting pugixml variables\n";
+    // std::cout << "Setting pugixml variables\n";
 	pugi::xml_node root = doc.child("data");
 	pugi::xml_node memNodes = root.child("membrane-nodes");
     pugi::xml_node intNodes = root.child("interior-nodes");
@@ -64,7 +64,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     // Load properties from the "settings" section.
     // Check for parameters that match with GeneralParams (?)
 
-    std::cout << "Loading properties from xml\n";
+    // std::cout << "Loading properties from xml\n";
 
     if (auto p = props.child("temperature"))
         pltBuilder->generalParams.temperature = (p.text().as_double());
@@ -94,15 +94,12 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
      
     // *****************************************************
 
-    std::cout << "Adding membrane nodes\n";
+    // std::cout << "Adding membrane nodes\n";
     // Add membrane nodes.
     double x, y, z; //variables to be used reading in data.
 
-    unsigned counter{ 0 };
-
 	for (auto memNode = memNodes.child("mem-node"); memNode; memNode = memNode.next_sibling("mem-node")) {
 		const char* text = memNode.text().as_string();
-        ++counter;
 		if (3 != sscanf(text, "%lf %lf %lf", &x, &y, &z)) {
 			std::cout << "parse memNode error\n";
 			return 0;
@@ -110,11 +107,8 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 		__attribute__ ((unused)) int unused = pltBuilder->addMembraneNode( glm::dvec3(x, y, z) );
     }
 
-    std::cout << "Counter: " << counter << '\n';
 
-
-
-    std::cout << "Adding interior nodes\n";
+    // std::cout << "Adding interior nodes\n";
     // Add interior nodes.
     for (auto intNode = intNodes.child("int-node"); intNode; intNode = intNode.next_sibling("int-node")) {
 		const char* text = intNode.text().as_string();
@@ -127,13 +121,13 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     }
     
     // Check that the nodes are all there.
-    std::cout << "Printing nodes\n";
-    pltBuilder->printNodes();
+    // std::cout << "Printing nodes\n";
+    // pltBuilder->printNodes();
 
     // *****************************************************
 
 
-    std::cout << "Adding membrane spring connections\n";
+    // std::cout << "Adding membrane spring connections\n";
     // Add membrane spring connections.
 
     unsigned n1, n2; //variables to be used reading in data.
@@ -145,11 +139,10 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 			std::cout << "parse link error\n";
 			return 0;
 		}
-        std::cout << "n1: " << n1 << "\t n2: " << n2 << '\n';
 		__attribute__ ((unused)) int unused = pltBuilder->addMembraneEdge( n1, n2 );
     }
 
-    std::cout << "Setting fixed nodes\n";
+    // std::cout << "Setting fixed nodes\n";
     // Read in fixed nodes.
     pugi::xml_node fixedRoot = root.child("fixed");
 	if (fixedRoot) {
@@ -157,8 +150,8 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 			pltBuilder->fixNode(node.text().as_uint());
 	}
 
-    std::cout << "Printing membrane spring edges\n";
-    pltBuilder->printEdges();
+    // std::cout << "Printing membrane spring edges\n";
+    // pltBuilder->printEdges();
 
     // *****************************************************
 	// Create and initialize (the pointer to) the final system on device().
