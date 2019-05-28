@@ -61,6 +61,13 @@ void PlatletSystem::solvePltSystem() {
 
     while (simulationParams.runSim == true) {
 
+        pltStorage->print_VTK_File();
+
+        // View what happens in the first few simulation steps.
+        /* if (simulationParams.iterationCounter <= 200) {
+            pltStorage->print_VTK_File();    
+        } */
+
         simulationParams.iterationCounter += 1;
         simulationParams.currentTime += generalParams.dt;
 
@@ -177,8 +184,10 @@ void PlatletSystem::setSpringEdge(
     thrust::host_vector<unsigned> &host_nodeID_L,
     thrust::host_vector<unsigned> &host_nodeID_R,
     thrust::host_vector<double> &host_len_0) {
+
+
         
-    // std::cout << "Resizing springEdge vectors.\n";
+    std::cout << "Resizing springEdge vectors.\n";
 
     springEdge.nodeID_L.resize(springEdge.count);
     springEdge.nodeID_R.resize(springEdge.count);
@@ -187,7 +196,7 @@ void PlatletSystem::setSpringEdge(
     memNode.connectedSpringID.resize(memNode.count * memNode.maxConnectedSpringCount);
     memNode.connectedSpringCount.resize(memNode.count);
 
-    // std::cout << "Filling vectors with garbage values.\n";
+    std::cout << "Filling vectors with garbage values.\n";
 
     thrust::fill(memNode.connectedSpringCount.begin(), memNode.connectedSpringCount.end(), 0);
     thrust::fill(memNode.connectedSpringID.begin(), memNode.connectedSpringID.end(), 47);
@@ -235,7 +244,7 @@ void PlatletSystem::printPoints() {
 
 
 void PlatletSystem::printConnections() {
-    std::cout << "Testing edge connections in PlatletSystem: \n";
+    /* std::cout << "Testing edge connections in PlatletSystem: \n";
     for(auto i = 0; i < springEdge.count; ++i) {
         std::cout << "Spring " << i << " is connected to: "
             << springEdge.nodeID_L[i] << ", "
@@ -246,7 +255,7 @@ void PlatletSystem::printConnections() {
     std::cout << "Testing connectedSpringID vector:\n";
     for(auto i = 0; i <  memNode.connectedSpringID.size(); ++i) {
         std::cout << memNode.connectedSpringID[i] << '\n';
-    }
+    } */
 
     std::cout << "Testing nodeDegree vector:\n";
     for(auto i = memNode.connectedSpringCount.begin(); i != memNode.connectedSpringCount.end(); ++i) {
@@ -276,4 +285,8 @@ void PlatletSystem::printParams() {
     std::cout << "kB: " << generalParams.kB << '\n';
     std::cout << "memNodeMass: " << memNode.mass << '\n';
     std::cout << "memSpringStiffness: " << springEdge.stiffness << '\n';
+    std::cout << "Morse U: " << generalParams.U_II << '\n';
+    std::cout << "Morse P: " << generalParams.P_II << '\n';
+    std::cout << "Morse R_eq: " << generalParams.R_eq_II << '\n';
+
 }

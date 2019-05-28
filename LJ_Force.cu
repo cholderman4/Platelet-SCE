@@ -39,14 +39,10 @@ void LJ_Force(
             intNode.count,
 
             generalParams.U_II,
-            generalParams.K_II,
-            generalParams.W_II,
-            generalParams.G_II,
-            generalParams.L_II,
+            generalParams.P_II,
+            generalParams.R_eq_II,
             generalParams.U_MI,
-            generalParams.K_MI,
-            generalParams.W_MI,
-            generalParams.G_MI,
-            generalParams.L_MI ) );
+            generalParams.P_MI,
+            generalParams.R_eq_MI) );
     
 }

@@ -62,7 +62,7 @@ struct MembraneNode : public Node {
     thrust::device_vector<unsigned> connectedSpringCount;
 
     // Used for indexing purposes.
-    unsigned maxConnectedSpringCount{ 2 };
+    unsigned maxConnectedSpringCount{ 20 };
 };
 
 
@@ -77,7 +77,7 @@ struct SimulationParams {
     double currentTime{ 0.0 };
     unsigned iterationCounter{ 0 };
     unsigned maxIterations{ 10000 };
-    unsigned printFileStepSize{ 200 };
+    unsigned printFileStepSize{ 500 };
 
 };
 
@@ -93,16 +93,32 @@ struct GeneralParams {
 	double kB{ 1.3806488e-8 };
 
     // LJ force parameters.
-    double U_II{ 0.49 };
+    /* double U_II{ 0.049 };
     double K_II{ 0.31 };
-    double W_II{ 0.15 };
+    double W_II{ 0.015 };
     double G_II{ 1.25 };
-    double L_II{ 1.56 };
-    double U_MI{ 0.78 };
+    double L_II{ 0.36 };
+    double U_MI{ 0.078 };
     double K_MI{ 0.13 };
     double W_MI{ 0.0 };
     double G_MI{ 1.0 };
-    double L_MI{ 1.56 };
+    double L_MI{ 0.36 }; */
+
+    double U_II{ 1.0 };
+    double P_II{ 2.0 };
+    // 3d
+    // double R_eq_II{ 0.271441761659491 };
+    // 2d
+    double R_eq_II{ 0.12 };
+
+
+
+    double U_MI{ 1.0 };
+    double P_MI{ 2.0 };
+    // 3d
+    // double R_eq_MI{ 0.271441761659491 };
+    // 2d
+    double R_eq_MI{ 0.12 };
 
 };
 

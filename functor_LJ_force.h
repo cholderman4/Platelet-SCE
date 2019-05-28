@@ -15,10 +15,14 @@
 
 
 
-__host__ __device__ double LJForceByCoord(double dist, double coordDist, 
-        double U, double K, double W, double G, double L) {
+__host__ __device__ double LJForceByCoord(double R, double coordDist, 
+        double U, double P, double R_eq) {
 
-    return ( (U/K) * exp(-(dist - L)/K) - (W/G) * exp(-(dist-L)/G) ) * (coordDist/dist);
+    // New formula for Morse potential.
+    // Newman 2008
+    return 4 * U * P * (R/R_eq) * ( exp( 2* P * (1 - (R/R_eq)*(R/R_eq))) - exp( P * (1 - (R/R_eq)*(R/R_eq))) ) * coordDist/R;
+
+    // return ( (U/K) * exp(-(dist - L)/K) - 2* (W/G) * exp(-(dist-L)/G) ) * (coordDist/dist);
 }
 
 template <typename T>
@@ -51,15 +55,12 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
     unsigned intNodeCount;
 
     double U_II;
-    double K_II;
-    double W_II;
-    double G_II;
-    double L_II;
+    double P_II;
+    double R_eq_II;
+
     double U_MI;
-    double K_MI;
-    double W_MI;
-    double G_MI;
-    double L_MI;
+    double P_MI;
+    double R_eq_MI;
 
 
     __host__ __device__
@@ -87,15 +88,12 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
             unsigned& _intNodeCount,
 
             double _U_II,
-            double _K_II,
-            double _W_II,
-            double _G_II,
-            double _L_II,
+            double _P_II,
+            double _R_eq_II,
+
             double _U_MI,
-            double _K_MI,
-            double _W_MI,
-            double _G_MI,
-            double _L_MI ) :
+            double _P_MI,
+            double _R_eq_MI ) :
 
         vec_memPos_x(_vec_memPos_x),
         vec_memPos_y(_vec_memPos_y),
@@ -120,15 +118,12 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         intNodeCount(_intNodeCount),
 
         U_II(_U_II),
-        K_II(_K_II),
-        W_II(_W_II),
-        G_II(_G_II),
-        L_II(_L_II),
+        P_II(_P_II),
+        R_eq_II(_R_eq_II),
+
         U_MI(_U_MI),
-        K_MI(_K_MI),
-        W_MI(_W_MI),
-        G_MI(_G_MI),
-        L_MI(_L_MI) {}
+        P_MI(_P_MI),
+        R_eq_MI(_R_eq_MI) {}
 
 
     __device__
@@ -148,10 +143,8 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         // Set parameters as MI.
         // These will be the first values no matter what.
         double U = U_MI;
-        double K = K_MI;
-        double W = W_MI;
-        double G = G_MI;
-        double L = L_MI;
+        double P = P_MI;
+        double R_eq = R_eq_MI;
 
         // ********************************************
 
@@ -213,10 +206,8 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
                     if (!isMemNode) {
                         // Change parameters to II.
                         U = U_II;
-                        K = K_II;
-                        W = W_II;
-                        G = G_II;
-                        L = L_II;
+                        P = P_II;
+                        R_eq = R_eq_II;
                     }
 
                     idB = i - memNodeCount;
@@ -229,9 +220,9 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
                 if (fabs(dist)>=1.0e-12) {
                     //Calculate force from LJ potential.
-                    sumForce_x += LJForceByCoord(dist, distAB_x, U, K, W, G, L);
-                    sumForce_y += LJForceByCoord(dist, distAB_y, U, K, W, G, L);
-                    sumForce_z += LJForceByCoord(dist, distAB_z, U, K, W, G, L);            
+                    sumForce_x += LJForceByCoord(dist, distAB_x, U, P, R_eq);
+                    sumForce_y += LJForceByCoord(dist, distAB_y, U, P, R_eq);
+                    sumForce_z += LJForceByCoord(dist, distAB_z, U, P, R_eq);            
                 }
             }
 

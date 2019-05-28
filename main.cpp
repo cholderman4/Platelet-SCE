@@ -90,6 +90,22 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     if (auto p = props.child("intNodeCount"))
         pltBuilder->intNodeCount = (p.text().as_uint());
 
+    if (auto p = props.child("morse-U")) {
+        pltBuilder->generalParams.U_II = (p.text().as_double());
+        pltBuilder->generalParams.U_MI = 2.0 * pltBuilder->generalParams.U_II;       
+    }
+
+    if (auto p = props.child("morse-P")) {
+        pltBuilder->generalParams.P_II = (p.text().as_double());
+        pltBuilder->generalParams.P_MI = (p.text().as_double());       
+    }
+
+    if (auto p = props.child("morse-R_eq")) {
+        pltBuilder->generalParams.R_eq_II = (p.text().as_double());
+        pltBuilder->generalParams.R_eq_MI = (p.text().as_double());       
+    }
+        
+
 
      
     // *****************************************************
@@ -117,6 +133,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 			std::cout << "parse intNode error\n";
 			return 0;
 		}
+
 		__attribute__ ((unused)) int unused = pltBuilder->addInteriorNode( glm::dvec3(x, y, z) );
     }
     
