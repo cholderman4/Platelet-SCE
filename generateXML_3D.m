@@ -6,11 +6,13 @@ rng(5, 'twister')
 
 UseMembrane = 0;
 memNodeCount = 0;
+meshFaceCount = 0
 
 mesh = icoSphereMesh(3);
 
 if (UseMembrane)
     memNodeCount = size(mesh.x,1);
+    meshFaceCount = size(mesh.face, 1);
 end
 
 intNodeCount = 256;
@@ -106,7 +108,7 @@ product = docNode.createElement('links');
 data.appendChild(product);
 
 % Connect everything in a circle.
-for j = 1:size(mesh.face, 1)
+for j = 1:meshFaceCount
     for k = 1:3
        curr_node = docNode.createElement('link');
 
