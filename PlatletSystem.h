@@ -57,7 +57,8 @@ struct MembraneNode : public Node {
     // Vector size is M * N, 
     // where    M = maxConnectedSpringCount
     // and      N = memNodeCount.
-    // Each entry corresponds to the ID of a spring that node is connected to.
+    // Each entry corresponds to the ID of 
+    // a spring that node is connected to.
     thrust::device_vector<unsigned> connectedSpringID;
     thrust::device_vector<unsigned> connectedSpringCount;
 

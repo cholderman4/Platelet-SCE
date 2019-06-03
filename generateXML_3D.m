@@ -4,11 +4,11 @@ rng(5, 'twister')
 
 %% Initializing nodes and parameters
 
-UseMembrane = true;
+UseMembrane = false;
 memNodeCount = 0;
-meshFaceCount = 0
+meshFaceCount = 0;
 
-mesh = icoSphereMesh(2);
+mesh = icoSphereMesh(1);
 
 if (UseMembrane)
     memNodeCount = size(mesh.x,1);

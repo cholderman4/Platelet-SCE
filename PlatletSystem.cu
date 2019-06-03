@@ -10,6 +10,10 @@
 #include "LJ_Force.h"
 #include "Bucket_Sort.h"
 
+// #include <thrust/system_error.h>
+// #include <thrust/system/cuda/error.h>
+// #include <sstream>
+
 
 PlatletSystem::PlatletSystem() {};
 
@@ -93,9 +97,14 @@ void PlatletSystem::solvePltSystem() {
         solvePltForces(); 
 
 std::cerr << "Advance_Positions(memNode)\n";
-        Advance_Positions(memNode, generalParams);
+        if (memNode.count > 0) {
+            Advance_Positions(memNode, generalParams);
+        }
+        
 std::cerr << "Advance_Positions(intNode)\n";
-        Advance_Positions(intNode, generalParams);
+        if (intNode.count > 0) {
+            Advance_Positions(intNode, generalParams);
+        }
 
 // std::cerr << "checking: print_VTK_File\n";
         if (simulationParams.iterationCounter % simulationParams.printFileStepSize == 0) {
@@ -292,16 +301,19 @@ void PlatletSystem::printForces() {
 void PlatletSystem::printParams() {
     std::cout << "Testing parameter initialization: \n";
 
-    std::cout << "epsilon: " << generalParams.epsilon << '\n';
-    std::cout << "dt: " << generalParams.dt << '\n';
-    std::cout << "viscousDamp: " << generalParams.viscousDamp << '\n';
-    std::cout << "temperature: " << generalParams.temperature << '\n';
-    std::cout << "kB: " << generalParams.kB << '\n';
-    std::cout << "memNodeMass: " << memNode.mass << '\n';
-    std::cout << "memSpringStiffness: " << springEdge.stiffness << '\n';
-    std::cout << "Morse U: " << generalParams.U_II << '\n';
-    std::cout << "Morse P: " << generalParams.P_II << '\n';
-    std::cout << "Morse R_eq: " << generalParams.R_eq_II << '\n';
+    // std::cout << "epsilon: " << generalParams.epsilon << '\n';
+    // std::cout << "dt: " << generalParams.dt << '\n';
+    // std::cout << "viscousDamp: " << generalParams.viscousDamp << '\n';
+    // std::cout << "temperature: " << generalParams.temperature << '\n';
+    // std::cout << "kB: " << generalParams.kB << '\n';
+    // std::cout << "memNodeMass: " << memNode.mass << '\n';
+    // std::cout << "memSpringStiffness: " << springEdge.stiffness << '\n';
+    // std::cout << "Morse U: " << generalParams.U_II << '\n';
+    // std::cout << "Morse P: " << generalParams.P_II << '\n';
+    // std::cout << "Morse R_eq: " << generalParams.R_eq_II << '\n';
+    std::cout << "memNodeCount: " << memNode.count << '\n';
+    std::cout << "intNodeCount: " << intNode.count << '\n';
+
 }
 
 

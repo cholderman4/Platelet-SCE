@@ -3,6 +3,7 @@
 #include "Advance_Positions.h"
 
 
+
 double Advance_Positions(
 	Node& node,
 	GeneralParams& generalParams) {
@@ -19,7 +20,8 @@ double Advance_Positions(
 		thrust::counting_iterator<unsigned> index_sequence_begin(_seed);
 
 std::cerr << "filling gaussian noise\n";
-		thrust::transform(//thrust::device, 
+		thrust::transform(
+			thrust::device, 
 			index_sequence_begin, 
 			index_sequence_begin + (node.count),
 			gaussianData.begin(), 
@@ -66,6 +68,8 @@ std::cerr << "transform: advance_position\n";
 				generalParams.kB,
 
 				node.mass));
+
+
 				
 std::cerr << "gaussianData size: " << gaussianData.size() << '\n';
 std::cerr << "clearing gaussian data\n";
