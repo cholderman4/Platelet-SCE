@@ -18,13 +18,18 @@ double Advance_Positions(
     	gaussianData.resize(node.count); //
 		thrust::counting_iterator<unsigned> index_sequence_begin(_seed);
 
-    	thrust::transform(thrust::device, index_sequence_begin, index_sequence_begin + (node.count),
-		gaussianData.begin(), psrunifgen(-1.0, 1.0));
+std::cerr << "filling gaussian noise\n";
+		thrust::transform(//thrust::device, 
+			index_sequence_begin, 
+			index_sequence_begin + (node.count),
+			gaussianData.begin(), 
+			psrunifgen(-1.0, 1.0));
 		
 		/* ***************************************************************************************** */
 
 		thrust::counting_iterator<unsigned> nodeIndexBegin(0);
 
+std::cerr << "transform: advance_position\n";
 		thrust::transform(
 			// Input vector #1
 			thrust::make_zip_iterator(
@@ -61,10 +66,21 @@ double Advance_Positions(
 				generalParams.kB,
 
 				node.mass));
-
+				
+std::cerr << "gaussianData size: " << gaussianData.size() << '\n';
+std::cerr << "clearing gaussian data\n";
 		// Clear the random data.
-        gaussianData.clear();
-        gaussianData.shrink_to_fit();
+		gaussianData.clear();
+std::cerr << "cleared\n";
+std::cerr << "gaussianData size: " << gaussianData.size() << '\n';
+
+std::cerr << "shrink_to_fit\n";
+		gaussianData.shrink_to_fit();
+
+		// Another trick to destroy vector
+		// gaussianData.clear();
+		// thrust::device_vector<double>().swap(gaussianData);
+std::cerr << "gaussian data cleared\n";
 
 	return generalParams.dt;
 		//now that nodeLoc is different, we can calculate change and then set previous location

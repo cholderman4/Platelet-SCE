@@ -8,6 +8,7 @@
 #include "Advance_Positions.h"
 #include "Spring_Force.h"
 #include "LJ_Force.h"
+#include "Bucket_Sort.h"
 
 
 PlatletSystem::PlatletSystem() {};
@@ -26,9 +27,9 @@ void PlatletSystem::initializePlatletSystem(
     thrust::host_vector<unsigned> &host_nodeID_R,
     thrust::host_vector<double> &host_len_0) {
     
-    std::cout << "Initializing...\n";
+// std::cerr << "Initializing...\n";
 
-    std::cout << "Initializing nodes\n";
+// std::cerr << "Initializing nodes\n";
     setNodes(
         host_pos_x,
         host_pos_y,
@@ -36,9 +37,12 @@ void PlatletSystem::initializePlatletSystem(
         host_isFixed);
 
 
+    initialize_bucket_vectors();
+
+
     // printPoints();
 
-    std::cout << "Initializing edges\n";
+// std::cerr << "Initializing edges\n";
     setSpringEdge(
         host_nodeID_L,
         host_nodeID_R,
@@ -48,53 +52,63 @@ void PlatletSystem::initializePlatletSystem(
 
     // printConnections();
 
-    std::cout << "Printing parameters.\n";
+// std::cerr << "Printing parameters.\n";
     printParams();
+
+
+
 
 }
 
 
 void PlatletSystem::solvePltSystem() {
+// std::cerr << "solvePltSystem\n";
+    // We want a picture of the initial system.
+    pltStorage->print_VTK_File();
 
+// std::cerr << "setBucketScheme\n";
+    // Make sure the bucket schem is set so we can use it.
+    setBucketScheme();
     
+    // Main loop.
+    // Maybe later add some way to have adaptive control
+    // of the loop so that it only runs for a few time steps
+    // or until it reaches equilibrium, etc.
 
-
+// std::cerr << "starting main loop\n";
     while (simulationParams.runSim == true) {
-
-        pltStorage->print_VTK_File();
-
-        // View what happens in the first few simulation steps.
-        /* if (simulationParams.iterationCounter <= 200) {
-            pltStorage->print_VTK_File();    
-        } */
-
         simulationParams.iterationCounter += 1;
         simulationParams.currentTime += generalParams.dt;
+// std::cerr << "in main loop: " << simulationParams.iterationCounter << " iterations\n";
 
+// std::cerr << "checking bucketScheme reset\n";
+        // Reset the bucket scheme every ten steps.
+        if (simulationParams.iterationCounter % 10 == 0) {
+// std::cerr << "resetting bucketScheme after 10 steps\n";
+            setBucketScheme();
+        }
+
+// std::cerr << "solvePltForces()\n";
         // Reset Forces to zero, then solve for next time step.
         solvePltForces(); 
 
+std::cerr << "Advance_Positions(memNode)\n";
         Advance_Positions(memNode, generalParams);
-
+std::cerr << "Advance_Positions(intNode)\n";
         Advance_Positions(intNode, generalParams);
 
+// std::cerr << "checking: print_VTK_File\n";
         if (simulationParams.iterationCounter % simulationParams.printFileStepSize == 0) {
-
             pltStorage->print_VTK_File(); 
-
-            // Temporary just to verify the output.
-            // printPoints();
         }
 
+// std::cerr << "Checking: simulation end\n";
         // Hard cap on the number of simulation steps. 
         // Currently the only way to stop the simulation.
         if (simulationParams.iterationCounter >= simulationParams.maxIterations) {
             simulationParams.runSim = false;
         }
-
-       // simulationParams.runSim = false;
-    }
-    
+    }    
 }
 
 
@@ -116,7 +130,7 @@ void PlatletSystem::solvePltForces() {
     // printForces();
 
 
-    LJ_Force(memNode, intNode, generalParams);
+    LJ_Force(memNode, intNode, bucketScheme, generalParams);
 
 
     // Fixed nodes. Set forces to zero.
@@ -288,5 +302,45 @@ void PlatletSystem::printParams() {
     std::cout << "Morse U: " << generalParams.U_II << '\n';
     std::cout << "Morse P: " << generalParams.P_II << '\n';
     std::cout << "Morse R_eq: " << generalParams.R_eq_II << '\n';
+}
+
+
+void PlatletSystem::setBucketScheme() {
+    
+    std::cout << "initialize_bucket_dimensions\n";
+    initialize_bucket_dimensions(
+        memNode,
+        intNode,
+        domainParams);
+    
+    std::cout << "set_bucket_grids\n";
+    set_bucket_grids(
+        memNode,
+        intNode,
+        domainParams,
+        bucketScheme);
+
+    std::cout << "assign_nodes_to_buckets\n";
+    assign_nodes_to_buckets(
+        memNode,
+        intNode,
+        domainParams,
+        bucketScheme);
+    
+    std::cout << "extend_to_bucket_neighbors\n";    
+    extend_to_bucket_neighbors(
+        memNode,
+        intNode,
+        domainParams,
+        bucketScheme);
+}
+
+
+void PlatletSystem::initialize_bucket_vectors() {
+
+    bucketScheme.bucket_ID.resize(memNode.count + intNode.count);
+    bucketScheme.globalNode_ID.resize(memNode.count + intNode.count);
+    bucketScheme.bucket_ID_expanded.resize( (memNode.count + intNode.count) * 27 );
+    bucketScheme.globalNode_ID_expanded.resize( (memNode.count + intNode.count) * 27 );
 
 }

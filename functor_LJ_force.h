@@ -54,6 +54,10 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
     unsigned intNodeCount;
 
+    unsigned* globalNode_ID_expanded;
+	unsigned* keyBegin;
+	unsigned* keyEnd;
+
     double U_II;
     double P_II;
     double R_eq_II;
@@ -87,6 +91,10 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
             unsigned& _intNodeCount,
 
+            unsigned* _globalNode_ID_expanded,
+            unsigned* _keyBegin,
+            unsigned* _keyEnd,
+
             double _U_II,
             double _P_II,
             double _R_eq_II,
@@ -117,6 +125,10 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
         intNodeCount(_intNodeCount),
 
+        globalNode_ID_expanded(_globalNode_ID_expanded),
+		keyBegin(_keyBegin),
+		keyEnd(_keyEnd),
+
         U_II(_U_II),
         P_II(_P_II),
         R_eq_II(_R_eq_II),
@@ -127,7 +139,10 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
 
     __device__
-    void operator()(const unsigned id) {
+    void operator()(const Tuu& u2) {
+
+        unsigned node_ID = thrust::get<0>(u2);
+        unsigned bucket_ID = thrust::get<1>(u2);
         // ID of the node being acted on.
         // Membrane nodes first, then internal nodes.
 
@@ -135,9 +150,12 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         double posA_y;
         double posA_z;
 
-        unsigned indexBegin;
-        unsigned indexEnd = memNodeCount + intNodeCount;
+        // Re-do this using bucket sort.
+        // unsigned indexBegin;
+        // unsigned indexEnd = memNodeCount + intNodeCount;
 
+        unsigned indexBegin = keyBegin[bucket_ID];
+        unsigned indexEnd = keyEnd[bucket_ID];
 
         // ********************************************
         // Set parameters as MI.
@@ -153,11 +171,11 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         double* vec_force_z;
 
         bool isFixed{ false };
-        bool isMemNode = (id < memNodeCount) ? true : false;
+        bool isMemNode = (node_ID < memNodeCount) ? true : false;
 
         unsigned idA;
         if (isMemNode) {
-            idA = id;
+            idA = node_ID;
             posA_x = vec_memPos_x[idA];
             posA_y = vec_memPos_y[idA];
             posA_z = vec_memPos_z[idA];
@@ -169,10 +187,10 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
             isFixed = vec_isFixed[idA];
 
             // Don't need LJ force from other membrane nodes.
-            indexBegin = memNodeCount;
+            // indexBegin = memNodeCount;
         } else {
             // The ID has moved passed the membrane nodes and is now into internal nodes.
-            idA = id - memNodeCount;
+            idA = node_ID - memNodeCount;
             posA_x = vec_intPos_x[idA];
             posA_y = vec_intPos_y[idA];
             posA_z = vec_intPos_z[idA];
@@ -189,19 +207,26 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         double sumForce_y = 0.0;
         double sumForce_z = 0.0;
         if (!isFixed) {
-            for (unsigned i = indexBegin; i < indexEnd; ++i) {
+            for (unsigned globalNodeIndex = indexBegin; globalNodeIndex < indexEnd; ++globalNodeIndex) {
 
                 double distAB_x;
                 double distAB_y;
                 double distAB_z;
 
+                unsigned globalNode_ID = globalNode_ID_expanded[globalNodeIndex];
+
                 unsigned idB;
-                if (i < memNodeCount) { // MI, since idA must be internal node.
-                    // Parameters stay at MI.
-                    idB = i;
-                    distAB_x = vec_memPos_x[idB] - posA_x;
-                    distAB_y = vec_memPos_y[idB] - posA_y;
-                    distAB_z = vec_memPos_z[idB] - posA_z;
+                if (globalNode_ID < memNodeCount) { // MI, since idA must be internal node.
+                    if (isMemNode) { // MM
+                        // Don't need membrane-membrane interaction
+                        continue;
+                    } else {
+                        // Parameters stay at MI.
+                        idB = globalNode_ID;
+                        distAB_x = vec_memPos_x[idB] - posA_x;
+                        distAB_y = vec_memPos_y[idB] - posA_y;
+                        distAB_z = vec_memPos_z[idB] - posA_z;
+                    }                    
                 } else { // MI or II
                     if (!isMemNode) {
                         // Change parameters to II.
@@ -209,8 +234,7 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
                         P = P_II;
                         R_eq = R_eq_II;
                     }
-
-                    idB = i - memNodeCount;
+                    idB = globalNode_ID - memNodeCount;
                     distAB_x = vec_intPos_x[idB] - posA_x;
                     distAB_y = vec_intPos_y[idB] - posA_y;
                     distAB_z = vec_intPos_z[idB] - posA_z;

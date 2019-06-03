@@ -5,7 +5,8 @@
 
 void LJ_Force(
     MembraneNode& memNode,
-    Node& intNode, 
+    Node& intNode,
+    BucketScheme& bucketScheme, 
     GeneralParams& generalParams);
 
 

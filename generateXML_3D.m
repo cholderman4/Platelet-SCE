@@ -4,16 +4,16 @@ rng(5, 'twister')
 
 %% Initializing nodes and parameters
 
-UseMembrane = 0;
+UseMembrane = true;
 memNodeCount = 0;
 
-mesh = icoSphereMesh(3);
+mesh = icoSphereMesh(2);
 
 if (UseMembrane)
     memNodeCount = size(mesh.x,1);
 end
 
-intNodeCount = 256;
+intNodeCount = 128;
 fixedNodeCount = 0;
 fixedNodeID = 50;
 
@@ -24,7 +24,7 @@ U = 1.0;
 P = 2.0;
 d = 3;
 density = 0.70;
-R_eq = 2 * (density * R_cell / intNodeCount)^(1/d); 
+R_eq = 2 * R_cell *(density / intNodeCount)^(1/d); 
 
 
 memNode_x = R_cell * mesh.x;
@@ -80,7 +80,7 @@ data.appendChild(product);
 
 for i = 1:memNodeCount
     curr_node = docNode.createElement('mem-node');
-    curr_node.appendChild(docNode.createTextNode(num2str([memNode_.x(i), memNode_.y(i), memNode_.z(i)])));
+    curr_node.appendChild(docNode.createTextNode(num2str([memNode_x(i), memNode_y(i), memNode_z(i)])));
     product.appendChild(curr_node);
 end
 

@@ -123,6 +123,43 @@ struct GeneralParams {
 };
 
 
+struct DomainParams {
+
+    // For now, these are scalars, but in future these may be vectors to have one for each platelet.
+    double min_x;
+    double min_y;
+    double min_z;
+    double max_x;
+    double max_y;
+    double max_z;
+
+    double gridSpacing{ 0.200 };
+
+    unsigned bucketCount_x;
+    unsigned bucketCount_y;
+    unsigned bucketCount_z;
+    unsigned bucketCount_total{ 0 };
+    
+};
+
+
+struct BucketScheme {
+
+    thrust::device_vector<unsigned> keyBegin;
+    thrust::device_vector<unsigned> keyEnd;
+
+    thrust::device_vector<unsigned> bucket_ID;
+    thrust::device_vector<unsigned> globalNode_ID;
+
+    thrust::device_vector<unsigned> bucket_ID_expanded;
+    thrust::device_vector<unsigned> globalNode_ID_expanded;
+
+    unsigned endIndexBucketKeys;
+
+
+};
+
+
 class PlatletSystem {
 public:
     MembraneNode memNode;
@@ -130,6 +167,9 @@ public:
     SpringEdge springEdge;
     SimulationParams simulationParams;
     GeneralParams generalParams;
+    DomainParams domainParams;
+    BucketScheme bucketScheme;
+    
 
     std::shared_ptr<PlatletStorage> pltStorage;
 
@@ -180,6 +220,12 @@ public:
 
 
     void printParams();
+
+
+    void setBucketScheme();
+
+
+    void initialize_bucket_vectors();
 
 };
 

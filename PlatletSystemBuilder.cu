@@ -103,7 +103,7 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 		return nullptr;
 	}
 
-	std::cout << "nodeID.size(): " << nodeID_L.size() << '\n';
+// std::cerr << "nodeID.size(): " << nodeID_L.size() << '\n';
 	if (nodeID_L.size() == nodeID_R.size()) {
 		springEdgeCount = nodeID_L.size();
 		ptr_Platlet_System_Host->springEdge.count = springEdgeCount;
@@ -111,7 +111,7 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 		std::cout << "ERROR: Missing entry on membrane edge connection.\n";
 		return nullptr;
 	}
-	std::cout << "springEdgeCount: " << springEdgeCount << '\n';
+// std::cerr << "springEdgeCount: " << springEdgeCount << '\n';
 
 
 	
