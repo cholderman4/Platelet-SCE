@@ -1,32 +1,33 @@
 clear
 format long
-rng(5, 'twister')
+%rng(5, 'twister')
 
 %% Initializing nodes and parameters
 
-UseMembrane = false;
+UseMembrane = true;
 memNodeCount = 0;
 meshFaceCount = 0;
 
-mesh = icoSphereMesh(1);
+mesh = icoSphereMesh(4);
 
 if (UseMembrane)
     memNodeCount = size(mesh.x,1);
     meshFaceCount = size(mesh.face, 1);
 end
 
-intNodeCount = 128;
+intNodeCount = 2000;
 fixedNodeCount = 0;
 fixedNodeID = 50;
 
 
 % Morse parameters
 R_cell = 1.0;
-U = 1.0;
-P = 2.0;
+U = 0.10;
+P = 2.15;
 d = 3;
-density = 0.70;
-R_eq = 2 * R_cell *(density / intNodeCount)^(1/d); 
+density = 0.750;
+R_eq = R_cell *(density / intNodeCount)^(1/d); 
+%R_eq = 0.15;
 
 
 memNode_x = R_cell * mesh.x;
@@ -41,13 +42,11 @@ memNode_z = R_cell * mesh.z;
 
 
 
-intNodeScale = 0.650;
+intNodeScale = 1.0;
 int_r = intNodeScale * R_cell * rand(intNodeCount, 1);
 int_th = 2*pi * rand(intNodeCount, 1);
 int_phi = pi * rand(intNodeCount, 1); % Set to pi for 2D.
-if (d == 2)
-    int_phi=pi/2;
-end
+
 intNode_x = int_r .* cos(int_th) .* sin(int_phi);
 intNode_y = int_r .* sin(int_th) .* sin(int_phi);
 intNode_z = int_r .* cos(int_phi);
