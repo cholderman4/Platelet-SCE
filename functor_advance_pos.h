@@ -88,7 +88,6 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 									newPos_z, 
 									velocity);
 	}
-
 };
 
 #endif
