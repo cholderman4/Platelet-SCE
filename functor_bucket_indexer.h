@@ -16,14 +16,9 @@ struct functor_bucket_indexer {
 	unsigned bucketCount_z;
 	double gridSpacing;
 
-    double* vec_memPos_x;
-    double* vec_memPos_y;
-    double* vec_memPos_z;
-    unsigned memNodeCount;
-
-    double* vec_intPos_x;
-    double* vec_intPos_y;
-    double* vec_intPos_z;
+    double* vec_pos_x;
+    double* vec_pos_y;
+    double* vec_pos_z;
 
 	__host__ __device__
 
@@ -40,14 +35,9 @@ struct functor_bucket_indexer {
 		unsigned _bucketCount_z,
 		double _gridSpacing,
         
-        double* _vec_memPos_x,
-        double* _vec_memPos_y,
-        double* _vec_memPos_z,
-        unsigned& _memNodeCount,
-        
-        double* _vec_intPos_x,
-        double* _vec_intPos_y,
-        double* _vec_intPos_z) :
+        double* _vec_pos_x,
+        double* _vec_pos_y,
+        double* _vec_pos_z) :
 
 		min_x(_min_x),
 		min_y(_min_y),
@@ -61,33 +51,16 @@ struct functor_bucket_indexer {
 		bucketCount_z(_bucketCount_z),
 		gridSpacing(_gridSpacing),
         
-        vec_memPos_x(_vec_memPos_x),
-        vec_memPos_y(_vec_memPos_y),
-        vec_memPos_z(_vec_memPos_z),
-        memNodeCount(_memNodeCount),
-        
-        vec_intPos_x(_vec_intPos_x),
-        vec_intPos_y(_vec_intPos_y),
-        vec_intPos_z(_vec_intPos_z) {}
+        vec_pos_x(_vec_pos_x),
+        vec_pos_y(_vec_pos_y),
+        vec_pos_z(_vec_pos_z) {}
 
 	__device__ 
 	Tuu operator()(const unsigned& id) {
 
-        double pos_x;
-        double pos_y;
-        double pos_z;
-
-        bool isMemNode = (id < memNodeCount) ? true : false;
-
-        if (isMemNode) {
-            pos_x = vec_memPos_x[id];
-            pos_y = vec_memPos_y[id];
-            pos_z = vec_memPos_z[id];
-        } else {
-            pos_x = vec_intPos_x[id];
-            pos_y = vec_intPos_y[id];
-            pos_z = vec_intPos_z[id];
-        }
+        double pos_x = vec_pos_x[id];
+        double pos_y = vec_pos_y[id];
+        double pos_z = vec_pos_z[id];
 
 
         unsigned x = static_cast<unsigned>((pos_x - min_x) / gridSpacing);

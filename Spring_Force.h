@@ -5,7 +5,7 @@
 #include "SystemStructures.h"
 
 void Spring_Force(
-    MembraneNode& memNode, 
+    Node& node, 
     SpringEdge& springEdge, 
     GeneralParams& generalParams);
 

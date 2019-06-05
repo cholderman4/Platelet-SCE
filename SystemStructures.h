@@ -51,7 +51,6 @@ Eventually these will replace pltInfoVecs and similar structures.
 struct SpringEdge;
 
 struct Node;
-struct MembraneNode;
 struct BucketScheme;
 // **********************************************
 

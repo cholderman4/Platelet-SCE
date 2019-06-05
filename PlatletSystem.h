@@ -45,13 +45,20 @@ struct Node {
     thrust::device_vector<double> force_y;
     thrust::device_vector<double> force_z;
 
-    double mass{ 1.0 };
-    unsigned count{ 0 };
+    // 1: membrane node
+    // 2: interior node
+    thrust::device_vector<unsigned> type;
 
-};
+    double membrane_mass{ 1.0 };
+    double interior_mass{ 1.0 };
+    unsigned membrane_count{ 0 };
+    unsigned interior_count{ 0 };
+    unsigned total_count{ 0 };
 
-struct MembraneNode : public Node {
-
+    // *******************************************
+    // Membrane node info
+    
+    // size() = node.membrane_count
     thrust::device_vector<bool> isFixed;
 
     // Vector size is M * N, 
@@ -60,16 +67,14 @@ struct MembraneNode : public Node {
     // Each entry corresponds to the ID of 
     // a spring that node is connected to.
     thrust::device_vector<unsigned> connectedSpringID;
+
+    // size() = node.membrane_count
     thrust::device_vector<unsigned> connectedSpringCount;
 
     // Used for indexing purposes.
     unsigned maxConnectedSpringCount{ 20 };
+    // *******************************************
 };
-
-
-/* struct InternalNode : public Node {
-
-}; */
 
 struct SimulationParams {
 
@@ -77,7 +82,7 @@ struct SimulationParams {
     bool runSim{ true };
     double currentTime{ 0.0 };
     unsigned iterationCounter{ 0 };
-    unsigned maxIterations{ 10000 };
+    unsigned maxIterations{ 20000 };
     unsigned printFileStepSize{ 500 };
 
 };
@@ -163,8 +168,7 @@ struct BucketScheme {
 
 class PlatletSystem {
 public:
-    MembraneNode memNode;
-    Node intNode;
+    Node node;
     SpringEdge springEdge;
     SimulationParams simulationParams;
     GeneralParams generalParams;

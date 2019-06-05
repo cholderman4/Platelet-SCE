@@ -7,7 +7,7 @@
 // This function is node-based. That is, for each node, it
 // loops through all the edges connected to it.
 void Spring_Force(
-    MembraneNode& memNode, 
+    Node& node, 
     SpringEdge& springEdge, 
     GeneralParams& generalParams) {
 
@@ -17,33 +17,30 @@ void Spring_Force(
         thrust::make_zip_iterator(
             thrust::make_tuple(
                 startEdgeIter,
-                memNode.isFixed.begin())),
+                node.isFixed.begin())),
         thrust::make_zip_iterator(
             thrust::make_tuple(
                 startEdgeIter,
-                memNode.isFixed.begin())) + memNode.count,
+                node.isFixed.begin())) + node.membrane_count,
         functor_spring_force(
-            thrust::raw_pointer_cast(memNode.pos_x.data()),
-            thrust::raw_pointer_cast(memNode.pos_y.data()),
-            thrust::raw_pointer_cast(memNode.pos_z.data()),
+            thrust::raw_pointer_cast(node.pos_x.data()),
+            thrust::raw_pointer_cast(node.pos_y.data()),
+            thrust::raw_pointer_cast(node.pos_z.data()),
 
-            thrust::raw_pointer_cast(memNode.force_x.data()),
-            thrust::raw_pointer_cast(memNode.force_y.data()),
-            thrust::raw_pointer_cast(memNode.force_z.data()),
+            thrust::raw_pointer_cast(node.force_x.data()),
+            thrust::raw_pointer_cast(node.force_y.data()),
+            thrust::raw_pointer_cast(node.force_z.data()),
 
-            thrust::raw_pointer_cast(memNode.isFixed.data()),
+            thrust::raw_pointer_cast(node.isFixed.data()),
 
-            thrust::raw_pointer_cast(memNode.connectedSpringID.data()),
-            thrust::raw_pointer_cast(memNode.connectedSpringCount.data()),
+            thrust::raw_pointer_cast(node.connectedSpringID.data()),
+            thrust::raw_pointer_cast(node.connectedSpringCount.data()),
 
-            memNode.maxConnectedSpringCount,
+            node.maxConnectedSpringCount,
 
             thrust::raw_pointer_cast(springEdge.nodeID_L.data()),
             thrust::raw_pointer_cast(springEdge.nodeID_R.data()),
             thrust::raw_pointer_cast(springEdge.len_0.data()),
             
-            springEdge.stiffness) );
-    
+            springEdge.stiffness) );    
 }
-// ******************************************************
-// This function is spring-based. For each spring, it assigns forces 

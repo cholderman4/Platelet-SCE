@@ -4,8 +4,7 @@
 #include "SystemStructures.h"
 
 void LJ_Force(
-    MembraneNode& memNode,
-    Node& intNode,
+    Node& node,
     BucketScheme& bucketScheme, 
     GeneralParams& generalParams);
 

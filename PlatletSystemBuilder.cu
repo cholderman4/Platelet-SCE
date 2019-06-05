@@ -117,12 +117,13 @@ std::shared_ptr<PlatletSystem> PlatletSystemBuilder::Create_Platlet_System_On_De
 	
 	// Temporary value for 2D.
 	// Not sure what this should be in general.
-	ptr_Platlet_System_Host->memNode.maxConnectedSpringCount = 20;
-	ptr_Platlet_System_Host->memNode.count = memNodeCount;
-	ptr_Platlet_System_Host->memNode.mass = memNodeMass;
-	ptr_Platlet_System_Host->intNode.count = intNodeCount;
-	ptr_Platlet_System_Host->intNode.mass = intNodeMass;
+	ptr_Platlet_System_Host->node.maxConnectedSpringCount = 20;
+	ptr_Platlet_System_Host->node.membrane_count = memNodeCount;
+	ptr_Platlet_System_Host->node.membrane_mass = memNodeMass;
+	ptr_Platlet_System_Host->node.interior_count = intNodeCount;
+	ptr_Platlet_System_Host->node.interior_mass = intNodeMass;
 	ptr_Platlet_System_Host->springEdge.stiffness = memSpringStiffness;
+	ptr_Platlet_System_Host->node.total_count = memNodeCount + intNodeCount;
 
 	ptr_Platlet_System_Host->generalParams = generalParams;
 

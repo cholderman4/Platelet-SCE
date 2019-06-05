@@ -66,12 +66,10 @@ void PlatletSystem::initializePlatletSystem(
 
 
 void PlatletSystem::solvePltSystem() {
-// std::cerr << "solvePltSystem\n";
     // We want a picture of the initial system.
     pltStorage->print_VTK_File();
 
-// std::cerr << "setBucketScheme\n";
-    // Make sure the bucket schem is set so we can use it.
+    // Make sure the bucket scheme is set so we can use it.
     setBucketScheme();
     
     // Main loop.
@@ -79,39 +77,24 @@ void PlatletSystem::solvePltSystem() {
     // of the loop so that it only runs for a few time steps
     // or until it reaches equilibrium, etc.
 
-// std::cerr << "starting main loop\n";
     while (simulationParams.runSim == true) {
         simulationParams.iterationCounter += 1;
         simulationParams.currentTime += generalParams.dt;
-// std::cerr << "in main loop: " << simulationParams.iterationCounter << " iterations\n";
 
-// std::cerr << "checking bucketScheme reset\n";
         // Reset the bucket scheme every ten steps.
         if (simulationParams.iterationCounter % 10 == 0) {
-// std::cerr << "resetting bucketScheme after 10 steps\n";
             setBucketScheme();
         }
 
-// std::cerr << "solvePltForces()\n";
         // Reset Forces to zero, then solve for next time step.
         solvePltForces(); 
 
-std::cerr << "Advance_Positions(memNode)\n";
-        if (memNode.count > 0) {
-            Advance_Positions(memNode, generalParams);
-        }
-        
-std::cerr << "Advance_Positions(intNode)\n";
-        if (intNode.count > 0) {
-            Advance_Positions(intNode, generalParams);
-        }
+        Advance_Positions(node, generalParams);
 
-// std::cerr << "checking: print_VTK_File\n";
         if (simulationParams.iterationCounter % simulationParams.printFileStepSize == 0) {
             pltStorage->print_VTK_File(); 
         }
 
-// std::cerr << "Checking: simulation end\n";
         // Hard cap on the number of simulation steps. 
         // Currently the only way to stop the simulation.
         if (simulationParams.iterationCounter >= simulationParams.maxIterations) {
@@ -124,25 +107,15 @@ std::cerr << "Advance_Positions(intNode)\n";
 void PlatletSystem::solvePltForces() {
 
     // Reset forces to zero.
-    thrust::fill(memNode.force_x.begin(), memNode.force_x.end(), 0.0);    
-    thrust::fill(memNode.force_y.begin(), memNode.force_y.end(), 0.0);    
-    thrust::fill(memNode.force_z.begin(), memNode.force_z.end(), 0.0);
+    thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);    
+    thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);    
+    thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
 
-    thrust::fill(intNode.force_x.begin(), intNode.force_x.end(), 0.0);    
-    thrust::fill(intNode.force_y.begin(), intNode.force_y.end(), 0.0);    
-    thrust::fill(intNode.force_z.begin(), intNode.force_z.end(), 0.0);
-
-
-    Spring_Force(memNode, springEdge, generalParams);
+    Spring_Force(node, springEdge, generalParams);
+    LJ_Force(node, bucketScheme, generalParams);
 
     // Used only for debugging.
     // printForces();
-
-
-    LJ_Force(memNode, intNode, bucketScheme, generalParams);
-
-
-    // Fixed nodes. Set forces to zero.
 }
 
 
@@ -153,53 +126,49 @@ void PlatletSystem::setNodes(
     thrust::host_vector<bool> &host_isFixed) {
 
     // pre-allocating for speed.
-    memNode.pos_x.resize(memNode.count);
-    memNode.pos_y.resize(memNode.count);
-    memNode.pos_z.resize(memNode.count);
+    if ( node.total_count == host_pos_x.size() ) {
+        node.pos_x.resize(node.total_count);
+        node.pos_y.resize(node.total_count);
+        node.pos_z.resize(node.total_count);
 
-    memNode.velocity.resize(memNode.count);
+        node.velocity.resize(node.total_count);
+        
+        node.force_x.resize(node.total_count);
+        node.force_y.resize(node.total_count);
+        node.force_z.resize(node.total_count);
+
+        node.type.resize(node.total_count);
+
+
+        // Filling with values from the SystemBuilder.
+        // host_vectors for PlatletSystemBuilder contain all memNodes, followed by all intNodes.
+        thrust::copy(host_pos_x.begin(), host_pos_x.end(), node.pos_x.begin());
+        thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
+        thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());
+
+        thrust::fill(node.velocity.begin(), node.velocity.end(), 0.0);
+
+        thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);
+        thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);
+        thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
+
+        thrust::fill(node.type.begin(), node.type.begin() + node.membrane_count, 1);
+        thrust::fill(node.type.begin() + node.membrane_count, node.type.begin() + node.membrane_count + node.interior_count, 2);
+    } else {
+        std::cerr << "ERROR: position vector not same size as node.total_count." << std::endl;
+        return; 
+    }
     
-    memNode.force_x.resize(memNode.count);
-    memNode.force_y.resize(memNode.count);
-    memNode.force_z.resize(memNode.count);
-
-    memNode.isFixed.resize(memNode.count);
-
-    // Filling with values from the SystemBuilder.
-    // host_vectors for PlatletSystemBuilder contain all memNodes, followed by all intNodes.
-    // First, we fill only the membrane nodes.
-    thrust::copy(host_pos_x.begin(), host_pos_x.begin() + memNode.count, memNode.pos_x.begin());
-    thrust::copy(host_pos_y.begin(), host_pos_y.begin() + memNode.count, memNode.pos_y.begin());
-    thrust::copy(host_pos_z.begin(), host_pos_z.begin() + memNode.count, memNode.pos_z.begin());
-
-    thrust::fill(memNode.velocity.begin(), memNode.velocity.begin() + memNode.count, 0.0);
-
-    thrust::fill(memNode.force_x.begin(), memNode.force_x.begin() + memNode.count, 0.0);
-    thrust::fill(memNode.force_y.begin(), memNode.force_y.begin() + memNode.count, 0.0);
-    thrust::fill(memNode.force_z.begin(), memNode.force_z.begin() + memNode.count, 0.0);
-
-    thrust::copy(host_isFixed.begin(), host_isFixed.begin() + memNode.count, memNode.isFixed.begin());
-
-    // Now we repeat the process for the internal nodes.
-    intNode.pos_x.resize(intNode.count);
-    intNode.pos_y.resize(intNode.count);
-    intNode.pos_z.resize(intNode.count);
-
-    intNode.velocity.resize(intNode.count);
-    
-    intNode.force_x.resize(intNode.count);
-    intNode.force_y.resize(intNode.count);
-    intNode.force_z.resize(intNode.count);
-
-    thrust::copy(host_pos_x.begin() + memNode.count, host_pos_x.end(), intNode.pos_x.begin());
-    thrust::copy(host_pos_y.begin() + memNode.count, host_pos_y.end(), intNode.pos_y.begin());
-    thrust::copy(host_pos_z.begin() + memNode.count, host_pos_z.end(), intNode.pos_z.begin());
-
-    thrust::fill(intNode.velocity.begin(), intNode.velocity.end(), 0.0);
-
-    thrust::fill(intNode.force_x.begin(), intNode.force_x.end(), 0.0);
-    thrust::fill(intNode.force_y.begin(), intNode.force_y.end(), 0.0);
-    thrust::fill(intNode.force_z.begin(), intNode.force_z.end(), 0.0);
+    if ( node.membrane_count == host_isFixed.size() ) {
+        node.isFixed.resize(node.membrane_count);
+        thrust::copy(
+            host_isFixed.begin(), 
+            host_isFixed.begin() + node.membrane_count, 
+            node.isFixed.begin());
+    } else {
+        std::cerr << "ERROR: isFixed vector not same size as node.membrane_count." << std::endl;
+        return; 
+    }
 }
 
 
@@ -208,60 +177,49 @@ void PlatletSystem::setSpringEdge(
     thrust::host_vector<unsigned> &host_nodeID_R,
     thrust::host_vector<double> &host_len_0) {
 
-
-        
-    std::cout << "Resizing springEdge vectors.\n";
-
+    
     springEdge.nodeID_L.resize(springEdge.count);
     springEdge.nodeID_R.resize(springEdge.count);
     springEdge.len_0.resize(springEdge.count);
 
-    memNode.connectedSpringID.resize(memNode.count * memNode.maxConnectedSpringCount);
-    memNode.connectedSpringCount.resize(memNode.count);
-
-    std::cout << "Filling vectors with garbage values.\n";
-
-    thrust::fill(memNode.connectedSpringCount.begin(), memNode.connectedSpringCount.end(), 0);
-    thrust::fill(memNode.connectedSpringID.begin(), memNode.connectedSpringID.end(), 47);
-
-    // std::cout << "Copying from host to device.\n";
-
-    // std::cout << "nodeID_L\n";
-    // std::cout << "springEdge.count: " << springEdge.count 
-        // << "\t host_nodeID.size: " << host_nodeID_L.size() << '\n';
     thrust::copy(host_nodeID_L.begin(), host_nodeID_L.end(), springEdge.nodeID_L.begin());
-     
-    // std::cout << "nodeID_R\n";
     thrust::copy(host_nodeID_R.begin(), host_nodeID_R.end(), springEdge.nodeID_R.begin());
-    
-    // std::cout << "len_0\n";
     thrust::copy(host_len_0.begin(), host_len_0.end(), springEdge.len_0.begin());
+    
+    
+    node.connectedSpringID.resize(node.membrane_count * node.maxConnectedSpringCount);
+    node.connectedSpringCount.resize(node.membrane_count);
+
+    thrust::fill(node.connectedSpringCount.begin(), node.connectedSpringCount.end(), 0);
+    thrust::fill(node.connectedSpringID.begin(), node.connectedSpringID.end(), 0);
+
 
     // std::cout << "Building connectedSpringID vector.\n";
     // Merge nodeID_(R/L) into connectedSpringID using maxConnectedSpringCount.
     // Build connectedSpringCount as we go.
     for (auto s = 0; s < springEdge.count; ++s) {
-        unsigned n = springEdge.nodeID_L[s];
-        unsigned index = n * memNode.maxConnectedSpringCount + memNode.connectedSpringCount[n];
-        memNode.connectedSpringID[index] = s;
-        ++memNode.connectedSpringCount[n];
-
-        n = springEdge.nodeID_R[s];
-        index = n * memNode.maxConnectedSpringCount + memNode.connectedSpringCount[n];
-        memNode.connectedSpringID[index] = s;
-        ++memNode.connectedSpringCount[n];
+        for (auto isLeft = 0; isLeft < 2; ++isLeft) {
+            unsigned n;
+            if (isLeft == 0) {
+                n = springEdge.nodeID_R[s];
+            } else if (isLeft == 1) {
+                n = springEdge.nodeID_L[s];
+            }
+            unsigned index = n * node.maxConnectedSpringCount + node.connectedSpringCount[n];
+            node.connectedSpringID[index] = s;
+            ++node.connectedSpringCount[n];
+        }
     }
-
 }
 
 
 void PlatletSystem::printPoints() {
     std::cout << "Testing initialization of vector position:\n";
-    for(auto i = 0; i < memNode.pos_x.size(); ++i) {
+    for(auto i = 0; i < node.pos_x.size(); ++i) {
         std::cout << "Node " << i << ": ("
-            << memNode.pos_x[i] << ", "
-            << memNode.pos_y[i] << ", "
-            << memNode.pos_z[i] << ")\n";
+            << node.pos_x[i] << ", "
+            << node.pos_y[i] << ", "
+            << node.pos_z[i] << ")\n";
     }
 }
 
@@ -276,12 +234,12 @@ void PlatletSystem::printConnections() {
     }
 
     std::cout << "Testing connectedSpringID vector:\n";
-    for(auto i = 0; i <  memNode.connectedSpringID.size(); ++i) {
-        std::cout << memNode.connectedSpringID[i] << '\n';
+    for(auto i = 0; i <  node.connectedSpringID.size(); ++i) {
+        std::cout << node.connectedSpringID[i] << '\n';
     } */
 
     std::cout << "Testing nodeDegree vector:\n";
-    for(auto i = memNode.connectedSpringCount.begin(); i != memNode.connectedSpringCount.end(); ++i) {
+    for(auto i = node.connectedSpringCount.begin(); i != node.connectedSpringCount.end(); ++i) {
         std::cout << *i << '\n';
     }
 }
@@ -289,11 +247,11 @@ void PlatletSystem::printConnections() {
 
 void PlatletSystem::printForces() {
     std::cout << "Testing force calculation:" << std::endl;
-        for(auto i = 0; i < memNode.force_x.size(); ++i) {
+        for(auto i = 0; i < node.force_x.size(); ++i) {
             std::cout << "Force on node " << i << ": ("
-                << memNode.force_x[i] << ", "
-                << memNode.force_y[i] << ", "
-                << memNode.force_z[i] << ")" << std::endl;
+                << node.force_x[i] << ", "
+                << node.force_y[i] << ", "
+                << node.force_z[i] << ")" << std::endl;
         }
 }
 
@@ -311,38 +269,30 @@ void PlatletSystem::printParams() {
     // std::cout << "Morse U: " << generalParams.U_II << '\n';
     // std::cout << "Morse P: " << generalParams.P_II << '\n';
     // std::cout << "Morse R_eq: " << generalParams.R_eq_II << '\n';
-    std::cout << "memNodeCount: " << memNode.count << '\n';
-    std::cout << "intNodeCount: " << intNode.count << '\n';
+    std::cout << "memNodeCount: " << node.membrane_count << '\n';
+    std::cout << "intNodeCount: " << node.interior_count << '\n';
 
 }
 
 
 void PlatletSystem::setBucketScheme() {
     
-    std::cout << "initialize_bucket_dimensions\n";
     initialize_bucket_dimensions(
-        memNode,
-        intNode,
+        node,
         domainParams);
     
-    std::cout << "set_bucket_grids\n";
     set_bucket_grids(
-        memNode,
-        intNode,
+        node,
         domainParams,
         bucketScheme);
 
-    std::cout << "assign_nodes_to_buckets\n";
     assign_nodes_to_buckets(
-        memNode,
-        intNode,
+        node,
         domainParams,
         bucketScheme);
     
-    std::cout << "extend_to_bucket_neighbors\n";    
     extend_to_bucket_neighbors(
-        memNode,
-        intNode,
+        node,
         domainParams,
         bucketScheme);
 }
@@ -350,9 +300,9 @@ void PlatletSystem::setBucketScheme() {
 
 void PlatletSystem::initialize_bucket_vectors() {
 
-    bucketScheme.bucket_ID.resize(memNode.count + intNode.count);
-    bucketScheme.globalNode_ID.resize(memNode.count + intNode.count);
-    bucketScheme.bucket_ID_expanded.resize( (memNode.count + intNode.count) * 27 );
-    bucketScheme.globalNode_ID_expanded.resize( (memNode.count + intNode.count) * 27 );
+    bucketScheme.bucket_ID.resize(node.total_count);
+    bucketScheme.globalNode_ID.resize(node.total_count);
+    bucketScheme.bucket_ID_expanded.resize( node.total_count * 27 );
+    bucketScheme.globalNode_ID_expanded.resize( node.total_count * 27 );
 
 }
