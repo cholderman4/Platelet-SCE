@@ -19,15 +19,20 @@ intNodeCount = 2000;
 fixedNodeCount = 0;
 fixedNodeID = 50;
 
+intNodeScale = 0.950;
 
 % Morse parameters
 R_cell = 1.0;
-U = 0.10;
-P = 2.15;
+U_II = 1.0;
+P_II = 2.15;
 d = 3;
-density = 0.750;
-R_eq = R_cell *(density / intNodeCount)^(1/d); 
+density = 0.640;
+R_eq_II = intNodeScale * R_cell *(density / intNodeCount)^(1/d); 
 %R_eq = 0.15;
+
+U_MI = 20*U_II;
+P_MI = P_II;
+R_eq_MI = R_eq_II;
 
 
 memNode_x = R_cell * mesh.x;
@@ -42,7 +47,6 @@ memNode_z = R_cell * mesh.z;
 
 
 
-intNodeScale = 1.0;
 int_r = intNodeScale * R_cell * rand(intNodeCount, 1);
 int_th = 2*pi * rand(intNodeCount, 1);
 int_phi = pi * rand(intNodeCount, 1); % Set to pi for 2D.
@@ -64,8 +68,8 @@ data = docNode.getDocumentElement;
 product = docNode.createElement('settings');
 data.appendChild(product);
 
-settingsList = {'morse-U', 'morse-P', 'morse-R_eq', 'memNodeCount', 'intNodeCount', 'viscousDamp', 'memSpringStiffness', 'memNodeMass', 'temperature', 'kB'};
-values = [U, P, R_eq, memNodeCount, intNodeCount, 3.769911184308, 500.0, 1.0, 300.0, 1.3806488e-8];
+settingsList = {'morse-U_MI', 'morse-P_MI', 'morse-R_eq_MI', 'morse-U_II', 'morse-P_II', 'morse-R_eq_II', 'memNodeCount', 'intNodeCount', 'viscousDamp', 'memSpringStiffness', 'memNodeMass', 'temperature', 'kB'};
+values = [U_MI, P_MI, R_eq_MI, U_II, P_II, R_eq_II, memNodeCount, intNodeCount, 3.769911184308, 500.0, 1.0, 300.0, 1.3806488e-8];
 
 for k = 1:numel(settingsList)
    curr_node = docNode.createElement(settingsList(k));
@@ -138,4 +142,4 @@ end
 
 
 xmlwrite('info.xml',docNode);
-type('info.xml');
+%type('info.xml');
