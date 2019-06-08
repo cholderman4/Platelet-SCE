@@ -45,6 +45,8 @@ struct Node {
     thrust::device_vector<double> force_y;
     thrust::device_vector<double> force_z;
 
+    thrust::device_vector<double> energy;
+
     // 1: membrane node
     // 2: interior node
     thrust::device_vector<unsigned> type;
@@ -82,7 +84,7 @@ struct SimulationParams {
     bool runSim{ true };
     double currentTime{ 0.0 };
     unsigned iterationCounter{ 0 };
-    unsigned maxIterations{ 20000 };
+    unsigned maxIterations{ 40000 };
     unsigned printFileStepSize{ 500 };
 
 };
@@ -92,11 +94,13 @@ struct GeneralParams {
 
     // Parameters used in various formulae. 
     double epsilon{ 0.0001 };
-    double dt{ 0.001 };
+    double dt{ 0.0005 };
 
 	double viscousDamp{ 3.769911184308 }; // ???
 	double temperature{ 300.0 };
 	double kB{ 1.3806488e-8 };
+
+    double totalEnergy{ 0.0 };
 
     // LJ force parameters.
     /* double U_II{ 0.049 };

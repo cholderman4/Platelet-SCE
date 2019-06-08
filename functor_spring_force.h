@@ -15,10 +15,17 @@
 
 
 
-__host__ __device__ double springForceByCoord(double dist, double coordDist, double k, double l_0) {
+__host__ __device__ 
+double springForceByCoord(double dist, double coordDist, double k, double l_0) {
     // double k = 20;
 
     return k*(dist - l_0)*coordDist/dist;
+}
+
+__host__ __device__
+double springEnergy(double R, double K, double l_0) {
+
+    return 0.5*K*(R - l_0)*(R - l_0);
 }
 
 template <typename T>
@@ -27,7 +34,7 @@ __host__ __device__ T norm(T x, T y, T z) {
 }
 
 
-struct functor_spring_force : public thrust::unary_function<unsigned, void> {
+struct functor_spring_force : public thrust::unary_function<Tub, double> {
     double* vec_pos_x;
     double* vec_pos_y;
     double* vec_pos_z;
@@ -96,10 +103,12 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
 
 
     __device__
-    void operator()(const Tub& u1b1) {
+    double operator()(const Tub& u1b1) {
         // ID of the node being acted on.
         unsigned idA = thrust::get<0>(u1b1);
         bool isFixed = thrust::get<1>(u1b1);
+
+        double sumEnergy{ 0.0 };
 
         if (!isFixed) {
             double sumForce_x = 0.0;
@@ -140,6 +149,11 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
 
                 double dist = norm(distAB_x, distAB_y, distAB_z);
 
+                double tempEnergy = springEnergy(dist, memSpringStiffness, length_0);
+                if (isfinite(tempEnergy)){
+                    sumEnergy += tempEnergy;
+                }
+
                 if (fabs(dist)>=1.0e-12) {
                     //Calculate force from linear spring (Hooke's Law) on node.
                     sumForce_x += springForceByCoord(dist, distAB_x, memSpringStiffness, length_0);
@@ -160,7 +174,7 @@ struct functor_spring_force : public thrust::unary_function<unsigned, void> {
 
         }
 
-            
+        return sumEnergy;            
         
     } // End operator()
 }; // End struct

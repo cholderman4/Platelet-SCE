@@ -13,15 +13,22 @@ void Spring_Force(
 
     thrust::counting_iterator<unsigned> startEdgeIter(0);
 
-    thrust::for_each(
+    thrust::transform(
+        // Input begin.
         thrust::make_zip_iterator(
             thrust::make_tuple(
                 startEdgeIter,
                 node.isFixed.begin())),
+
+        // Input end.
         thrust::make_zip_iterator(
             thrust::make_tuple(
                 startEdgeIter,
                 node.isFixed.begin())) + node.membrane_count,
+        
+        // Output.
+        node.energy.begin(),
+        
         functor_spring_force(
             thrust::raw_pointer_cast(node.pos_x.data()),
             thrust::raw_pointer_cast(node.pos_y.data()),
@@ -42,5 +49,10 @@ void Spring_Force(
             thrust::raw_pointer_cast(springEdge.nodeID_R.data()),
             thrust::raw_pointer_cast(springEdge.len_0.data()),
             
-            springEdge.stiffness) );    
+            springEdge.stiffness) );  
+            
+    generalParams.totalEnergy += 
+        thrust::reduce(
+            node.energy.begin(),
+            node.energy.begin() + node.membrane_count);
 }

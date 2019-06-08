@@ -2,6 +2,7 @@
 // Included for printing test messages.
 #include <iostream>
 #include <cstdio>
+#include <cassert>
 // ************************************
 #include "PlatletStorage.h"
 #include "PlatletSystem.h" 
@@ -31,9 +32,8 @@ void PlatletSystem::initializePlatletSystem(
     thrust::host_vector<unsigned> &host_nodeID_R,
     thrust::host_vector<double> &host_len_0) {
     
-// std::cerr << "Initializing...\n";
 
-// std::cerr << "Initializing nodes\n";
+    // std::cerr << "Initializing nodes\n";
     setNodes(
         host_pos_x,
         host_pos_y,
@@ -46,7 +46,7 @@ void PlatletSystem::initializePlatletSystem(
 
     // printPoints();
 
-// std::cerr << "Initializing edges\n";
+    // std::cerr << "Initializing edges\n";
     setSpringEdge(
         host_nodeID_L,
         host_nodeID_R,
@@ -56,12 +56,8 @@ void PlatletSystem::initializePlatletSystem(
 
     // printConnections();
 
-// std::cerr << "Printing parameters.\n";
+    // std::cerr << "Printing parameters.\n";
     printParams();
-
-
-
-
 }
 
 
@@ -91,8 +87,10 @@ void PlatletSystem::solvePltSystem() {
 
         Advance_Positions(node, generalParams);
 
+        // Log simulation state.
         if (simulationParams.iterationCounter % simulationParams.printFileStepSize == 0) {
             pltStorage->print_VTK_File(); 
+            std::cout << "Energy: " << generalParams.totalEnergy << '\n';
         }
 
         // Hard cap on the number of simulation steps. 
@@ -111,6 +109,9 @@ void PlatletSystem::solvePltForces() {
     thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);    
     thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
 
+    thrust::fill(node.energy.begin(), node.energy.end(), 0.0);
+    generalParams.totalEnergy = 0.0;
+
     Spring_Force(node, springEdge, generalParams);
     LJ_Force(node, bucketScheme, generalParams);
 
@@ -126,49 +127,49 @@ void PlatletSystem::setNodes(
     thrust::host_vector<bool> &host_isFixed) {
 
     // pre-allocating for speed.
-    if ( node.total_count == host_pos_x.size() ) {
-        node.pos_x.resize(node.total_count);
-        node.pos_y.resize(node.total_count);
-        node.pos_z.resize(node.total_count);
-
-        node.velocity.resize(node.total_count);
+    assert( node.total_count == host_pos_x.size() );
         
-        node.force_x.resize(node.total_count);
-        node.force_y.resize(node.total_count);
-        node.force_z.resize(node.total_count);
+    node.pos_x.resize(node.total_count);
+    node.pos_y.resize(node.total_count);
+    node.pos_z.resize(node.total_count);
 
-        node.type.resize(node.total_count);
-
-
-        // Filling with values from the SystemBuilder.
-        // host_vectors for PlatletSystemBuilder contain all memNodes, followed by all intNodes.
-        thrust::copy(host_pos_x.begin(), host_pos_x.end(), node.pos_x.begin());
-        thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
-        thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());
-
-        thrust::fill(node.velocity.begin(), node.velocity.end(), 0.0);
-
-        thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);
-        thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);
-        thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
-
-        thrust::fill(node.type.begin(), node.type.begin() + node.membrane_count, 1);
-        thrust::fill(node.type.begin() + node.membrane_count, node.type.begin() + node.membrane_count + node.interior_count, 2);
-    } else {
-        std::cerr << "ERROR: position vector not same size as node.total_count." << std::endl;
-        return; 
-    }
+    node.velocity.resize(node.total_count);
     
-    if ( node.membrane_count == host_isFixed.size() ) {
-        node.isFixed.resize(node.membrane_count);
-        thrust::copy(
-            host_isFixed.begin(), 
-            host_isFixed.begin() + node.membrane_count, 
-            node.isFixed.begin());
-    } else {
-        std::cerr << "ERROR: isFixed vector not same size as node.membrane_count." << std::endl;
-        return; 
-    }
+    node.force_x.resize(node.total_count);
+    node.force_y.resize(node.total_count);
+    node.force_z.resize(node.total_count);
+    
+    node.energy.resize(node.total_count);
+
+    node.type.resize(node.total_count);
+
+
+
+    // Filling with values from the SystemBuilder.
+    // host_vectors for PlatletSystemBuilder contain all memNodes, followed by all intNodes.
+    thrust::copy(host_pos_x.begin(), host_pos_x.end(), node.pos_x.begin());
+    thrust::copy(host_pos_y.begin(), host_pos_y.end(), node.pos_y.begin());
+    thrust::copy(host_pos_z.begin(), host_pos_z.end(), node.pos_z.begin());
+
+    thrust::fill(node.velocity.begin(), node.velocity.end(), 0.0);
+
+    thrust::fill(node.force_x.begin(), node.force_x.end(), 0.0);
+    thrust::fill(node.force_y.begin(), node.force_y.end(), 0.0);
+    thrust::fill(node.force_z.begin(), node.force_z.end(), 0.0);
+
+    thrust::fill(node.energy.begin(), node.energy.end(), 0.0);
+
+    thrust::fill(node.type.begin(), node.type.begin() + node.membrane_count, 1);
+    thrust::fill(node.type.begin() + node.membrane_count, node.type.begin() + node.membrane_count + node.interior_count, 2);
+    
+    
+    assert( node.membrane_count == host_isFixed.size() );
+
+    node.isFixed.resize(node.membrane_count);
+    thrust::copy(
+        host_isFixed.begin(), 
+        host_isFixed.begin() + node.membrane_count, 
+        node.isFixed.begin());
 }
 
 

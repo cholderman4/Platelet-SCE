@@ -15,7 +15,8 @@
 
 
 
-__host__ __device__ double LJForceByCoord(double R, double coordDist, 
+__host__ __device__ 
+double LJForceByCoord(double R, double coordDist, 
         double U, double P, double R_eq) {
 
     // New formula for Morse potential.
@@ -23,7 +24,12 @@ __host__ __device__ double LJForceByCoord(double R, double coordDist,
     return 4 * U * P * (R/R_eq) 
         * ( exp( 2 * P * (1 - (R/R_eq)*(R/R_eq))) - exp( P * (1 - (R/R_eq)*(R/R_eq))) )
         * coordDist/R;
+}
 
+__host__ __device__ 
+double morseEnergy(double R, double U, double P, double R_eq) {
+
+    return 0.5*U*( exp( 2*P*(1 - (R/R_eq)*(R/R_eq))) - 2*exp(P*(1 - (R/R_eq)*(R/R_eq))) ); 
 }
 
 template <typename T>
@@ -32,7 +38,7 @@ __host__ __device__ T norm(T x, T y, T z) {
 }
 
 
-struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
+struct functor_LJ_force : public thrust::unary_function<Tuu, double> {
     double* vec_pos_x;
     double* vec_pos_y;
     double* vec_pos_z;
@@ -113,11 +119,12 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
 
 
     __device__
-    void operator()(const Tuu& u2) {
+    double operator()(const Tuu& u2) {
         
         // ID of the node being acted on.
         unsigned idA = thrust::get<0>(u2);
-        
+
+        // Bucket that current node is in. 
         unsigned bucket_ID = thrust::get<1>(u2);
 
         double posA_x = vec_pos_x[idA];
@@ -137,6 +144,8 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
         double sumForce_x = 0.0;
         double sumForce_y = 0.0;
         double sumForce_z = 0.0;
+
+        double sumEnergy{ 0.0 };
 
         if (!isFixed) {
             for (unsigned globalNodeIndex = indexBegin; globalNodeIndex < indexEnd; ++globalNodeIndex) {
@@ -165,6 +174,10 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
                 double distAB_z = vec_pos_z[idB] - posA_z;
 
                 double dist = norm(distAB_x, distAB_y, distAB_z);
+                double tempEnergy = morseEnergy(dist, U, P, R_eq);
+                if (isfinite(tempEnergy)) {
+                    sumEnergy += tempEnergy;
+                }
 
                 if (fabs(dist)>=1.0e-12) {
                     //Calculate force from LJ potential.
@@ -183,7 +196,9 @@ struct functor_LJ_force : public thrust::unary_function<unsigned, void> {
             if(isfinite(sumForce_x)) {
                 vec_force_z[idA] += sumForce_z;
             }
-        }            
+        }
+
+    return sumEnergy;            
         
     } // End operator()
 }; // End struct
