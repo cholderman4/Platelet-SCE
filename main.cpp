@@ -1,6 +1,7 @@
 
 // Not sure how many of these are actually needed.
 // ************************************************
+#include <cassert>
 #include <iomanip>
 #include <string>
 #include <memory>
@@ -42,10 +43,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     pugi::xml_document doc;
 	pugi::xml_parse_result parseResult = doc.load_file(schemeFile);
 
-	if (!parseResult) {
-		std::cout << "parse error in createPlatletSystem: " << parseResult.description() << std::endl;
-		return nullptr;
-	}
+	assert(parseResult); 
 
     // std::cout << "Setting pugixml variables\n";
 	pugi::xml_node root = doc.child("data");
@@ -56,9 +54,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 
     // Check that no crucial data is missing.
     // Default parameter values are stored in GeneralParams, so those are optional.
-	if (!(root && memNodes && links)) {
-		std::cout << "Unable to find nessesary data.\n";
-    }
+	assert(root && memNodes && links);
     
     // *****************************************************
     // Load properties from the "settings" section.
@@ -90,19 +86,28 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     if (auto p = props.child("intNodeCount"))
         pltBuilder->intNodeCount = (p.text().as_uint());
 
-    if (auto p = props.child("morse-U")) {
+    if (auto p = props.child("morse-U_II")) {
         pltBuilder->generalParams.U_II = (p.text().as_double());
-        pltBuilder->generalParams.U_MI = 2.0 * pltBuilder->generalParams.U_II;       
     }
 
-    if (auto p = props.child("morse-P")) {
+    if (auto p = props.child("morse-U_MI")) {
+        pltBuilder->generalParams.U_MI = (p.text().as_double());
+    }
+
+    if (auto p = props.child("morse-P_II")) {
         pltBuilder->generalParams.P_II = (p.text().as_double());
-        pltBuilder->generalParams.P_MI = (p.text().as_double());       
     }
 
-    if (auto p = props.child("morse-R_eq")) {
+    if (auto p = props.child("morse-P_MI")) {
+        pltBuilder->generalParams.P_MI = (p.text().as_double());
+    }
+
+    if (auto p = props.child("morse-R_eq_II")) {
         pltBuilder->generalParams.R_eq_II = (p.text().as_double());
-        pltBuilder->generalParams.R_eq_MI = (p.text().as_double());       
+    }
+
+    if (auto p = props.child("morse-R_eq_MI")) {
+        pltBuilder->generalParams.R_eq_MI = (p.text().as_double());
     }
         
 
@@ -116,10 +121,9 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 
 	for (auto memNode = memNodes.child("mem-node"); memNode; memNode = memNode.next_sibling("mem-node")) {
 		const char* text = memNode.text().as_string();
-		if (3 != sscanf(text, "%lf %lf %lf", &x, &y, &z)) {
-			std::cout << "parse memNode error\n";
-			return 0;
-		}
+
+		assert( (3 == sscanf(text, "%lf %lf %lf", &x, &y, &z)) );
+
 		__attribute__ ((unused)) int unused = pltBuilder->addMembraneNode( glm::dvec3(x, y, z) );
     }
 
@@ -129,10 +133,7 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
     for (auto intNode = intNodes.child("int-node"); intNode; intNode = intNode.next_sibling("int-node")) {
 		const char* text = intNode.text().as_string();
 
-		if (3 != sscanf(text, "%lf %lf %lf", &x, &y, &z)) {
-			std::cout << "parse intNode error\n";
-			return 0;
-		}
+		assert( (3 == sscanf(text, "%lf %lf %lf", &x, &y, &z)) );
 
 		__attribute__ ((unused)) int unused = pltBuilder->addInteriorNode( glm::dvec3(x, y, z) );
     }
@@ -152,10 +153,8 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 	for (auto link = links.child("link"); link; link = link.next_sibling("link")) {
 		const char* text = link.text().as_string();
 
-		if (2 != sscanf(text, "%u %u", &n1, &n2)) {
-			std::cout << "parse link error\n";
-			return 0;
-		}
+		assert( (2 == sscanf(text, "%u %u", &n1, &n2)) );
+
 		__attribute__ ((unused)) int unused = pltBuilder->addMembraneEdge( n1, n2 );
     }
 
@@ -190,11 +189,11 @@ void run() {
 	t0 = time(0);
 
     double epsilon = 0.01;
-    double timeStep = 0.001;
+    double dt = 0.001;
 
     // Inital creation of pointer to the PlatletSystemBuilder.
     std::cout << "Creating pltBuilder\n";
-    auto pltBuilder = std::make_shared<PlatletSystemBuilder>(epsilon, timeStep);
+    auto pltBuilder = std::make_shared<PlatletSystemBuilder>(epsilon, dt);
 
     std::cout << "Creating pltSystem\n";
     auto pltSystem = createPlatletSystem("info.xml", pltBuilder);
@@ -225,7 +224,6 @@ void run() {
 
 int main(int argc, char** argv) {  
 
-    std::cout << "Running\n";
     run();
            
     return 0;
