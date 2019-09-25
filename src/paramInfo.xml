@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+   <parameters>
+      <viscousDamp value=3.769911184308></viscousDamp>
+      <temperature>300</temperature>
+      <kB>1.3806488e-08</kB>
+      <springStiffness_MM>500</springStiffness_MM>
+      <springStiffness_MP>600</springStiffness_MP>
+      <U_II>1</U_II>
+      <P_II>2.15</P_II>
+      <rEq_II>0.0649790859737145</rEq_II>
+      <U_MI>20</U_MI>
+      <P_MI>2.15</P_MI>
+      <rEq_MI>0.0649790859737145</rEq_MI>
+      <nMemNode>2562</nMemNode>
+      <nIntNode>2000</nIntNode>
+   </parameters>
+</data>
