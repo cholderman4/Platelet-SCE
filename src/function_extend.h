@@ -1,7 +1,14 @@
 #ifndef FUNCTION_EXTEND_H_
 #define FUNCTION_EXTEND_H_
 
-#include "SystemStructures.h"
+
+#include <thrust/device_vector.h>
+#include <thrust/gather.h>
+#include <thrust/iterator/counting_iterator.h>
+#include <thrust/scatter.h>
+
+
+
 
 template <typename InputIterator1,
           typename InputIterator2,

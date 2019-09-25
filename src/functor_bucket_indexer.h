@@ -1,7 +1,12 @@
 #ifndef FUNCTOR_BUCKET_INDEXER_H_
 #define FUNCTOR_BUCKET_INDEXER_H_
 
-#include "SystemStructures.h"
+
+#include <thrust/tuple.h>
+
+
+typedef thrust::tuple<unsigned, unsigned> Tuu;
+
 
 struct functor_bucket_indexer {
 	double min_x;

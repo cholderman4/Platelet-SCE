@@ -1,7 +1,7 @@
 #ifndef FUNCTOR_NEIGHBOR_H_
 #define FUNCTOR_NEIGHBOR_H_
 
-#include "SystemStructures.h"
+
 
 /*
 * Functor to compute neighbor buckets(center bucket included) of a node.
@@ -18,7 +18,12 @@ example with 3x3x3 grid. with node at position (1,1,1). Notice there are 27 poss
 The words left & right denote x change, top and bottom denote y change and upper & lower denote z change
  */
 
-struct functor_neighbor : public thrust::unary_function<Tuu, Tuu> {
+
+typedef thrust::tuple<unsigned, unsigned> Tuu;
+
+
+
+struct functor_neighbor : public thrust::unary_function<Tuu, unsigned> {
 	unsigned bucketCount_x;
 	unsigned bucketCount_y;
 	unsigned bucketCount_z;
