@@ -2,14 +2,14 @@
 // Not sure how many of these are actually needed.
 // ************************************************
 #include <cassert>
-#include <iomanip>
-#include <string>
-#include <memory>
-#include <fstream>
 #include <ctime>
-#include <stdio.h>
-#include <inttypes.h>
 #include <cstddef>
+#include <fstream>
+#include <inttypes.h>
+#include <iomanip>
+#include <memory>
+#include <string>
+#include <stdio.h>
 // ************************************************
 
 #include "pugixml/include/pugixml.hpp"
@@ -18,7 +18,9 @@
 #include "PlatletSystemBuilder.h"
 #include "PlatletStorage.h"
 
-std::string generateOutputFileNameByDate(std::string inputFileName) {
+
+
+std::string generateOutputPathByDate() {
 	time_t now;
 	const int MAX_DATE = 64;
 	char theDate[MAX_DATE];
@@ -27,8 +29,8 @@ std::string generateOutputFileNameByDate(std::string inputFileName) {
 	now = time(nullptr);
 
 	if (now != -1) {
-		strftime(theDate, MAX_DATE, "_%Y.%m.%d_%H-%M-%S", gmtime(&now));
-		return inputFileName + theDate;
+		strftime(theDate, MAX_DATE, "/%Y.%m.%d/%H-%M-%S/", gmtime(&now));
+		return theDate;
 	}
 	return "";
 }
@@ -160,8 +162,8 @@ std::shared_ptr<PlatletSystem> createPlatletSystem(const char* schemeFile, std::
 
     // std::cout << "Setting fixed nodes\n";
     // Read in fixed nodes.
-    pugi::xml_node fixedRoot = root.child("fixed");
-	if (fixedRoot) {
+    pugi::xml_node fixedNodes = root.child("fixed");
+	if (fixedNodes) {
 		for (auto node = fixedRoot.child("nodeID"); node; node = node.next_sibling("nodeID"))
 			pltBuilder->fixNode(node.text().as_uint());
 	}
@@ -188,20 +190,24 @@ void run() {
     time_t t0,t1;
 	t0 = time(0);
 
-    double epsilon = 0.01;
-    double dt = 0.001;
+    // double epsilon = 0.01;
+    // double dt = 0.001;
 
     // Inital creation of pointer to the PlatletSystemBuilder.
     std::cout << "Creating pltBuilder\n";
-    auto pltBuilder = std::make_shared<PlatletSystemBuilder>(epsilon, dt);
+    auto pltBuilder = std::make_shared<PlatletSystemBuilder>();
 
     std::cout << "Creating pltSystem\n";
     auto pltSystem = createPlatletSystem("info.xml", pltBuilder);
 
     std::cout << "Generating output filename\n";
-    auto outputFileName = generateOutputFileNameByDate("Test");
+    auto outputPath = generateOutputPathByDate("Test");
+    
+    // Make sure the path exists.
+    mkdir_p(outputPath.c_str());
 
-    std::cout << outputFileName << '\n';
+
+    std::cout << outputPath << '\n';
 
     auto pltStorage = std::make_shared<PlatletStorage>(pltSystem, pltBuilder, outputFileName);
 
@@ -220,6 +226,9 @@ void run() {
 	std::cout << "Total time hh: " << hours << " mm: " << min << " ss: " << sec << '\n';
     // ***********************************************************
 }
+
+
+
 
 
 int main(int argc, char** argv) {  
