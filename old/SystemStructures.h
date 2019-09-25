@@ -158,6 +158,7 @@ struct psrnormgen {
     }
 
 };
+
 struct psrunifgen {
 
     double a, b;
