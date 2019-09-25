@@ -16,7 +16,7 @@ int mkdir_p(const char *path) {
     // Adapted from http://stackoverflow.com/a/2336245/119527 
     const size_t len = strlen(path);
     char _path[PATH_MAX];
-    char *p; 
+    char *p;
 
     errno = 0;
 
@@ -48,10 +48,11 @@ int mkdir_p(const char *path) {
     }   
 
     return 0;
-}
+};
 
 
-PlatletStorage::PlatletStorage(std::weak_ptr<PlatletSystem> a_pltSystem,
+PlatletStorage::PlatletStorage(
+	std::weak_ptr<PlatletSystem> a_pltSystem,
 	std::weak_ptr<PlatletSystemBuilder> b_pltSystem, 
 	const std::string& a_fileName) {
 
@@ -138,5 +139,4 @@ void PlatletStorage::print_VTK_File() {
 		} */
 		ofs.close();
 	}
-
 };
