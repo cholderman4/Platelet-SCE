@@ -1,7 +1,10 @@
 #ifndef FUNCTOR_ADVANCE_POS_H_
 #define FUNCTOR_ADVANCE_POS_H_
 
-#include "SystemStructures.h"
+#include <cmath>
+#include <thrust/tuple.h>
+
+
 
 /* Used to advance position and velocity from known force
 Velocity Verlet Like algorithm used : https://arxiv.org/pdf/1212.1244.pdf */
@@ -16,8 +19,12 @@ Velocity Verlet Like algorithm used : https://arxiv.org/pdf/1212.1244.pdf */
 
 /* Update:	None	 */
 
+typedef thrust::tuple<unsigned, double, double, double> U_CVec3;
+typedef thrust::tuple<double, double, double, double> CVec4;
 
-struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4> {
+
+
+struct functor_advance_pos : public thrust::binary_function<U_CVec3, CVec4, CVec4> {
 	double dt;
 	double viscousDamp;
 	double temperature;
@@ -43,13 +50,13 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 		mass(_mass) {}
 
 	__device__
-		CVec4 operator()(const UCVec3& p3, const CVec4& g1f3) {
+		CVec4 operator()(const U_CVec3& id_p3, const CVec4& g1f3) {
 
-			unsigned id = thrust::get<0>(p3);		
+			unsigned id = thrust::get<0>(id_p3);		
 
-			double pos_x = thrust::get<1>(p3);
-			double pos_y = thrust::get<2>(p3);
-			double pos_z = thrust::get<3>(p3);
+			double pos_x = thrust::get<1>(id_p3);
+			double pos_y = thrust::get<2>(id_p3);
+			double pos_z = thrust::get<3>(id_p3);
 
 			//random data
 			double gaussianData = thrust::get<0>(g1f3);
@@ -76,17 +83,16 @@ struct functor_advance_pos : public thrust::binary_function<UCVec3, CVec4, CVec4
 			double newPos_y = pos_y + (dt/viscousDamp) * (acc_y) + noise;
 			double newPos_z = pos_z + (dt/viscousDamp) * (acc_z) + noise;
 
-			double velocity = sqrt((newPos_x - pos_x) * (newPos_x - pos_x) + 
-									(newPos_y - pos_y) * (newPos_y - pos_y) + 
-									(newPos_z - pos_z) * (newPos_z - pos_z));
-
-
+			double velocity = 
+					sqrt(	(newPos_x - pos_x) * (newPos_x - pos_x) + 
+							(newPos_y - pos_y) * (newPos_y - pos_y) + 
+							(newPos_z - pos_z) * (newPos_z - pos_z));
 
 			return thrust::make_tuple(
-									newPos_x, 
-									newPos_y, 
-									newPos_z, 
-									velocity);
+				newPos_x, 
+				newPos_y, 
+				newPos_z, 
+				velocity);
 	}
 };
 
