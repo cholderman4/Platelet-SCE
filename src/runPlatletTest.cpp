@@ -45,18 +45,7 @@ set_param_data(
     // Parameter calculation
 
 
-    // Register the node types with functors
-    platletBuilder->enrollCalculateParameter(std::make_shared<KineticEnergy>(nodeData));
-
-
-    // Register save files.
-    platletBuilder->enrollSaveState(std::make_shared<PrintVTK>(nodeData))
-
-
-    // get the parameters from the functors
-    ParameterManager paramManager;
-
-
+    
 
     // Read parameters from XML.
     
