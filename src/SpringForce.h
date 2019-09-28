@@ -5,10 +5,10 @@
 class NodeData;
 
 #include "IFunction.h"
-#include "NodeOperation.h"
+#include "SymmetricForce.h"
 
 
-class SpringForce : public NodeOperation, public IFunction {
+class SpringForce : public SymmetricForce, public IFunction {
 
     private:
     // ==========================================

@@ -10,12 +10,12 @@
 
 #include "functor_spring_force.h"
 #include "NodeData.h"
-#include "NodeOperation.h"
+#include "NodeTypeOperation.h"
 #include "ParameterManager.h"
 
 
 SpringForce::SpringForce(NodeData& _nodeData) :
-    NodeOperation(_nodeData) {};
+    NodeTypeOperation(_nodeData) {};
 
 
 void SpringForce::getDefaultParameterValues(ParameterManager& parameterManager) {

@@ -6,12 +6,13 @@
 
 #include <thrust/device_vector.h>
 
-class ParameterManager;
+class IReadParameter;
 class NodeData;
+class ParameterManager;
 
-class NodeOperation {
+class NodeTypeOperation {
 
-protected:
+    protected:
     NodeData& nodeData;
 
     // Begin/End index for each node type.
@@ -22,7 +23,7 @@ protected:
     // The value will be used to interface with NodeData
     // The index will be used internally by the functor
     std::vector<unsigned> nodeTypes;
-    unsigned nNodeTypes;
+    unsigned nNodeTypes{ 0 };
     
     // Begin/End index for all nodes.
     unsigned indexBegin { 0 };
@@ -31,26 +32,19 @@ protected:
     // unsigned nRegisteredNodeTypes;
     // unsigned nRegisteredNodes;
 
-    std::vector<unsigned> nodeInteractionA;
-    std::vector<unsigned> nodeInteractionB;
-
+    void checkBoundary(unsigned begin, unsigned end);
     
 
-public:
-
-    // NodeOperation();
-
-    ~NodeOperation();
-
-    NodeOperation(NodeData& _nodeData);
-
-    void registerNodeInteraction(unsigned nodeTypeA, unsigned nodeTypeB);
+    public:
+    NodeTypeOperation(NodeData& _nodeData);
+    ~NodeTypeOperation();
 
     void updateNodeIndices();
 
-    void checkBeginEnd(unsigned begin, unsigned end);
+    void registerNodeType(unsigned nodeType);
 
-    virtual void getDefaultParameterValues(ParameterManager& parameterManager) = 0;
+    virtual void getParameterKeys(IParameterList& paramList) = 0;
+    virtual void setParameterValues(const IReadParameter& readParam) = 0;
 };
 
-#endif
+#endif // NODE_OPERATION_H_

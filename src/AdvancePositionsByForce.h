@@ -4,10 +4,10 @@
 class NodeData;
 
 #include "IFunction.h"
-#include "NodeOperation.h"
+#include "NodeTypeOperation.h"
 
 
-class AdvancePositionsByForce : public NodeOperation, public IFunction {
+class AdvancePositionsByForce : public NodeTypeOperation, public IFunction {
 
     private:
 

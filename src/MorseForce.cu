@@ -14,7 +14,7 @@
 
 MorseForce::MorseForce(NodeData& _nodeData, BucketScheme& _bucketScheme) :
     bucketScheme(_bucketScheme),
-    NodeOperation(_nodeData) {};
+    NodeTypeOperation(_nodeData) {};
 
 
 void MorseForce::getDefaultParameterValues(ParameterManager& parameterManager) {

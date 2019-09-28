@@ -2,13 +2,13 @@
 #define ADVANCE_POSITIONS_BY_VELOCITY_H_
 
 #include "IFunction.h"
-#include "NodeOperation.h"
+#include "NodeTypeOperation.h"
 
 class NodeData;
 
 
 
-class AdvancePositionsByVelocity : public IFunction, public NodeOperation {
+class AdvancePositionsByVelocity : public IFunction, public NodeTypeOperation {
 
     private:
     double dt;

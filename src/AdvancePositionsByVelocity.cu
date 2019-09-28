@@ -9,11 +9,11 @@
 
 #include "functor_advance_by_vel.h"
 #include "NodeData.h"
-#include "NodeOperation.h"
+#include "NodeTypeOperation.h"
 #include "NodeOperationUtil.h"
 
 AdvancePositionsByVelocity::AdvancePositionsByVelocity(NodeData& _nodeData) :
-    NodeOperation(_nodeData) {};
+    NodeTypeOperation(_nodeData) {};
 
 void AdvancePositionsByVelocity::SetVelocity(
     double _vel_x, 

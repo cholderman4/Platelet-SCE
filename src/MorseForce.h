@@ -3,13 +3,13 @@
 
 
 #include "IFunction.h"
-#include "NodeOperation.h"
+#include "SymmetricForce.h"
 
 
 class BucketScheme;
 
 
-class MorseForce : public NodeOperation, public IFunction {
+class MorseForce : public SymmetricForce, public IFunction {
 
     private:
     BucketScheme& bucketScheme;

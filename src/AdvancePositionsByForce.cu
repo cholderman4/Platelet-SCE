@@ -12,12 +12,12 @@
 
 #include "functor_advance_pos.h"
 #include "NodeData.h"
-#include "NodeOperation.h"
+#include "NodeTypeOperation.h"
 #include "RandomUtil.h"
 
 
 AdvancePositionsByForce::AdvancePositionsByForce(NodeData& _nodeData) :
-	NodeOperation(_nodeData) {};
+	NodeTypeOperation(_nodeData) {};
 
 void AdvancePositionsByForce::execute() {
     /****************************************************************************************** 
