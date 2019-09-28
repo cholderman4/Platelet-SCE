@@ -26,6 +26,28 @@ class ParameterManager : public IParameterList {
 
     public:
     ParameterManager();
+    ~ParameterManager();
+
+    // Add parameters directly. Allows clients more control over default values.
+    void addParameter(
+        Parameter& parameter); // Not sure whether this should be passed by reference.
+
+    // setValue is overloaded to allow for nodeType abbreviations to be appended to a root key.
+    void setValue(
+        const std::string key, 
+        const double& value, 
+        unsigned A, unsigned B);
+
+    bool findValue(
+        const std::string key, 
+        double& value,
+        unsigned A, unsigned B);
+
+    // Called if we want to iterate through all stored parameters and search for values, possibly with some greater degree of control over default parameters, e.g skipping or updating only those values that have already have a default value. (Otherwise, we will just let IReadParameter call sendValuesToList() as it probably has a better way to iterate through its source rather than searching for every key individually.)
+    // Possibly used if it is easier to search rather than iterate through a source of parameters.
+    // Probably unnecessary.
+    void updateParameters(const IReadParameter& readParameters);
+
 
     // IParameterList
     void addValue(
@@ -36,6 +58,7 @@ class ParameterManager : public IParameterList {
         const std::string key, 
         const double& value);
 
+
     // IReadParameter
     bool findValue(
         const std::string key, 
@@ -43,23 +66,7 @@ class ParameterManager : public IParameterList {
 
     void sendValuesToList(IParameterList& parameterList);
 
-    // ParameterManager
-    void addParameter(
-        const std::string key, 
-        Parameter parameter);
-
-
-    // setValue is overloaded to allow for nodeType abbreviations to be appended to a root key.
-    void setValue(
-        const std::string key, 
-        const double& value, 
-        unsigned A, unsigned B);
-
-    // Called if we want to iterate through all stored parameters and search for values, possibly with some greater degree of control over default parameters, e.g skipping or updating only those values that have already have a default value. (Otherwise, we will just let IReadParameter call sendValuesToList() as it probably has a better way to iterate through its source rather than searching for every key.)
-    // Possibly used if it is easier to search rather than iterate through a source of parameters.
-    // Probably unnecessary.
-    void updateParameters(const IReadParameter& readParameters);
-
+    
     
 
     private:
