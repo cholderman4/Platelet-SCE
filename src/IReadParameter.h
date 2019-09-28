@@ -27,6 +27,7 @@ class IReadParameter {
     // Iterate through source values, calling parameterList.setValue().
     virtual void sendValuesToList(IParameterList& parameterList) = 0;
 
+    virtual ~IReadParameter() {};
 };
 
 #endif // I_READ_PARAMETER_H_

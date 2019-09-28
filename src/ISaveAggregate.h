@@ -14,7 +14,9 @@ Possibly could be replaced by an ISave object that is just declared in a larger 
 
 class ISaveAggregate : public ISave{
     public:
+
+    virtual ~ISaveAggregate() {};
     
 };
 
-#endif
+#endif // I_SAVE_AGGREGATE_H_

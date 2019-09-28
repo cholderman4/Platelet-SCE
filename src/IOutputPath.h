@@ -17,6 +17,8 @@ Example: By parameter test: SpringStiffness001
 class IOutputPath {
     public:
     virtual std::string getOutputPath(std::string seed) = 0;
+
+    virtual ~IOutputPath() {};
 };
 
 #endif // I_OUTPUT_PATH_H_

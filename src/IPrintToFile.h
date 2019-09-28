@@ -18,6 +18,8 @@ However, if we want a file that just displays e.g. kinetic energy, then that wil
 class IPrintToFile {
     public:
     virtual void print(std::ofstream& ofs) = 0;
+
+    virtual ~IPrintToFile() {};
 };
 
-#endif
+#endif // I_PRINT_TO_FILE_H_

@@ -14,6 +14,8 @@ class IFunction {
     public:
     // virtual ~IFunction() {}
     virtual void execute() = 0;
+
+    virtual ~IFunction() {};
 };
 
-#endif
+#endif // IFUNCTION_H_

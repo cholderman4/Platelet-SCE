@@ -17,7 +17,9 @@ Possibly this should be modified to account for parameters that aren't a single 
 class ICalculateParameter {    
     public:
     virtual void calculate() = 0;
-    virtual double getParameter() = 0;   
+    virtual double getParameter() = 0;
+
+    virtual ~ICalculateParameter() {};
 };
 
-#endif
+#endif // I_CALCULATE_PARAMETER_H_

@@ -33,6 +33,8 @@ class ISave {
     virtual void save() = 0;
     virtual void print() = 0;
     virtual void endSimulation() = 0;
+
+    virtual ~ISave() {};
 };
 
-#endif
+#endif // I_SAVE_H_

@@ -17,6 +17,7 @@ A specific case of an IReadParameter object (hence the inheritance) that interna
 class IParameterList : public IReadParameter {
 
     public:
+
     // Possibly duplicate functionality.
     // Maybe clients want different behavior if the value already exists or not.
     // Possibly one or both of these could be changed to return bool.
@@ -36,8 +37,7 @@ class IParameterList : public IReadParameter {
 
     virtual void sendValuesToList(IParameterList& parameterList) = 0;
 
-
-
+    virtual ~IParameterList() {};
 };
 
 #endif // I_PARAMETER_LIST_H_
