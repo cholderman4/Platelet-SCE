@@ -19,8 +19,6 @@ class PlatletSystem {
     public:
 
     void runSystem();
-
-
 };
 
 
