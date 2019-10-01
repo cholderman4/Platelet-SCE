@@ -2,15 +2,20 @@
 
 #include "pugixml/include/pugixml.hpp"
 
+#include "ReadParameterFromCommandLine.h"
+#include "ReadParameterFromXml.h"
+
 
 
 Director(
     std::unique_ptr<PlatletSystemBuilder> _pltBuilder,
     std::string _nodeDataFile, 
     std::string _paramDataFile) :
+
     platletSystemBuilder(std::move(_pltBuilder)),
     nodeDataFile(_nodeDataFile),
     paramDataFile(_paramDataFile) {
+        readParams.push_back(std::make_shared<ReadParameterFromXml>(_paramDataFile));
         
 }
 
@@ -21,11 +26,12 @@ Director(
     std::string _nodeDataFile, 
     std::string _paramDataFile,
     int argc, char** argv) :
+    
     platletSystemBuilder(std::move(_pltBuilder)),
     nodeDataFile(_nodeDataFile),
     paramDataFile(_paramDataFile) {
-
-
+        readParams.push_back(std::make_shared<ReadParameterFromXml>(_paramDataFile));
+        readParams.push_back(std::make_shared<ReadParameterFromCommandLine>(argc, argv));
 }
 
 
@@ -34,12 +40,9 @@ void Director::createPlatletSystem() {
 
     initializeFunctors();
 
-    setParameterInputs();
-
-    setParameterOutputs();
+    setInputs();
     
-    setSaveStates();
-
+    setOutputs();
 }
 
 
@@ -124,7 +127,17 @@ void Director::initializeFunctors() {
 
 
 void Director::setInputs() {
-    platletSystemBuilder->setInputs();
+    // We need to know which keys the functors are expecting.
+    // Let the builder gather all the keys from its various functors.
+    platletSystemBuilder->getParameterKeysFromFunctors();
+
+    // Send over whatever data we have that matches expected keys.
+    for (auto rp : readParams) {
+        rp->sendValuesToList(platletSystemBuilder->paramManager);
+    }
+
+    // Let the builder disseminate keys (via ParameterManager) to the proper functors.
+    platletSystemBuilder->setParameterValuesToFunctors();
 }
 
 
@@ -134,5 +147,5 @@ void Director::setOutputs() {
 
 
 std::unique_ptr<PlatletSystem> getPlatletSystem() {
-    return platletSystemBuilder->getSystem().release();
+    return platletSystemBuilder->getSystem();
 }

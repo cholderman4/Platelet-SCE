@@ -3,7 +3,9 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
+class IReadParameter;
 class PlatletSystemBuilder;
 
 
@@ -29,6 +31,8 @@ class Director {
     private:
     std::string nodeDataFile;
     std::string paramDataFile;
+
+    std::vector<std::shared_ptr<IReadParameter>> readParams;
 
     std::unique_ptr<PlatletSystemBuilder> platletSystemBuilder;
 
