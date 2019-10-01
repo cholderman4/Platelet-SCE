@@ -1,5 +1,5 @@
-#ifndef NODE_OPERATION_H_
-#define NODE_OPERATION_H_
+#ifndef NODE_TYPE_OPERATION_H_
+#define NODE_TYPE_OPERATION_H_
 
 #include <vector>
 #include <memory>
@@ -47,4 +47,4 @@ class NodeTypeOperation {
     virtual void setParameterValues(const IReadParameter& readParam) = 0;
 };
 
-#endif // NODE_OPERATION_H_
+#endif // NODE_TYPE_OPERATION_H_
