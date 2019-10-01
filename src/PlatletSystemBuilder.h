@@ -82,7 +82,7 @@ class PlatletSystemBuilder {
 
     std::vector< std::shared_ptr<ICalculateParameter> > parameters;
 
-    std::shared_ptr<IOutputPath> outputPath;
+    std::shared_ptr<IOutputPath> outputPathGenerator;
     
     
     // ***************************************
@@ -94,7 +94,7 @@ class PlatletSystemBuilder {
 
     public:
 
-    PlatletSystemBuilder(std::shared_ptr<IOutputPath> _outputPath);
+    PlatletSystemBuilder(std::shared_ptr<IOutputPath> _outputPathGenerator);
 
     // ******************************************
     // Called by director to add individual pieces as they are read from XML.
