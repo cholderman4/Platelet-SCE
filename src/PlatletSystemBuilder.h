@@ -5,6 +5,7 @@
 #include <memory>
 #include <thrust/host_vector.h>
 #include <string>
+#include <vector>
 
 #include "AdvancePositionsByForce.h"
 #include "AdvancePositionsByVelocity.h"
@@ -52,6 +53,8 @@ class PlatletSystemBuilder {
     thrust::host_vector<double> pos_y;
     thrust::host_vector<double> pos_z;
 
+    std::vector<unsigned> nNodesByType;
+
     // ***************************************
     // SpringForce
 
@@ -77,10 +80,6 @@ class PlatletSystemBuilder {
     // File outputs.
     std::vector< std::shared_ptr<ISave> > saveStates;
 
-
-    // Parameter calculations
-    ParameterManager paramManager;
-    
     std::vector< std::shared_ptr<ICalculateParameter> > parameters;
 
     std::shared_ptr<IOutputPath> outputPath;
@@ -103,30 +102,22 @@ class PlatletSystemBuilder {
     int addMembraneNode( glm::dvec3 pos );
     int addInteriorNode( glm::dvec3 pos );
     int addMembraneEdge( unsigned n1, unsigned n2 );
-
+    
     // Probably change this around so that it checks as we go.
     // Or just delete this entirely.
     // void setNodeCount(unsigned count, unsigned nodeTypeA);
-    
 
-    // ******************************************
-    // These could all be done away with, maybe.
-    // Instead implement in Builder.
-    // Use a different Builder if we want to make something different.
-    /* void enrollUtilFunction(std::shared_ptr<IFunction> f);
-
-    void enrollExternalForce(std::shared_ptr<IFunction> f);
-
-    void enrollPlatletForce(std::shared_ptr<IFunction> f);
-
-    void enrollCalculateParameter(std::shared_ptr<ICalculateParameter> p);
-     */
-    // ******************************************
     
     void initializeFunctors();
 
-    void setInputs();
+    // Parameter calculations
+    ParameterManager paramManager;
+    
+    // Setting parameter input values.
+    void getParameterKeysFromFunctors();
+    void setParameterValuesToFunctors();
 
+    // Save parameters and output files.
     void setOutputs();
 
     std::unique_ptr<PlatletSystem> getSystem();
