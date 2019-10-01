@@ -17,9 +17,10 @@
 
 
 PlatletSystemBuilder::PlatletSystemBuilder(
-    std::shared_ptr<IOutputPath> _outputPath) :
+    std::shared_ptr<IOutputPath> _outputPathGenerator) :
+    
     platletSystem(std::make_unique<PlatletSystem>())
-    outputPath(std::move(_outputPath)) {};
+    outputPathGenerator(std::move(_outputPathGenerator)) {};
 
 
 int PlatletSystemBuilder::addMembraneNode( glm::dvec3 pos ) {
@@ -114,10 +115,9 @@ void PlatletSystemBuilder::setOutputs() {
 
 
     // Register save files.
-    auto printVTK = std::make_shared<PrintVTK>(platletSystem->nodeData)
+    auto printVTK = std::make_shared<PrintVTK>(platletSystem->nodeData, outputPathGenerator)
     printVTK->enrollData(std::make_shared<PrintNodePositionsVTK>(platletSystem->nodeData));
     printVTK->enrollData(std::make_shared<PrintNodeTypeVTK>(platletSystem->nodeData));
-    // Set OutputPath!!
     saveStates.push_back(printVTK);
 
 
