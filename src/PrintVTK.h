@@ -9,8 +9,9 @@
 #include "IPrintToFile.h"
 #include "ISave.h"
 
-
+class IOutoutPath;
 class NodeData;
+
 
 
 class PrintVTK : public ISave {
@@ -25,15 +26,18 @@ class PrintVTK : public ISave {
 
     // Variables needed for filename info.
     unsigned outputCounter{ 0 };
-    std::string fileName;
+    std::string seedFileName;
     std::string format = ".vtk";
-    std::string number;
-    std::string path = "AnimationTest/";
+    std::string seedPath;
+    std::string path;
 
 
     public:
-    PrintVTK(NodeData& _nodeData);
-    PrintVTK(NodeData& _nodeData, std::string _fileName);
+    PrintVTK(
+        NodeData& _nodeData, 
+        std::shared_ptr<IOutputPath> outputPathGenerator,
+        std::string _seedPath = "AnimationTest/",
+        std::string _seedFileName = "Test");
     
     // ISave
     void beginSimulation();
@@ -42,8 +46,6 @@ class PrintVTK : public ISave {
     void endSimulation();
 
     // PrintVTK 
-    void setFileName(std::string _filename);
-    void setOutputPath(std::string _outputPath);
     void enrollData(std::shared_ptr<IPrintToFile> d);
 };
 
