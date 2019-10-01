@@ -10,14 +10,12 @@ FixNodes::FixNodes(NodeData& _nodeData) :
     NodeOperation(_nodeData) {};
 
 
-void FixNodes::execute() {
-    
+void FixNodes::execute() {    
     thrust::for_each(
-        fixedNodes.begin(), 
-        fixedNodes.end(),
+        nodeID.begin(), 
+        nodeID.end(),
         functor_fix_nodes(
             thrust::raw_pointer_cast(nodeData.force_x.data()),
             thrust::raw_pointer_cast(nodeData.force_y.data()),
             thrust::raw_pointer_cast(nodeData.force_z.data())));
-
 }

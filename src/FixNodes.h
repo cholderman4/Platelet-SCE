@@ -11,12 +11,8 @@
 
 class FixNodes : public NodeOperation, public IFunction {
 
-    private:
-
-    thrust::device_vector<unsigned> fixedNodes;
 
     public:
-
     FixNodes(NodeData& _nodeData);
 
     void execute();
