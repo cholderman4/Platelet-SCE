@@ -19,44 +19,7 @@
 
 
 
-set_param_data(
-    std::shared_ptr<PlatletSystemBuilder> platletBuilder, 
-    std::string paramDataFile,
-    NodeData& nodeData, 
-    std::string outputPath, 
-    int argc, char** argv) {
 
-    // *****************************************************
-    // Initialize all the functors
-
-    // Utility functors (bucketScheme)
-    auto bucketScheme = std::make_shared<BucketScheme>(nodeData);
-    platletBuilder->enrollUtilFunction(bucketScheme);
-
-    // Platlet Forces
-    platletBuilder->enrollPlatletForce(std::make_shared<SpringForce>(nodeData));
-    platletBuilder->enrollPlatletForce(nodeData, *bucketScheme);
-    platletBuilder->enrollPlatletForce(std::make_shared<AdvancePositionsByForce>(nodeData));
-
-    // External forces
-    // platletBuilder->enrollExternalForce(std::make_shared<PullingForce>(nodeData));
-    // platletBuilder->enrollExternalForce(std::make_shared<FixNodes>(nodeData));
-
-    // Parameter calculation
-
-
-    
-
-    // Read parameters from XML.
-    
-
-    // *****************************************************
-    // Load properties from the "parameters" section.
-    // Check for parameters that match with parameters logged by the functions.
-
-    
-
-}
 
 
 
