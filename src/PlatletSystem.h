@@ -9,14 +9,12 @@ class PlatletSystemController;
 
 class PlatletSystem {
 
-    private:
+    public:
 
     NodeData nodeData;
 
     PlatletSystemController platletSystemController;
 
-
-    public:
 
     void runSystem();
 };
