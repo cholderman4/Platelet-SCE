@@ -15,8 +15,9 @@ class PlatletSystem {
 
     PlatletSystemController platletSystemController;
 
-
     void runSystem();
+
+    // NodeData& getNodeData();
 };
 
 
