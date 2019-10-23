@@ -32,7 +32,7 @@ class ParameterManager : public IParameterList {
     void addParameter(
         Parameter& parameter); // Not sure whether this should be passed by reference.
 
-    // setValue is overloaded to allow for nodeType abbreviations to be appended to a root key.
+    // setValue and findValue are overloaded to allow for nodeType abbreviations to be appended to a root key.
     void setValue(
         const std::string key, 
         const double& value, 

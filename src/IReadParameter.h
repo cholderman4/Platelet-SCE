@@ -18,12 +18,17 @@ class IParameterList;
 class IReadParameter {
 
     public:
+
+    virtual bool findValue(const std::string) = 0;
+
+    virtual double getValue(const std::string key) = 0;
+
     // Find (and get) a specific value.
     // This may not be supported and implemented with empty function (returning false).
     virtual bool findValue(
                     const std::string key, 
                     double& value) = 0;
-    
+
     // Iterate through source values, calling parameterList.setValue().
     virtual void sendValuesToList(IParameterList& parameterList) = 0;
 
