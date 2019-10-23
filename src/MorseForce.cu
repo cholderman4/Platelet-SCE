@@ -17,14 +17,22 @@ MorseForce::MorseForce(NodeData& _nodeData, BucketScheme& _bucketScheme) :
     NodeTypeOperation(_nodeData) {};
 
 
-void MorseForce::getDefaultParameterValues(ParameterManager& parameterManager) {
 
+void MorseForce::getParameterKeys(ParameterManager& parameterManager) {
     for(auto i = 0; i < nodeInteractionA.size(); ++i) {
         parameterManager.setValue("morse_U", 0.0, nodeInteractionA[i], nodeInteractionB[i]);
         parameterManager.setValue("morse_P", 0.0, nodeInteractionA[i], nodeInteractionB[i]);
         parameterManager.setValue("morse_R_eq", 0.0, nodeInteractionA[i], nodeInteractionB[i]);
     }
+}
 
+
+void MorseForce::setParameterValues(ParameterManager& parameterManager) {
+    for(auto i = 0; i < nodeInteractionA.size(); ++i) {
+        parameterManager.findValue("morse_U", U[i], nodeInteractionA[i], nodeInteractionB[i]);
+        parameterManager.findValue("morse_P", P[i], nodeInteractionA[i], nodeInteractionB[i]);
+        parameterManager.findValue("morse_R_eq", R_eq[i], nodeInteractionA[i], nodeInteractionB[i]);
+    }
 }
 
 
