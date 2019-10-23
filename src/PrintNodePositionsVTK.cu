@@ -20,6 +20,12 @@ void PrintNodePositionsVTK::print(std::ofstream& ofs) {
     thrust::host_vector<double> hostPos_y(nNodes);
     thrust::host_vector<double> hostPos_z(nNodes);
 
+/* 
+    hostPos_x = nodeData.pos_x;
+    hostPos_y = nodeData.pos_y;
+    hostPos_z = nodeData.pos_z;
+ */
+ 
     thrust::copy(nodeData.pos_x.begin(), nodeData.pos_x.end(), hostPos_x.begin());
     thrust::copy(nodeData.pos_y.begin(), nodeData.pos_y.end(), hostPos_y.begin());
     thrust::copy(nodeData.pos_z.begin(), nodeData.pos_z.end(), hostPos_z.begin());    

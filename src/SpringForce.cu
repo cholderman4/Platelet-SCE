@@ -18,10 +18,20 @@ SpringForce::SpringForce(NodeData& _nodeData) :
     NodeTypeOperation(_nodeData) {};
 
 
-void SpringForce::getDefaultParameterValues(ParameterManager& parameterManager) {
+
+void SpringForce::getParameterKeys(ParameterManager& parameterManager) {
     parameterManager.setValue("springStiffness", stiffness);
     parameterManager.setValue("nMaxSpringsConnectedToNode", nMaxSpringsConnectedToNode);
 }
+
+
+void SpringForce::setParameterValues(ParameterManager& parameterManager) {
+    stiffness = parameterManager.getValue("springStiffness");
+
+    // Should include some checking somewhere.
+    nMaxSpringsConnectedToNode =  static_cast<unsigned>(parameterManager.getValue("nMaxSpringsConnectedToNode"));
+}
+
 
 
 void SpringForce::execute() {

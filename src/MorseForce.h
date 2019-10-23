@@ -25,7 +25,8 @@ class MorseForce : public SymmetricForce, public IFunction {
 
     MorseForce(NodeData& _nodeData, BucketScheme& _bucketScheme);
 
-    void getDefaultParameterValues(ParameterManager& parameterManager);
+    void getParameterKeys(ParameterManager& parameterManager);
+    void setParameterValues(ParameterManager& parameterManager);
 
 
     void execute();
