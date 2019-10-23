@@ -58,7 +58,9 @@ class SpringForce : public SymmetricForce, public IFunction {
 
         SpringForce(NodeData& _nodeData);
 
-        void getDefaultParameterValues(ParameterManager& parameterManager);
+        void getParameterKeys(ParameterManager& parameterManager);
+        void setParameterValues(ParameterManager& parameterManager);
+
 
         void execute();
         // void enrollNodeType(std::shared_ptr<INodeType> nodeType);
